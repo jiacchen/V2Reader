@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		4E413F9B278C2C9D00908C0A /* SupplementView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4E413F9A278C2C9D00908C0A /* SupplementView.swift */; };
 		4E4B92B02786B54A00273317 /* Node.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4E4B92AF2786B54A00273317 /* Node.swift */; };
 		4E4B92B22786B57F00273317 /* Topic.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4E4B92B12786B57F00273317 /* Topic.swift */; };
 		4E4B92B62786B67A00273317 /* Reply.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4E4B92B52786B67A00273317 /* Reply.swift */; };
@@ -33,6 +34,7 @@
 
 /* Begin PBXFileReference section */
 		4E083C55278B974D00F3C8F3 /* V2Reader.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = V2Reader.entitlements; sourceTree = "<group>"; };
+		4E413F9A278C2C9D00908C0A /* SupplementView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SupplementView.swift; sourceTree = "<group>"; };
 		4E4B92AF2786B54A00273317 /* Node.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Node.swift; sourceTree = "<group>"; };
 		4E4B92B12786B57F00273317 /* Topic.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Topic.swift; sourceTree = "<group>"; };
 		4E4B92B52786B67A00273317 /* Reply.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Reply.swift; sourceTree = "<group>"; };
@@ -158,6 +160,7 @@
 				8696D44C277A300800BB45EA /* AvatarView.swift */,
 				8696D44E277A3BCC00BB45EA /* StoriesBarView.swift */,
 				4EAD48452785311A00AA35CC /* ReplyCardView.swift */,
+				4E413F9A278C2C9D00908C0A /* SupplementView.swift */,
 			);
 			path = Components;
 			sourceTree = "<group>";
@@ -257,6 +260,7 @@
 				86BF45B3277939AB0087ABB2 /* PostReactionsBarView.swift in Sources */,
 				4E4B92B22786B57F00273317 /* Topic.swift in Sources */,
 				4E4B92B82786B76F00273317 /* Member.swift in Sources */,
+				4E413F9B278C2C9D00908C0A /* SupplementView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

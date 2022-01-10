@@ -12,16 +12,23 @@ struct AvatarView: View {
     
     var body: some View {
         if let avatarURL = url {
-            AsyncImage(url: URL(string: avatarURL)) { image in
-                image
-                    .resizable()
-                    .aspectRatio(contentMode: .fill)
-                    .mask(Circle())
-            } placeholder: {
-                Image(systemName: "circle")
+            if avatarURL == "" {
+                Image(systemName: "house.circle.fill")
                     .resizable()
                     .aspectRatio(contentMode: .fit)
-                    .foregroundColor(Color(UIColor.systemFill))
+                    .foregroundColor(.accentColor)
+            } else {
+                AsyncImage(url: URL(string: avatarURL)) { image in
+                    image
+                        .resizable()
+                        .aspectRatio(contentMode: .fill)
+                        .mask(Circle())
+                } placeholder: {
+                    Image(systemName: "circle")
+                        .resizable()
+                        .aspectRatio(contentMode: .fit)
+                        .foregroundColor(Color(UIColor.systemFill))
+                }
             }
         } else {
             Image(systemName: "circle")

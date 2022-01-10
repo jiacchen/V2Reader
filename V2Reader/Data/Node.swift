@@ -59,7 +59,7 @@ struct NodeResponse: Codable {
 
 @MainActor
 class NodeCollectionFetcher: ObservableObject {
-    @Published var nodeCollectionData: OrderedDictionary<String, Node> = [:]
+    @Published var nodeCollectionData: OrderedDictionary<String, Node> = ["home": Node(id: 0, url: "", name: "home", title: "Home", header: "", footer: "", avatar: "", topics: 0, created: 0, last_modified: 0)]
     @Published var completed = false
     @Published var fetching = false
     var storedNodes: [String: Data] = UserDefaults.standard.object(forKey: "storedNodes") as? [String: Data] ?? [:]

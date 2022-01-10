@@ -8,18 +8,30 @@
 import SwiftUI
 
 struct ContentView: View {
-    @AppStorage("currentNode") var currentNode = "apple"
     @EnvironmentObject var data: AppData
     @StateObject private var memberResponseFetcher = MemberResponseFetcher()
     @State var tabSelection: TabSelection = .feed
+    @Binding var refresh: Bool
     
     enum TabSelection: Hashable {
         case feed, activity, profile
     }
     
     var body: some View {
+#if targetEnvironment(macCatalyst)
+        FeedView(refresh: $refresh)
+            .tabItem {
+                Label("Feed", systemImage: "newspaper")
+            }
+            .withHostingWindow { window in
+                if let titlebar = window?.windowScene?.titlebar {
+                    titlebar.titleVisibility = .hidden
+                    titlebar.toolbar = nil
+                }
+            }
+#else
         TabView(selection: $tabSelection) {
-            FeedView()
+            FeedView(refresh: $refresh)
                 .tabItem {
                     Label("Feed", systemImage: "newspaper")
                 }
@@ -41,17 +53,10 @@ struct ContentView: View {
             }
             .tag(TabSelection.profile)
         }
-        .withHostingWindow { window in
-#if targetEnvironment(macCatalyst)
-            if let titlebar = window?.windowScene?.titlebar {
-                titlebar.titleVisibility = .hidden
-                titlebar.toolbar = nil
-            }
-#endif
-        }
         .task {
             try? await memberResponseFetcher.fetchData()
         }
+#endif
     }
 }
 
@@ -78,6 +83,6 @@ fileprivate struct HostingWindowFinder: UIViewRepresentable {
 
 struct ContentView_Previews: PreviewProvider {
     static var previews: some View {
-        ContentView()
+        ContentView(refresh: .constant(false))
     }
 }

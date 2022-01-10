@@ -42,6 +42,14 @@ struct ReplyCardView: View {
                                 break
                             }
                         }
+                    if reply.member.username == topic.member?.username {
+                        Text("OP")
+                            .padding(2)
+                            .font(.caption2)
+                            .foregroundColor(.secondary)
+                            .background(.gray.opacity(0.2))
+                            .cornerRadius(3)
+                    }
                     Text("#\(reply.num)")
                         .font(.subheadline)
                         .foregroundColor(.secondary)
@@ -56,7 +64,11 @@ struct ReplyCardView: View {
                         AsyncImage(url: URL(string: reply.imageURL[index]), scale: 2) { phase in
                             switch phase {
                             case .empty:
-                                ProgressView()
+                                HStack {
+                                    Spacer()
+                                    ProgressView()
+                                    Spacer()
+                                }
                             case .success(let image):
                                 image
                                     .resizable()

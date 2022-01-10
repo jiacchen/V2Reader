@@ -19,21 +19,28 @@ struct PostDetailView: View {
     
     var body: some View {
         List {
-            PostCardView(topicDetailFetcher: topicDetailFetcher, toProfile: $toProfile, member: $member, fullWidth: true)
-                .environmentObject(node)
-                .environmentObject(topic)
-            ForEach(replyResponseFetcher.replyCollection.elements, id: \.0) { id, reply in
-                ReplyCardView(toProfile: $toProfile, member: $member)
-                    .environmentObject(reply)
-                    .task {
-                        await replyResponseFetcher.fetchMoreIfNeeded(id: id, topicId: topic.id)
-                    }
+            Section {
+                PostCardView(topicDetailFetcher: topicDetailFetcher, toProfile: $toProfile, member: $member, fullWidth: true)
+                    .environmentObject(node)
+                    .environmentObject(topic)
+                ForEach(topic.supplements, id: \.id) { supplement in
+                    SupplementView().environmentObject(supplement)
+                }
             }
-            if !replyResponseFetcher.fullyFetched {
-                HStack {
-                    Spacer()
-                    ProgressView()
-                    Spacer()
+            Section {
+                ForEach(replyResponseFetcher.replyCollection.elements, id: \.0) { id, reply in
+                    ReplyCardView(toProfile: $toProfile, member: $member)
+                        .environmentObject(reply)
+                        .task {
+                            await replyResponseFetcher.fetchMoreIfNeeded(id: id, topicId: topic.id)
+                        }
+                }
+                if !replyResponseFetcher.fullyFetched {
+                    HStack {
+                        Spacer()
+                        ProgressView()
+                        Spacer()
+                    }
                 }
             }
         }
@@ -45,6 +52,14 @@ struct PostDetailView: View {
         }
         .navigationBarTitleDisplayMode(.inline)
         .task {
+            if !topic.detailsAdded && !topicDetailFetcher.fetching {
+                try? await topicDetailFetcher.fetchData(id: topic.id)
+                var supplements: [Supplement] = []
+                for supplement in topicDetailFetcher.topicData.result.supplements {
+                    supplements.append(Supplement(id: supplement.id, content: supplement.content, content_rendered: supplement.content_rendered, syntax: supplement.syntax, created: supplement.created))
+                }
+                topic.addDetails(member: Member(id: topicDetailFetcher.topicData.result.member.id, username: topicDetailFetcher.topicData.result.member.username, url: topicDetailFetcher.topicData.result.member.url, website: topicDetailFetcher.topicData.result.member.website, github: topicDetailFetcher.topicData.result.member.github, bio: topicDetailFetcher.topicData.result.member.bio, avatar: topicDetailFetcher.topicData.result.member.avatar, created: topicDetailFetcher.topicData.result.member.created), node: Node(id: topicDetailFetcher.topicData.result.node.id, url: topicDetailFetcher.topicData.result.node.url, name: topicDetailFetcher.topicData.result.node.name, title: topicDetailFetcher.topicData.result.node.title, header: topicDetailFetcher.topicData.result.node.header, footer: topicDetailFetcher.topicData.result.node.footer, avatar: topicDetailFetcher.topicData.result.node.avatar, topics: topicDetailFetcher.topicData.result.node.topics, created: topicDetailFetcher.topicData.result.node.created, last_modified: topicDetailFetcher.topicData.result.node.last_modified), supplements: supplements)
+            }
             if replyResponseFetcher.replyCollectionData.result.isEmpty {
                 try? await replyResponseFetcher.fetchData(id: topic.id)
             }

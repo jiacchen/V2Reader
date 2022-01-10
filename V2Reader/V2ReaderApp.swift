@@ -9,12 +9,21 @@ import SwiftUI
 
 @main
 struct V2ReaderApp: App {
+    @State var refresh = false
     var data = AppData()
     
     var body: some Scene {
         WindowGroup {
-            ContentView()
+            ContentView(refresh: $refresh)
                 .environmentObject(data)
+        }
+        .commands {
+            CommandGroup(after: .sidebar) {
+                Button("Refresh") {
+                    refresh.toggle()
+                }
+                .keyboardShortcut("R", modifiers: .command)
+            }
         }
     }
 }
