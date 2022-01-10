@@ -8,6 +8,7 @@
 import SwiftUI
 
 struct StoriesBarView: View {
+    @AppStorage("currentNode") var currentNode = "apple"
     @EnvironmentObject var data: AppData
     @ObservedObject var topicCollectionResponseFetcher: TopicCollectionResponseFetcher
     @ObservedObject var nodeCollectionFetcher: NodeCollectionFetcher
@@ -24,13 +25,13 @@ struct StoriesBarView: View {
                 } else {
                     ForEach(nodeCollectionFetcher.nodeCollectionData.elements, id: \.0) { name, node in
                         Button(action: {
-                            data.switchNode(name: name)
+                            currentNode = name
                             topicCollectionResponseFetcher.topicCollection = [:]
                             topicCollectionResponseFetcher.currentPage = 1
                             topicCollectionResponseFetcher.fullyFetched = false
                             Task {
                                 if topicCollectionResponseFetcher.topicCollection.isEmpty && !topicCollectionResponseFetcher.fetching {
-                                    try? await topicCollectionResponseFetcher.fetchData(name: data.currentNode)
+                                    try? await topicCollectionResponseFetcher.fetchData(name: currentNode)
                                 }
                             }
                         }) {
@@ -38,7 +39,7 @@ struct StoriesBarView: View {
                                 ZStack {
                                     AvatarView(url: node.avatar)
                                         .padding(4)
-                                    if name == data.currentNode {
+                                    if name == currentNode {
                                         Circle()
                                             .strokeBorder(Color.cyan, lineWidth: 2)
                                     }
@@ -55,7 +56,7 @@ struct StoriesBarView: View {
             }
             .task {
                 if !nodeCollectionFetcher.completed && !nodeCollectionFetcher.fetching {
-                    try? await nodeCollectionFetcher.fetchData(names: data.nodes)
+                    try? await nodeCollectionFetcher.fetchData(names: data.pinnedNodes)
                 }
             }
             .padding()

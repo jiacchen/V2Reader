@@ -8,6 +8,7 @@
 import SwiftUI
 
 struct FeedView: View {
+    @AppStorage("currentNode") var currentNode = "apple"
     @EnvironmentObject var data: AppData
     @State var showNewPostView = false
     @State var showNodeSearch = false
@@ -24,10 +25,10 @@ struct FeedView: View {
                         .listRowInsets(EdgeInsets())
                     ForEach(topicCollectionResponseFetcher.topicCollection.elements, id: \.0) { (id, topic) in
                         PostCardView(topicDetailFetcher: TopicResponseFetcher(), toProfile: .constant(false), member: .constant(nil))
-                            .environmentObject(nodeCollectionFetcher.nodeCollectionData[data.currentNode]!)
+                            .environmentObject(nodeCollectionFetcher.nodeCollectionData[currentNode]!)
                             .environmentObject(topic)
                             .task {
-                                await topicCollectionResponseFetcher.fetchMoreIfNeeded(id: id, nodeName: data.currentNode)
+                                await topicCollectionResponseFetcher.fetchMoreIfNeeded(id: id, nodeName: currentNode)
                             }
                     }
                     if !topicCollectionResponseFetcher.fullyFetched {
@@ -45,7 +46,7 @@ struct FeedView: View {
                     topicCollectionResponseFetcher.topicCollection = [:]
                     topicCollectionResponseFetcher.currentPage = 1
                     topicCollectionResponseFetcher.fullyFetched = false
-                    try? await topicCollectionResponseFetcher.fetchData(name: data.currentNode)
+                    try? await topicCollectionResponseFetcher.fetchData(name: currentNode)
                 }
 #endif
                 if showNodeSearch {
@@ -73,6 +74,7 @@ struct FeedView: View {
                             .onSubmit {
                                 showNodeSearch = false
                                 data.addNode(name: newNode)
+                                currentNode = newNode
                                 nodeCollectionFetcher.completed = false
                                 topicCollectionResponseFetcher.topicCollection = [:]
                                 topicCollectionResponseFetcher.currentPage = 1
@@ -81,10 +83,10 @@ struct FeedView: View {
                                 newNode = ""
                                 Task {
                                     if !nodeCollectionFetcher.completed && !nodeCollectionFetcher.fetching {
-                                        try? await nodeCollectionFetcher.fetchData(names: data.nodes)
+                                        try? await nodeCollectionFetcher.fetchData(names: data.pinnedNodes)
                                     }
                                     if topicCollectionResponseFetcher.topicCollection.isEmpty && !topicCollectionResponseFetcher.fetching {
-                                        try? await topicCollectionResponseFetcher.fetchData(name: data.currentNode)
+                                        try? await topicCollectionResponseFetcher.fetchData(name: currentNode)
                                     }
                                 }
                             }
@@ -93,7 +95,7 @@ struct FeedView: View {
                             showNodeSearch = true
                         }) {
                             HStack(spacing: 4) {
-                                Text(nodeCollectionFetcher.nodeCollectionData[data.currentNode]?.title ?? "Feed")
+                                Text(nodeCollectionFetcher.nodeCollectionData[currentNode]?.title ?? "Feed")
                                     .foregroundColor(.primary)
                                     .fontWeight(.semibold)
                                     .font(.headline)
@@ -123,10 +125,10 @@ struct FeedView: View {
         }
         .task {
             if !nodeCollectionFetcher.completed && !nodeCollectionFetcher.fetching {
-                try? await nodeCollectionFetcher.fetchData(names: data.nodes)
+                try? await nodeCollectionFetcher.fetchData(names: data.pinnedNodes)
             }
             if topicCollectionResponseFetcher.topicCollection.isEmpty && !topicCollectionResponseFetcher.fetching {
-                try? await topicCollectionResponseFetcher.fetchData(name: data.currentNode)
+                try? await topicCollectionResponseFetcher.fetchData(name: currentNode)
             }
         }
     }

@@ -54,7 +54,7 @@ struct NodeResponse: Codable {
     var message: String
     var result: Result
     
-    static let defaultNode = NodeResponse(success: false, message: "", result: Result.defaultResult)
+    static let defaultNodeResponse = NodeResponse(success: false, message: "", result: Result.defaultResult)
 }
 
 @MainActor
@@ -62,6 +62,7 @@ class NodeCollectionFetcher: ObservableObject {
     @Published var nodeCollectionData: OrderedDictionary<String, Node> = [:]
     @Published var completed = false
     @Published var fetching = false
+    var storedNodes: [String: Data] = UserDefaults.standard.object(forKey: "storedNodes") as? [String: Data] ?? [:]
     
     enum FetchError: Error {
         case badRequest
@@ -72,16 +73,24 @@ class NodeCollectionFetcher: ObservableObject {
         fetching = true
         for name in names {
             if nodeCollectionData[name] == nil {
-                print("nodecollection")
-                let url = URL(string:"https://www.v2ex.com/api/v2/nodes/\(name)")!
-                let token = "ec8a1394-93a0-4a7e-b513-f5c129226796"
-                var request = URLRequest(url: url)
-                request.addValue("Bearer \(token)", forHTTPHeaderField: "Authorization")
-                request.httpMethod = "GET"
-                let (data, response) = try await URLSession.shared.data(for: request)
-                guard (response as? HTTPURLResponse)?.statusCode == 200 else { throw FetchError.badRequest }
-                let node = try JSONDecoder().decode(NodeResponse.self, from: data)
-                nodeCollectionData[node.result.name] = Node(id: node.result.id, url: node.result.url, name: node.result.name, title: node.result.title, header: node.result.header, footer: node.result.footer, avatar: node.result.avatar, topics: node.result.topics, created: node.result.created, last_modified: node.result.last_modified)
+                if storedNodes[name] == nil {
+                    print("nodecollection")
+                    let url = URL(string:"https://www.v2ex.com/api/v2/nodes/\(name)")!
+                    let token = "ec8a1394-93a0-4a7e-b513-f5c129226796"
+                    var request = URLRequest(url: url)
+                    request.addValue("Bearer \(token)", forHTTPHeaderField: "Authorization")
+                    request.httpMethod = "GET"
+                    let (data, response) = try await URLSession.shared.data(for: request)
+                    guard (response as? HTTPURLResponse)?.statusCode == 200 else { throw FetchError.badRequest }
+                    storedNodes[name] = data
+                    UserDefaults.standard.set(storedNodes, forKey: "storedNodes")
+                    let nodeResponse = try JSONDecoder().decode(NodeResponse.self, from: data)
+                    nodeCollectionData[name] = Node(id: nodeResponse.result.id, url: nodeResponse.result.url, name: nodeResponse.result.name, title: nodeResponse.result.title, header: nodeResponse.result.header, footer: nodeResponse.result.footer, avatar: nodeResponse.result.avatar, topics: nodeResponse.result.topics, created: nodeResponse.result.created, last_modified: nodeResponse.result.last_modified)
+                } else {
+                    let data = storedNodes[name]!
+                    let nodeResponse = try JSONDecoder().decode(NodeResponse.self, from: data)
+                    nodeCollectionData[name] = Node(id: nodeResponse.result.id, url: nodeResponse.result.url, name: nodeResponse.result.name, title: nodeResponse.result.title, header: nodeResponse.result.header, footer: nodeResponse.result.footer, avatar: nodeResponse.result.avatar, topics: nodeResponse.result.topics, created: nodeResponse.result.created, last_modified: nodeResponse.result.last_modified)
+                }
             }
         }
         fetching = false

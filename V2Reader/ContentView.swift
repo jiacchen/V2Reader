@@ -8,6 +8,7 @@
 import SwiftUI
 
 struct ContentView: View {
+    @AppStorage("currentNode") var currentNode = "apple"
     @EnvironmentObject var data: AppData
     @StateObject private var memberResponseFetcher = MemberResponseFetcher()
     @State var tabSelection: TabSelection = .feed

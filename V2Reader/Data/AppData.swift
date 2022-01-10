@@ -7,18 +7,11 @@
 
 import Foundation
 
-let defaultNodes = ["apple", "create", "macos", "ios"]
-
 class AppData: ObservableObject {
-    @Published var nodes = defaultNodes
-    @Published var currentNode = "apple"
-    
-    func switchNode(name: String) {
-        currentNode = name
-    }
+    @Published var pinnedNodes: [String] = UserDefaults.standard.stringArray(forKey: "pinnedNodes") ?? ["apple"]
     
     func addNode(name: String) {
-        nodes.append(name)
-        currentNode = name
+        pinnedNodes.append(name)
+        UserDefaults.standard.set(pinnedNodes, forKey: "pinnedNodes")
     }
 }
