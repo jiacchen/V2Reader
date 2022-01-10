@@ -1,0 +1,191 @@
+//
+//  PostCardView.swift
+//  Social
+//
+//  Created by Jordan Singer on 12/26/21.
+//
+
+import SwiftUI
+
+struct PostCardView: View {
+    @Environment(\.horizontalSizeClass) var sizeClass
+    @Environment(\.presentationMode) var presentationMode
+    @EnvironmentObject var data: AppData
+    @EnvironmentObject var node: Node
+    @EnvironmentObject var topic: Topic
+    @ObservedObject var topicDetailFetcher: TopicResponseFetcher
+    @Binding var toProfile: Bool
+    @Binding var member: Member?
+    @State var usernameWithLink = AttributedString()
+    @State var nodeTitleWithLink = AttributedString()
+    var fullWidth = false
+    
+    var card: some View {
+        VStack(spacing: 0) {
+//            PostHeaderView()
+//                .environmentObject(topic)
+            VStack(alignment: .leading, spacing: 12) {
+                if fullWidth {
+                    Text(topic.title)
+                        .font(.title3)
+                        .fontWeight(.medium)
+                } else {
+                    Text(topic.title)
+                        .font(.body)
+                        .fontWeight(.medium)
+                }
+                
+                if !topic.content.isEmpty {
+                    if fullWidth {
+                        ForEach(0..<topic.content_rendered.count) { index in
+                            Text(topic.content_rendered[index])
+                            if index < topic.imageURL.count {
+                                AsyncImage(url: URL(string: topic.imageURL[index]), scale: 2) { phase in
+                                    switch phase {
+                                    case .empty:
+                                        ProgressView()
+                                    case .success(let image):
+                                        image
+                                            .resizable()
+                                            .aspectRatio(contentMode: .fit)
+                                            .cornerRadius(12)
+                                    case .failure:
+                                        Image(systemName: "photo")
+                                    @unknown default:
+                                        // Since the AsyncImagePhase enum isn't frozen,
+                                        // we need to add this currently unused fallback
+                                        // to handle any new cases that might be added
+                                        // in the future:
+                                        EmptyView()
+                                    }
+                                }
+                            }
+                        }
+                    } else {
+                        Text(topic.content_rendered[0])
+                            .font(.callout)
+                            .lineLimit(3)
+                        if !topic.imageURL.isEmpty {
+                            AsyncImage(url: URL(string: topic.imageURL[0]), scale: 2) { phase in
+                                switch phase {
+                                case .empty:
+                                    ProgressView()
+                                case .success(let image):
+                                    image
+                                        .resizable()
+                                        .aspectRatio(contentMode: .fit)
+                                        .cornerRadius(12)
+                                case .failure:
+                                    Image(systemName: "photo")
+                                @unknown default:
+                                    // Since the AsyncImagePhase enum isn't frozen,
+                                    // we need to add this currently unused fallback
+                                    // to handle any new cases that might be added
+                                    // in the future:
+                                    EmptyView()
+                                }
+                            }
+                        }
+                    }
+                }
+                
+                if fullWidth {
+                    HStack(spacing: 0) {
+                        Text("in ")
+                            .font(.callout)
+                            .foregroundColor(.secondary)
+                        Text(nodeTitleWithLink)
+                            .font(.callout)
+                            .accentColor(.secondary)
+                            .onAppear {
+                                nodeTitleWithLink = AttributedString(node.title)
+                                nodeTitleWithLink.link = URL(string: "v2reader://go/\(node.name)")
+                                nodeTitleWithLink.inlinePresentationIntent = .stronglyEmphasized
+                            }
+                        if topic.detailsAdded {
+                            Text(" by ")
+                                .font(.callout)
+                                .foregroundColor(.secondary)
+                            Text(usernameWithLink)
+                                .font(.callout)
+                                .accentColor(.secondary)
+                                .onAppear {
+                                    usernameWithLink = AttributedString(topic.member!.username)
+                                    usernameWithLink.link = URL(string: "v2reader://member/\(topic.member!.username)")
+                                    usernameWithLink.inlinePresentationIntent = .stronglyEmphasized
+                                }
+//                            NavigationLink(destination: ProfileView().environmentObject(topic.member!), isActive: $toProfile) {
+//                                Text(topic.member!.username)
+//                                    .font(.callout)
+//                                    .foregroundColor(.secondary)
+//                                    .fontWeight(.medium)
+//                            }
+                            .onOpenURL { url in
+                                let host = url.host
+                                var path = url.path
+                                switch host {
+                                case "member":
+                                    path.removeFirst()
+                                    if path == topic.member!.username {
+                                        toProfile = true
+                                        member = topic.member!
+                                    }
+                                case "go":
+                                    path.removeFirst()
+                                    if path == node.name {
+                                        self.presentationMode.wrappedValue.dismiss()
+                                    }
+                                default:
+                                    break
+                                }
+                            }
+                        }
+                    }
+                    .task {
+                        if !topic.detailsAdded {
+                            try? await topicDetailFetcher.fetchData(id: topic.id)
+                            topic.addDetails(member: Member(id: topicDetailFetcher.topicData.result.member.id, username: topicDetailFetcher.topicData.result.member.username, url: topicDetailFetcher.topicData.result.member.url, website: topicDetailFetcher.topicData.result.member.website, github: topicDetailFetcher.topicData.result.member.github, bio: topicDetailFetcher.topicData.result.member.bio, avatar: topicDetailFetcher.topicData.result.member.avatar, created: topicDetailFetcher.topicData.result.member.created), node: Node(id: topicDetailFetcher.topicData.result.node.id, url: topicDetailFetcher.topicData.result.node.url, name: topicDetailFetcher.topicData.result.node.name, title: topicDetailFetcher.topicData.result.node.title, header: topicDetailFetcher.topicData.result.node.header, footer: topicDetailFetcher.topicData.result.node.footer, avatar: topicDetailFetcher.topicData.result.node.avatar, topics: topicDetailFetcher.topicData.result.node.topics, created: topicDetailFetcher.topicData.result.node.created, last_modified: topicDetailFetcher.topicData.result.node.last_modified))
+                        }
+                    }
+                }
+                    
+                PostReactionsBarView(fullWidth: fullWidth)
+            }
+            .padding(.vertical)
+//            .padding(.top, fullWidth ? 12 : 4)
+//            .padding(.leading, fullWidth ? 0 : 60)
+        }
+//        .padding(.horizontal, sizeClass == .compact ? nil : 32)
+//        .contentShape(Rectangle())
+    }
+    
+    var body: some View {
+        if fullWidth {
+            card
+        } else {
+            NavigationLink(destination: PostDetailView(toProfile: toProfile).environmentObject(node).environmentObject(topic)) {
+                card
+            }
+//            card
+//                .background{
+//                    NavigationLink(destination: PostDetailView(toProfile: toProfile).environmentObject(node).environmentObject(topic)) {
+//                        EmptyView()
+//                    }
+//                    .buttonStyle(CustomButtonStyle())
+//                    .opacity(0)
+//                }
+        }
+    }
+}
+
+struct CustomButtonStyle: ButtonStyle {
+    func makeBody(configuration: Configuration) -> some View {
+        configuration.label
+    }
+}
+
+struct PostCardView_Previews: PreviewProvider {
+    static var previews: some View {
+        PostCardView(topicDetailFetcher: TopicResponseFetcher(), toProfile: .constant(false), member: .constant(nil))
+    }
+}

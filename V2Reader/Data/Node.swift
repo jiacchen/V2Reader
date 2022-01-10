@@ -1,0 +1,90 @@
+//
+//  Node.swift
+//  V2EX
+//
+//  Created by Jiachen Chen on 1/5/22.
+//
+
+import Foundation
+import OrderedCollections
+
+class Node: ObservableObject {
+    var id: Int
+    var url: String
+    var name: String
+    var title: String
+    var header: String
+    var footer: String
+    var avatar: String
+    var topics: Int
+    var created: TimeInterval
+    var last_modified: TimeInterval
+    
+    init(id: Int, url: String, name: String, title: String, header: String, footer: String, avatar: String, topics: Int, created: TimeInterval, last_modified: TimeInterval) {
+        self.id = id
+        self.url = url
+        self.name = name
+        self.title = title
+        self.header = header
+        self.footer = footer
+        self.avatar = avatar
+        self.topics = topics
+        self.created = created
+        self.last_modified = last_modified
+    }
+}
+
+struct NodeResponse: Codable {
+    struct Result: Codable {
+        var id: Int
+        var url: String
+        var name: String
+        var title: String
+        var header: String
+        var footer: String
+        var avatar: String
+        var topics: Int
+        var created: TimeInterval
+        var last_modified: TimeInterval
+        
+        static let defaultResult = Result(id: 0, url: "", name: "", title: "", header: "", footer: "", avatar: "", topics: 0, created: 0, last_modified: 0)
+    }
+    
+    var success: Bool
+    var message: String
+    var result: Result
+    
+    static let defaultNode = NodeResponse(success: false, message: "", result: Result.defaultResult)
+}
+
+@MainActor
+class NodeCollectionFetcher: ObservableObject {
+    @Published var nodeCollectionData: OrderedDictionary<String, Node> = [:]
+    @Published var completed = false
+    @Published var fetching = false
+    
+    enum FetchError: Error {
+        case badRequest
+        case badJSON
+    }
+    
+    func fetchData(names: [String]) async throws {
+        fetching = true
+        for name in names {
+            if nodeCollectionData[name] == nil {
+                print("nodecollection")
+                let url = URL(string:"https://www.v2ex.com/api/v2/nodes/\(name)")!
+                let token = "ec8a1394-93a0-4a7e-b513-f5c129226796"
+                var request = URLRequest(url: url)
+                request.addValue("Bearer \(token)", forHTTPHeaderField: "Authorization")
+                request.httpMethod = "GET"
+                let (data, response) = try await URLSession.shared.data(for: request)
+                guard (response as? HTTPURLResponse)?.statusCode == 200 else { throw FetchError.badRequest }
+                let node = try JSONDecoder().decode(NodeResponse.self, from: data)
+                nodeCollectionData[node.result.name] = Node(id: node.result.id, url: node.result.url, name: node.result.name, title: node.result.title, header: node.result.header, footer: node.result.footer, avatar: node.result.avatar, topics: node.result.topics, created: node.result.created, last_modified: node.result.last_modified)
+            }
+        }
+        fetching = false
+        completed = true
+    }
+}
