@@ -38,14 +38,12 @@ struct PostDetailView: View {
             }
         }
         .background {
-            if member != nil {
-                NavigationLink(destination: ProfileView().environmentObject(member!), isActive: $toProfile) {
-                    EmptyView()
-                }.opacity(0)
+            NavigationLink(destination: ProfileView().environmentObject(member ?? Member(id: 0, username: "", url: "", website: nil, github: nil, bio: nil, avatar: "", created: 0)), isActive: $toProfile) {
+                EmptyView()
             }
+            .hidden()
         }
         .navigationBarTitleDisplayMode(.inline)
-//        .textSelection(.enabled)
         .task {
             if replyResponseFetcher.replyCollectionData.result.isEmpty {
                 try? await replyResponseFetcher.fetchData(id: topic.id)

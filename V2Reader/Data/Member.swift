@@ -30,20 +30,6 @@ class Member: ObservableObject {
         dateFormatter.dateFormat = "yyyy-MM-dd HH:mm:ss"
         self.created = dateFormatter.string(from: Date(timeIntervalSince1970: created))
     }
-    
-    func loadData(id: Int, username: String, url: String, website: String?, github: String?, bio: String?, avatar: String, created: TimeInterval) {
-        self.id = id
-        self.username = username
-        self.url = url
-        self.website = website == "" ? nil : website
-        self.github = github == "" ? nil : github
-        self.bio = bio == "" ? nil : bio
-        self.avatar = avatar
-        
-        let dateFormatter = DateFormatter()
-        dateFormatter.dateFormat = "yyyy-MM-dd HH:mm:ss"
-        self.created = dateFormatter.string(from: Date(timeIntervalSince1970: created))
-    }
 }
 
 struct MemberResponse: Codable {

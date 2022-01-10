@@ -81,10 +81,10 @@
 			isa = PBXGroup;
 			children = (
 				863CC8DA277A1FBE0045112E /* AppData.swift */,
+				4E4B92B72786B76F00273317 /* Member.swift */,
 				4E4B92AF2786B54A00273317 /* Node.swift */,
 				4E4B92B12786B57F00273317 /* Topic.swift */,
 				4E4B92B52786B67A00273317 /* Reply.swift */,
-				4E4B92B72786B76F00273317 /* Member.swift */,
 			);
 			path = Data;
 			sourceTree = "<group>";
@@ -115,9 +115,9 @@
 				86BF45C0277A12CB0087ABB2 /* Detail Views */,
 				86F5D2DA27792DA000B3467E /* Tabs */,
 				86AEF6252777BC500028E4C5 /* V2ReaderApp.swift */,
+				4E8A99F62789665B0092A2BE /* ContentView.swift */,
 				86AEF6292777BC500028E4C5 /* Assets.xcassets */,
 				86AEF62B2777BC500028E4C5 /* Preview Content */,
-				4E8A99F62789665B0092A2BE /* ContentView.swift */,
 			);
 			path = V2Reader;
 			sourceTree = "<group>";
