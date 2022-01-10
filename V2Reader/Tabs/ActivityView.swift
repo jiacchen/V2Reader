@@ -13,11 +13,7 @@ struct ActivityView: View {
     var body: some View {
         NavigationView {
             ScrollView {
-                VStack(spacing: 0) {
-                    ForEach(data.activity, id: \.id) { activity in
-                        ActivityCellView(activity: activity)
-                    }
-                }
+                EmptyView()
             }
             .navigationTitle("Activity")
             .navigationBarTitleDisplayMode(.inline)

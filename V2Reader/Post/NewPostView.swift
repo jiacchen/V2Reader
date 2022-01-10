@@ -9,7 +9,6 @@ import SwiftUI
 
 struct NewPostView: View {
     @EnvironmentObject var data: AppData
-    @EnvironmentObject var post: Post
     @Environment(\.presentationMode) var presentationMode
     @State private var content = ""
     @FocusState private var focusedField: Field?
@@ -76,12 +75,6 @@ struct NewPostView: View {
     
     func newPost() {
         self.loading = true
-        
-        if isReply {
-            data.replyToPost(content, post: post)
-        } else {
-            data.addNewPost(content)
-        }
         
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
             presentationMode.wrappedValue.dismiss()
