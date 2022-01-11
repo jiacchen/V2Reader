@@ -177,12 +177,14 @@ struct FeedView: View {
                                     Spacer()
                                     if data.homeNodes.contains(name) {
                                         Image(systemName: "star.fill")
+                                            .foregroundColor(Color.accentColor)
                                             .onTapGesture {
                                                 data.removeFromHome(name: name)
                                                 edited = true
                                             }
                                     } else {
-                                        Image(systemName: "star")
+                                        Image(systemName: "star.fill")
+                                            .foregroundColor(Color(UIColor.systemFill))
                                             .onTapGesture {
                                                 data.addToHome(name: name)
                                                 edited = true
@@ -201,7 +203,7 @@ struct FeedView: View {
                         }
                     }
                 }
-                .navigationBarTitle(Text("Sheet View"), displayMode: .inline)
+                .navigationBarTitle(Text("Nodes"), displayMode: .inline)
                 .navigationBarItems(trailing: Button(action: {
                     if editMode == EditMode.active {
                         editMode = EditMode.inactive

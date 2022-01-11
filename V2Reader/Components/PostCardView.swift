@@ -122,12 +122,6 @@ struct PostCardView: View {
                                     usernameWithLink.link = URL(string: "v2reader://member/\(topic.member!.username)")
                                     usernameWithLink.inlinePresentationIntent = .stronglyEmphasized
                                 }
-//                            NavigationLink(destination: ProfileView().environmentObject(topic.member!), isActive: $toProfile) {
-//                                Text(topic.member!.username)
-//                                    .font(.callout)
-//                                    .foregroundColor(.secondary)
-//                                    .fontWeight(.medium)
-//                            }
                             .onOpenURL { url in
                                 let host = url.host
                                 var path = url.path
@@ -156,6 +150,11 @@ struct PostCardView: View {
                                     break
                                 }
                             }
+                        } else {
+                            Text(" ")
+                                .font(.callout)
+                                .foregroundColor(.secondary)
+                                .hidden()
                         }
                     }
                     .task {
