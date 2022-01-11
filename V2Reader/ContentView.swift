@@ -31,10 +31,10 @@ struct ContentView: View {
                     Label("Feed", systemImage: "newspaper")
                 }
             
-            ActivityView()
-                .tabItem {
-                    Label("Activity", systemImage: "bell")
-                }
+//            ActivityView()
+//                .tabItem {
+//                    Label("Activity", systemImage: "bell")
+//                }
             
             NavigationView {
                 ProfileView()

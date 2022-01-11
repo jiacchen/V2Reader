@@ -10,7 +10,6 @@ import SwiftUI
 struct PostCardView: View {
     @Environment(\.dismiss) var dismiss
     @EnvironmentObject var data: AppData
-    @EnvironmentObject var node: Node
     @EnvironmentObject var topic: Topic
     @ObservedObject var topicDetailFetcher: TopicResponseFetcher
     @ObservedObject var topicCollectionResponseFetcher: TopicCollectionResponseFetcher
@@ -179,7 +178,7 @@ struct PostCardView: View {
         if fullWidth {
             card
         } else {
-            NavigationLink(destination: PostDetailView(topicCollectionResponseFetcher: topicCollectionResponseFetcher, toProfile: toProfile).environmentObject(node).environmentObject(topic)) {
+            NavigationLink(destination: PostDetailView(topicCollectionResponseFetcher: topicCollectionResponseFetcher, toProfile: toProfile).environmentObject(topic)) {
                 card
             }
         }

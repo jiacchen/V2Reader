@@ -9,7 +9,6 @@ import SwiftUI
 
 struct PostDetailView: View {
     @EnvironmentObject var data: AppData
-    @EnvironmentObject var node: Node
     @EnvironmentObject var topic: Topic
     @StateObject private var topicDetailFetcher = TopicResponseFetcher()
     @StateObject private var replyResponseFetcher = ReplyResponseFetcher()
@@ -21,7 +20,6 @@ struct PostDetailView: View {
         List {
             Section {
                 PostCardView(topicDetailFetcher: topicDetailFetcher, topicCollectionResponseFetcher: topicCollectionResponseFetcher, toProfile: $toProfile, member: $member, fullWidth: true)
-                    .environmentObject(node)
                     .environmentObject(topic)
                 ForEach(topic.supplements, id: \.id) { supplement in
                     SupplementView().environmentObject(supplement)
