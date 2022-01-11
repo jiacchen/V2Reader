@@ -46,7 +46,7 @@ struct ReplyCardView: View {
                             .padding(2)
                             .font(.caption2)
                             .foregroundColor(.secondary)
-                            .background(.gray.opacity(0.2))
+                            .background(Color(.systemGray5))
                             .cornerRadius(3)
                     }
                     Text("#\(reply.num)")

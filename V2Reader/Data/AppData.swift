@@ -6,11 +6,14 @@
 //
 
 import Foundation
+import OrderedCollections
 
 class AppData: ObservableObject {
     @Published var currentNode: String = UserDefaults.standard.string(forKey: "currentNode") ?? "home"
-    @Published var pinnedNodes: [String] = UserDefaults.standard.stringArray(forKey: "pinnedNodes") ?? []
+    @Published var pinnedNodes: [String] = UserDefaults.standard.stringArray(forKey: "pinnedNodes") ?? ["home"]
     @Published var homeNodes: [String] = UserDefaults.standard.stringArray(forKey: "homeNodes") ?? []
+    @Published var allNodes: [String: String] = UserDefaults.standard.object(forKey: "allNodes") as? [String: String] ?? ["home": "Home"]
+    @Published var fetching = false
     
     func switchNode(newNode: String) {
         currentNode = newNode
@@ -44,5 +47,35 @@ class AppData: ObservableObject {
     func removeFromHome(name: String) {
         homeNodes.remove(at: homeNodes.firstIndex(of: name)!)
         UserDefaults.standard.set(homeNodes, forKey: "homeNodes")
+    }
+    
+    func fetchAllNodes() async throws {
+        fetching = true
+        if let url = URL(string:"https://www.v2ex.com/planes") {
+            do {
+                let content = try String(contentsOf: url)
+                let regex = try! NSRegularExpression(pattern: #"<a href="/go/[a-z0-9]+" class="item_node">.+</a>"#)
+                let matches = regex.matches(in: content, options: [], range: NSRange(location: 0, length: content.utf16.count))
+                for match in matches {
+                    guard let range = Range(match.range, in: content) else { continue }
+                    let line = content[range]
+                    let parts = line.split(separator: "/")
+                    let name = String(parts[2].split(separator: "\"")[0])
+                    var title = String(parts[2].split(separator: ">")[1])
+                    title.removeLast()
+                    allNodes[name] = title
+                }
+            } catch {
+                throw error
+            }
+        }
+        UserDefaults.standard.set(allNodes, forKey: "allNodes")
+        fetching = false
+    }
+    
+    func getAllNodes(refresh: Bool) async throws {
+        if refresh || allNodes.count <= 1 {
+            try await fetchAllNodes()
+        }
     }
 }

@@ -176,63 +176,7 @@ struct FeedView: View {
                 }
             }
         }, content: {
-            NavigationView {
-                List {
-                    Section("Home") {
-                        ForEach(data.homeNodes, id: \.self) { name in
-                            Text(nodeCollectionFetcher.nodeCollectionData[name]!.title)
-                        }
-                    }
-                    Section("Pinned") {
-                        ForEach(data.pinnedNodes, id: \.self) { name in
-                            if name != "home" {
-                                HStack {
-                                    Text(nodeCollectionFetcher.nodeCollectionData[name]!.title)
-                                    Spacer()
-                                    if data.homeNodes.contains(name) {
-                                        Image(systemName: "star.fill")
-                                            .foregroundColor(Color.accentColor)
-                                            .onTapGesture {
-                                                data.removeFromHome(name: name)
-                                                homeChanged = true
-                                            }
-                                    } else {
-                                        Image(systemName: "star.fill")
-                                            .foregroundColor(Color(UIColor.systemFill))
-                                            .onTapGesture {
-                                                data.addToHome(name: name)
-                                                homeChanged = true
-                                            }
-                                    }
-                                }
-                            }
-                        }
-                        .onDelete { offsets in
-                            data.removeNode(offsets: offsets)
-                            edited = true
-                        }
-                        .onMove { offsets, dest in
-                            data.pinnedNodes.move(fromOffsets: offsets, toOffset: dest)
-                            edited = true
-                        }
-                    }
-                }
-                .navigationBarTitle(Text("Nodes"), displayMode: .inline)
-                .navigationBarItems(trailing: Button(action: {
-                    if editMode == EditMode.active {
-                        editMode = EditMode.inactive
-                    } else {
-                        showNodeManagement = false
-                    }
-                }, label: {
-                    Text("Done")
-                        .fontWeight(.semibold)
-                }))
-                .navigationBarItems(leading: Button("Edit", action: {
-                    editMode = EditMode.active
-                }))
-                .environment(\.editMode, $editMode)
-            }
+            SheetView(editMode: $editMode, homeChanged: $homeChanged, edited: $edited, showNodeManagement: $showNodeManagement, nodeCollectionFetcher: nodeCollectionFetcher).environmentObject(data)
         })
         .task {
             if !nodeCollectionFetcher.completed && !nodeCollectionFetcher.fetching {
