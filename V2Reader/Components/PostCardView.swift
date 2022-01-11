@@ -8,12 +8,12 @@
 import SwiftUI
 
 struct PostCardView: View {
-    @Environment(\.horizontalSizeClass) var sizeClass
-    @Environment(\.presentationMode) var presentationMode
+    @Environment(\.dismiss) var dismiss
     @EnvironmentObject var data: AppData
     @EnvironmentObject var node: Node
     @EnvironmentObject var topic: Topic
     @ObservedObject var topicDetailFetcher: TopicResponseFetcher
+    @ObservedObject var topicCollectionResponseFetcher: TopicCollectionResponseFetcher
     @Binding var toProfile: Bool
     @Binding var member: Member?
     @State var usernameWithLink = AttributedString()
@@ -99,18 +99,18 @@ struct PostCardView: View {
                 
                 if fullWidth {
                     HStack(spacing: 0) {
-                        Text("in ")
-                            .font(.callout)
-                            .foregroundColor(.secondary)
-                        Text(nodeTitleWithLink)
-                            .font(.callout)
-                            .accentColor(.secondary)
-                            .onAppear {
-                                nodeTitleWithLink = AttributedString(node.title)
-                                nodeTitleWithLink.link = URL(string: "v2reader://go/\(node.name)")
-                                nodeTitleWithLink.inlinePresentationIntent = .stronglyEmphasized
-                            }
                         if topic.detailsAdded {
+                            Text("in ")
+                                .font(.callout)
+                                .foregroundColor(.secondary)
+                            Text(nodeTitleWithLink)
+                                .font(.callout)
+                                .accentColor(.secondary)
+                                .onAppear {
+                                    nodeTitleWithLink = AttributedString(topic.node!.title)
+                                    nodeTitleWithLink.link = URL(string: "v2reader://go/\(topic.node!.name)")
+                                    nodeTitleWithLink.inlinePresentationIntent = .stronglyEmphasized
+                                }
                             Text(" by ")
                                 .font(.callout)
                                 .foregroundColor(.secondary)
@@ -140,9 +140,18 @@ struct PostCardView: View {
                                     }
                                 case "go":
                                     path.removeFirst()
-                                    if path == node.name {
-                                        self.presentationMode.wrappedValue.dismiss()
+                                    if data.currentNode != path {
+                                        data.switchNode(newNode: path)
+                                        topicCollectionResponseFetcher.topicCollection = [:]
+                                        topicCollectionResponseFetcher.currentPage = 1
+                                        topicCollectionResponseFetcher.fullyFetched = false
+                                        Task {
+                                            if topicCollectionResponseFetcher.topicCollection.isEmpty && !topicCollectionResponseFetcher.fetching {
+                                                try? await topicCollectionResponseFetcher.fetchData(name: data.currentNode, home: data.homeNodes)
+                                            }
+                                        }
                                     }
+                                    dismiss()
                                 default:
                                     break
                                 }
@@ -164,28 +173,16 @@ struct PostCardView: View {
                 PostReactionsBarView(fullWidth: fullWidth)
             }
             .padding(.vertical)
-//            .padding(.top, fullWidth ? 12 : 4)
-//            .padding(.leading, fullWidth ? 0 : 60)
         }
-//        .padding(.horizontal, sizeClass == .compact ? nil : 32)
-//        .contentShape(Rectangle())
     }
     
     var body: some View {
         if fullWidth {
             card
         } else {
-            NavigationLink(destination: PostDetailView(toProfile: toProfile).environmentObject(node).environmentObject(topic)) {
+            NavigationLink(destination: PostDetailView(topicCollectionResponseFetcher: topicCollectionResponseFetcher, toProfile: toProfile).environmentObject(node).environmentObject(topic)) {
                 card
             }
-//            card
-//                .background{
-//                    NavigationLink(destination: PostDetailView(toProfile: toProfile).environmentObject(node).environmentObject(topic)) {
-//                        EmptyView()
-//                    }
-//                    .buttonStyle(CustomButtonStyle())
-//                    .opacity(0)
-//                }
         }
     }
 }
@@ -198,6 +195,6 @@ struct CustomButtonStyle: ButtonStyle {
 
 struct PostCardView_Previews: PreviewProvider {
     static var previews: some View {
-        PostCardView(topicDetailFetcher: TopicResponseFetcher(), toProfile: .constant(false), member: .constant(nil))
+        PostCardView(topicDetailFetcher: TopicResponseFetcher(), topicCollectionResponseFetcher: TopicCollectionResponseFetcher(), toProfile: .constant(false), member: .constant(nil))
     }
 }

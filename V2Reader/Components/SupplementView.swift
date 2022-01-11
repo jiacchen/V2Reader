@@ -56,7 +56,6 @@ struct SupplementView: View {
             }
         }
         .padding(.vertical)
-        //        .padding(.horizontal, sizeClass == .compact ? nil : 32)
         .contentShape(Rectangle())
     }
 }

@@ -71,6 +71,7 @@ class NodeCollectionFetcher: ObservableObject {
     
     func fetchData(names: [String]) async throws {
         fetching = true
+        nodeCollectionData = ["home": Node(id: 0, url: "", name: "home", title: "Home", header: "", footer: "", avatar: "", topics: 0, created: 0, last_modified: 0)]
         for name in names {
             if nodeCollectionData[name] == nil {
                 if storedNodes[name] == nil {

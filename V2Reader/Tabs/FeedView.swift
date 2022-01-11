@@ -11,6 +11,9 @@ struct FeedView: View {
     @EnvironmentObject var data: AppData
     @State var showNewPostView = false
     @State var showNodeSearch = false
+    @State var showNodeManagement = false
+    @State var editMode = EditMode.inactive
+    @State var edited = false
     @FocusState private var searchFieldIsFocused: Bool
     @StateObject private var topicCollectionResponseFetcher = TopicCollectionResponseFetcher()
     @StateObject private var nodeCollectionFetcher = NodeCollectionFetcher()
@@ -24,11 +27,11 @@ struct FeedView: View {
                     StoriesBarView(topicCollectionResponseFetcher: topicCollectionResponseFetcher, nodeCollectionFetcher: nodeCollectionFetcher)
                         .listRowInsets(EdgeInsets())
                     ForEach(topicCollectionResponseFetcher.topicCollection.elements, id: \.0) { (id, topic) in
-                        PostCardView(topicDetailFetcher: TopicResponseFetcher(), toProfile: .constant(false), member: .constant(nil))
+                        PostCardView(topicDetailFetcher: TopicResponseFetcher(), topicCollectionResponseFetcher: topicCollectionResponseFetcher, toProfile: .constant(false), member: .constant(nil))
                             .environmentObject(nodeCollectionFetcher.nodeCollectionData[data.currentNode]!)
                             .environmentObject(topic)
                             .task {
-                                await topicCollectionResponseFetcher.fetchMoreIfNeeded(id: id, nodeName: data.currentNode)
+                                await topicCollectionResponseFetcher.fetchMoreIfNeeded(id: id, nodeName: data.currentNode, homeNodes: data.homeNodes)
                             }
                     }
                     if !topicCollectionResponseFetcher.fullyFetched {
@@ -41,6 +44,7 @@ struct FeedView: View {
                 }
                 .listStyle(.insetGrouped)
                 .disabled(showNodeSearch)
+#if targetEnvironment(macCatalyst)
                 .onChange(of: refresh) { newValue in
                     Task {
                         topicCollectionResponseFetcher.topicCollection = [:]
@@ -49,12 +53,12 @@ struct FeedView: View {
                         try? await topicCollectionResponseFetcher.fetchData(name: data.currentNode)
                     }
                 }
-#if !targetEnvironment(macCatalyst)
+#else
                 .refreshable {
                     topicCollectionResponseFetcher.topicCollection = [:]
                     topicCollectionResponseFetcher.currentPage = 1
                     topicCollectionResponseFetcher.fullyFetched = false
-                    try? await topicCollectionResponseFetcher.fetchData(name: data.currentNode)
+                    try? await topicCollectionResponseFetcher.fetchData(name: data.currentNode, home: data.homeNodes)
                 }
 #endif
                 if showNodeSearch {
@@ -94,7 +98,7 @@ struct FeedView: View {
                                         try? await nodeCollectionFetcher.fetchData(names: data.pinnedNodes)
                                     }
                                     if topicCollectionResponseFetcher.topicCollection.isEmpty && !topicCollectionResponseFetcher.fetching {
-                                        try? await topicCollectionResponseFetcher.fetchData(name: data.currentNode)
+                                        try? await topicCollectionResponseFetcher.fetchData(name: data.currentNode, home: data.homeNodes)
                                     }
                                 }
                             }
@@ -103,7 +107,7 @@ struct FeedView: View {
                             showNodeSearch = true
                         }) {
                             HStack(spacing: 4) {
-                                Text(nodeCollectionFetcher.nodeCollectionData[data.currentNode]?.title ?? "Feed")
+                                Text(nodeCollectionFetcher.nodeCollectionData[data.currentNode]?.title ?? "")
                                     .foregroundColor(.primary)
                                     .fontWeight(.semibold)
                                     .font(.headline)
@@ -118,27 +122,118 @@ struct FeedView: View {
                     }
                 }
                 ToolbarItem(placement: .navigationBarTrailing) {
-                    Button(action: { showNewPostView = true }) {
-                        Image(systemName: "plus.circle.fill")
-                            .font(.headline)
-                    }
-                    .sheet(isPresented: $showNewPostView) {
-                        NewPostView()
-                            .environmentObject(data)
+                    if showNodeSearch {
+                        Button("Cancel") {
+                            UIApplication.shared.sendAction(#selector(UIResponder.resignFirstResponder), to: nil, from: nil, for: nil)
+                            showNodeSearch = false
+                        }
+                    } else {
+                        Button {
+                            showNodeManagement = true
+                        } label: {
+                            Image(systemName: "gear")
+                        }
                     }
                 }
             }
             Text("Nothing Selected.")
                 .foregroundColor(.secondary)
         }
+        .sheet(isPresented: $showNodeManagement, onDismiss: {
+            editMode = EditMode.inactive
+            if edited {
+                edited = false
+                nodeCollectionFetcher.completed = false
+                if !data.pinnedNodes.contains(data.currentNode) {
+                    data.switchNode(newNode: "home")
+                    topicCollectionResponseFetcher.topicCollection = [:]
+                    topicCollectionResponseFetcher.currentPage = 1
+                    topicCollectionResponseFetcher.fullyFetched = false
+                    Task {
+                        if topicCollectionResponseFetcher.topicCollection.isEmpty && !topicCollectionResponseFetcher.fetching {
+                            try? await topicCollectionResponseFetcher.fetchData(name: data.currentNode, home: data.homeNodes)
+                        }
+                    }
+                }
+                Task {
+                    if !nodeCollectionFetcher.completed && !nodeCollectionFetcher.fetching {
+                        try? await nodeCollectionFetcher.fetchData(names: data.pinnedNodes)
+                    }
+                }
+            }
+        }, content: {
+            NavigationView {
+                List {
+                    Section("Home") {
+                        ForEach(data.homeNodes, id: \.self) { name in
+                            Text(nodeCollectionFetcher.nodeCollectionData[name]!.title)
+                        }
+                    }
+                    Section("Pinned") {
+                        ForEach(data.pinnedNodes, id: \.self) { name in
+                            if name != "home" {
+                                HStack {
+                                    Text(nodeCollectionFetcher.nodeCollectionData[name]!.title)
+                                    Spacer()
+                                    if data.homeNodes.contains(name) {
+                                        Image(systemName: "star.fill")
+                                            .onTapGesture {
+                                                data.removeFromHome(name: name)
+                                                edited = true
+                                            }
+                                    } else {
+                                        Image(systemName: "star")
+                                            .onTapGesture {
+                                                data.addToHome(name: name)
+                                                edited = true
+                                            }
+                                    }
+                                }
+                            }
+                        }
+                        .onDelete { offsets in
+                            data.removeNode(offsets: offsets)
+                            edited = true
+                        }
+                        .onMove { offsets, dest in
+                            data.pinnedNodes.move(fromOffsets: offsets, toOffset: dest)
+                            edited = true
+                        }
+                    }
+                }
+                .navigationBarTitle(Text("Sheet View"), displayMode: .inline)
+                .navigationBarItems(trailing: Button(action: {
+                    if editMode == EditMode.active {
+                        editMode = EditMode.inactive
+                    } else {
+                        showNodeManagement = false
+                    }
+                }, label: {
+                    Text("Done")
+                        .fontWeight(.semibold)
+                }))
+                .navigationBarItems(leading: Button("Edit", action: {
+                    editMode = EditMode.active
+                }))
+                .environment(\.editMode, $editMode)
+            }
+        })
         .task {
             if !nodeCollectionFetcher.completed && !nodeCollectionFetcher.fetching {
                 try? await nodeCollectionFetcher.fetchData(names: data.pinnedNodes)
             }
             if topicCollectionResponseFetcher.topicCollection.isEmpty && !topicCollectionResponseFetcher.fetching {
-                try? await topicCollectionResponseFetcher.fetchData(name: data.currentNode)
+                try? await topicCollectionResponseFetcher.fetchData(name: data.currentNode, home: data.homeNodes)
             }
         }
+    }
+}
+
+extension UISplitViewController {
+    open override func viewDidLoad() {
+        super.viewDidLoad()
+        self.preferredDisplayMode = DisplayMode.oneBesideSecondary
+        self.preferredSplitBehavior = SplitBehavior.tile
     }
 }
 

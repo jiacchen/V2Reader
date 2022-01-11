@@ -10,12 +10,7 @@ import SwiftUI
 struct ContentView: View {
     @EnvironmentObject var data: AppData
     @StateObject private var memberResponseFetcher = MemberResponseFetcher()
-    @State var tabSelection: TabSelection = .feed
     @Binding var refresh: Bool
-    
-    enum TabSelection: Hashable {
-        case feed, activity, profile
-    }
     
     var body: some View {
 #if targetEnvironment(macCatalyst)
@@ -30,18 +25,16 @@ struct ContentView: View {
                 }
             }
 #else
-        TabView(selection: $tabSelection) {
+        TabView() {
             FeedView(refresh: $refresh)
                 .tabItem {
                     Label("Feed", systemImage: "newspaper")
                 }
-                .tag(TabSelection.feed)
             
             ActivityView()
                 .tabItem {
                     Label("Activity", systemImage: "bell")
                 }
-                .tag(TabSelection.activity)
             
             NavigationView {
                 ProfileView()
@@ -51,7 +44,6 @@ struct ContentView: View {
             .tabItem {
                 Label("Profile", systemImage: "person")
             }
-            .tag(TabSelection.profile)
         }
         .task {
             try? await memberResponseFetcher.fetchData()

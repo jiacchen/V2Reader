@@ -224,12 +224,33 @@ class TopicCollectionResponseFetcher: ObservableObject {
         case badJSON
     }
     
-    func fetchData(name: String) async throws {
+    func fetchData(name: String, home: [String]) async throws {
+        fetching = true
         if name == "home" {
+            for homeNode in home {
+                print("nodetopic")
+                let url = URL(string:"https://www.v2ex.com/api/v2/nodes/\(homeNode)/topics?p=\(currentPage)")!
+                let token = "ec8a1394-93a0-4a7e-b513-f5c129226796"
+                var request = URLRequest(url: url)
+                request.addValue("Bearer \(token)", forHTTPHeaderField: "Authorization")
+                request.httpMethod = "GET"
+                let (data, response) = try await URLSession.shared.data(for: request)
+                guard (response as? HTTPURLResponse)?.statusCode == 200 else { throw FetchError.badRequest }
+                topicCollectionData = try JSONDecoder().decode(TopicCollectionResponse.self, from: data)
+                fullyFetched = true
+                for topicData in topicCollectionData.result {
+                    if topicCollection[topicData.id] == nil {
+                        fullyFetched = false
+                        topicCollection[topicData.id] = Topic(id: topicData.id, title: topicData.title, content: topicData.content, content_rendered: topicData.content_rendered, syntax: topicData.syntax, url: topicData.url, replies: topicData.replies, last_reply_by: topicData.last_reply_by, created: topicData.created, last_modified: topicData.last_modified, last_touched: topicData.last_touched)
+                    }
+                }
+            }
+            topicCollection.sort { elem1, elem2 in
+                return elem1.value.last_touched > elem2.value.last_touched
+            }
             fullyFetched = true
         } else {
             print("nodetopic")
-            fetching = true
             let url = URL(string:"https://www.v2ex.com/api/v2/nodes/\(name)/topics?p=\(currentPage)")!
             let token = "ec8a1394-93a0-4a7e-b513-f5c129226796"
             var request = URLRequest(url: url)
@@ -245,15 +266,15 @@ class TopicCollectionResponseFetcher: ObservableObject {
                     topicCollection[topicData.id] = Topic(id: topicData.id, title: topicData.title, content: topicData.content, content_rendered: topicData.content_rendered, syntax: topicData.syntax, url: topicData.url, replies: topicData.replies, last_reply_by: topicData.last_reply_by, created: topicData.created, last_modified: topicData.last_modified, last_touched: topicData.last_touched)
                 }
             }
-            fetching = false
         }
+        fetching = false
     }
     
-    func fetchMoreIfNeeded(id: Int, nodeName: String) async {
+    func fetchMoreIfNeeded(id: Int, nodeName: String, homeNodes: [String]) async {
         if !fullyFetched {
             if id == topicCollection.keys.last && !fetching {
                 currentPage += 1
-                try? await fetchData(name: nodeName)
+                try? await fetchData(name: nodeName, home: homeNodes)
             }
         }
     }

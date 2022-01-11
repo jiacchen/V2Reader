@@ -8,19 +8,19 @@
 import SwiftUI
 
 struct PostDetailView: View {
-    @Environment(\.horizontalSizeClass) var sizeClass
     @EnvironmentObject var data: AppData
     @EnvironmentObject var node: Node
     @EnvironmentObject var topic: Topic
     @StateObject private var topicDetailFetcher = TopicResponseFetcher()
     @StateObject private var replyResponseFetcher = ReplyResponseFetcher()
+    @ObservedObject var topicCollectionResponseFetcher: TopicCollectionResponseFetcher
     @State var toProfile: Bool = false
     @State var member: Member?
     
     var body: some View {
         List {
             Section {
-                PostCardView(topicDetailFetcher: topicDetailFetcher, toProfile: $toProfile, member: $member, fullWidth: true)
+                PostCardView(topicDetailFetcher: topicDetailFetcher, topicCollectionResponseFetcher: topicCollectionResponseFetcher, toProfile: $toProfile, member: $member, fullWidth: true)
                     .environmentObject(node)
                     .environmentObject(topic)
                 ForEach(topic.supplements, id: \.id) { supplement in
@@ -44,6 +44,7 @@ struct PostDetailView: View {
                 }
             }
         }
+        .listStyle(.insetGrouped)
         .background {
             NavigationLink(destination: ProfileView().environmentObject(member ?? Member(id: 0, username: "", url: "", website: nil, github: nil, bio: nil, avatar: "", created: 0)), isActive: $toProfile) {
                 EmptyView()
@@ -75,6 +76,6 @@ struct PostDetailView: View {
 
 struct PostDetailView_Previews: PreviewProvider {
     static var previews: some View {
-        PostDetailView()
+        PostDetailView(topicCollectionResponseFetcher: TopicCollectionResponseFetcher())
     }
 }

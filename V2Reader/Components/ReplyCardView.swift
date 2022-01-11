@@ -8,7 +8,6 @@
 import SwiftUI
 
 struct ReplyCardView: View {
-    @Environment(\.horizontalSizeClass) var sizeClass
     @EnvironmentObject var data: AppData
     @EnvironmentObject var reply: Reply
     @EnvironmentObject var topic: Topic
@@ -89,7 +88,6 @@ struct ReplyCardView: View {
             }
         }
         .padding(.vertical)
-//        .padding(.horizontal, sizeClass == .compact ? nil : 32)
         .contentShape(Rectangle())
     }
     
