@@ -8,6 +8,7 @@
 import SwiftUI
 
 struct SheetView: View {
+    @Environment(\.dismiss) var dismiss
     @EnvironmentObject var data: AppData
     @State var searchText = ""
     @Binding var editMode: EditMode
@@ -15,6 +16,7 @@ struct SheetView: View {
     @Binding var edited: Bool
     @Binding var showNodeManagement: Bool
     @ObservedObject var nodeCollectionFetcher: NodeCollectionFetcher
+    @ObservedObject var topicCollectionResponseFetcher: TopicCollectionResponseFetcher
     
     var body: some View {
         NavigationView {
@@ -24,30 +26,37 @@ struct SheetView: View {
                 List {
                     Section("Home") {
                         ForEach(homeResults, id: \.self) { name in
-                            Text(nodeCollectionFetcher.nodeCollectionData[name]!.title)
+                            HStack {
+                                Text(nodeCollectionFetcher.nodeCollectionData[name]?.title ?? data.allNodes[name]!)
+                                Spacer()
+                                Image(systemName: "star.fill")
+                                    .foregroundColor(Color.accentColor)
+                                    .onTapGesture {
+                                        data.removeFromHome(name: name)
+                                        homeChanged = true
+                                    }
+                            }
                         }
                     }
                     Section("Pinned") {
                         ForEach(pinnedResults, id: \.self) { name in
-                            if name != "home" {
-                                HStack {
-                                    Text(nodeCollectionFetcher.nodeCollectionData[name]!.title)
-                                    Spacer()
-                                    if data.homeNodes.contains(name) {
-                                        Image(systemName: "star.fill")
-                                            .foregroundColor(Color.accentColor)
-                                            .onTapGesture {
-                                                data.removeFromHome(name: name)
-                                                homeChanged = true
-                                            }
-                                    } else {
-                                        Image(systemName: "star.fill")
-                                            .foregroundColor(Color(UIColor.systemFill))
-                                            .onTapGesture {
-                                                data.addToHome(name: name)
-                                                homeChanged = true
-                                            }
-                                    }
+                            HStack {
+                                Text(nodeCollectionFetcher.nodeCollectionData[name]?.title ?? data.allNodes[name]!)
+                                Spacer()
+                                if data.homeNodes.contains(name) {
+                                    Image(systemName: "star.fill")
+                                        .foregroundColor(Color.accentColor)
+                                        .onTapGesture {
+                                            data.removeFromHome(name: name)
+                                            homeChanged = true
+                                        }
+                                } else {
+                                    Image(systemName: "star.fill")
+                                        .foregroundColor(Color(UIColor.systemFill))
+                                        .onTapGesture {
+                                            data.addToHome(name: name)
+                                            homeChanged = true
+                                        }
                                 }
                             }
                         }
@@ -64,8 +73,18 @@ struct SheetView: View {
                         ForEach(allResults.sorted(by: { elem1, elem2 in
                             return elem1.key < elem2.key
                         }), id: \.0) { name, title in
-                            if name != "home" {
-                                Text(title)
+                            if !data.pinnedNodes.contains(name) {
+                                HStack {
+                                    Text(title)
+                                        .foregroundColor(Color.primary)
+                                    Spacer()
+                                    Image(systemName: "plus")
+                                        .foregroundColor(Color.secondary)
+                                        .onTapGesture {
+                                            data.addNode(name: name)
+                                            edited = true
+                                        }
+                                }
                             }
                         }
                     }
@@ -133,6 +152,6 @@ struct SheetView: View {
 
 struct SheetView_Previews: PreviewProvider {
     static var previews: some View {
-        SheetView(editMode: .constant(EditMode.inactive), homeChanged: .constant(false), edited: .constant(false), showNodeManagement: .constant(false), nodeCollectionFetcher: NodeCollectionFetcher())
+        SheetView(editMode: .constant(EditMode.inactive), homeChanged: .constant(false), edited: .constant(false), showNodeManagement: .constant(false), nodeCollectionFetcher: NodeCollectionFetcher(), topicCollectionResponseFetcher: TopicCollectionResponseFetcher())
     }
 }

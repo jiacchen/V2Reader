@@ -20,13 +20,13 @@ class Node: ObservableObject {
     var created: TimeInterval
     var last_modified: TimeInterval
     
-    init(id: Int, url: String, name: String, title: String, header: String, footer: String, avatar: String, topics: Int, created: TimeInterval, last_modified: TimeInterval) {
+    init(id: Int, url: String, name: String, title: String, header: String?, footer: String?, avatar: String, topics: Int, created: TimeInterval, last_modified: TimeInterval) {
         self.id = id
         self.url = url
         self.name = name
         self.title = title
-        self.header = header
-        self.footer = footer
+        self.header = header ?? ""
+        self.footer = footer ?? ""
         self.avatar = avatar
         self.topics = topics
         self.created = created
@@ -40,14 +40,14 @@ struct NodeResponse: Codable {
         var url: String
         var name: String
         var title: String
-        var header: String
-        var footer: String
+        var header: String?
+        var footer: String?
         var avatar: String
         var topics: Int
         var created: TimeInterval
         var last_modified: TimeInterval
         
-        static let defaultResult = Result(id: 0, url: "", name: "", title: "", header: "", footer: "", avatar: "", topics: 0, created: 0, last_modified: 0)
+        static let defaultResult = Result(id: 0, url: "", name: "", title: "", avatar: "", topics: 0, created: 0, last_modified: 0)
     }
     
     var success: Bool
@@ -86,11 +86,11 @@ class NodeCollectionFetcher: ObservableObject {
                     storedNodes[name] = data
                     UserDefaults.standard.set(storedNodes, forKey: "storedNodes")
                     let nodeResponse = try JSONDecoder().decode(NodeResponse.self, from: data)
-                    nodeCollectionData[name] = Node(id: nodeResponse.result.id, url: nodeResponse.result.url, name: nodeResponse.result.name, title: nodeResponse.result.title, header: nodeResponse.result.header, footer: nodeResponse.result.footer, avatar: nodeResponse.result.avatar, topics: nodeResponse.result.topics, created: nodeResponse.result.created, last_modified: nodeResponse.result.last_modified)
+                    nodeCollectionData[name] = Node(id: nodeResponse.result.id, url: nodeResponse.result.url, name: nodeResponse.result.name, title: nodeResponse.result.title, header: nodeResponse.result.header, footer: nodeResponse.result.footer, avatar: nodeResponse.result.avatar[nodeResponse.result.avatar.startIndex] == "/" ? "https://www.v2ex.com\(nodeResponse.result.avatar)" : nodeResponse.result.avatar, topics: nodeResponse.result.topics, created: nodeResponse.result.created, last_modified: nodeResponse.result.last_modified)
                 } else {
                     let data = storedNodes[name]!
                     let nodeResponse = try JSONDecoder().decode(NodeResponse.self, from: data)
-                    nodeCollectionData[name] = Node(id: nodeResponse.result.id, url: nodeResponse.result.url, name: nodeResponse.result.name, title: nodeResponse.result.title, header: nodeResponse.result.header, footer: nodeResponse.result.footer, avatar: nodeResponse.result.avatar, topics: nodeResponse.result.topics, created: nodeResponse.result.created, last_modified: nodeResponse.result.last_modified)
+                    nodeCollectionData[name] = Node(id: nodeResponse.result.id, url: nodeResponse.result.url, name: nodeResponse.result.name, title: nodeResponse.result.title, header: nodeResponse.result.header, footer: nodeResponse.result.footer, avatar: nodeResponse.result.avatar[nodeResponse.result.avatar.startIndex] == "/" ? "https://www.v2ex.com\(nodeResponse.result.avatar)" : nodeResponse.result.avatar, topics: nodeResponse.result.topics, created: nodeResponse.result.created, last_modified: nodeResponse.result.last_modified)
                 }
             }
         }

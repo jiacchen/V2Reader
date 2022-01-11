@@ -10,9 +10,9 @@ import OrderedCollections
 
 class AppData: ObservableObject {
     @Published var currentNode: String = UserDefaults.standard.string(forKey: "currentNode") ?? "home"
-    @Published var pinnedNodes: [String] = UserDefaults.standard.stringArray(forKey: "pinnedNodes") ?? ["home"]
+    @Published var pinnedNodes: [String] = UserDefaults.standard.stringArray(forKey: "pinnedNodes") ?? []
     @Published var homeNodes: [String] = UserDefaults.standard.stringArray(forKey: "homeNodes") ?? []
-    @Published var allNodes: [String: String] = UserDefaults.standard.object(forKey: "allNodes") as? [String: String] ?? ["home": "Home"]
+    @Published var allNodes: [String: String] = UserDefaults.standard.object(forKey: "allNodes") as? [String: String] ?? [:]
     @Published var fetching = false
     
     func switchNode(newNode: String) {
@@ -35,6 +35,7 @@ class AppData: ObservableObject {
     func addToHome(name: String) {
         if !homeNodes.contains(name) {
             homeNodes.append(name)
+            homeNodes.sort()
             UserDefaults.standard.set(homeNodes, forKey: "homeNodes")
         }
     }

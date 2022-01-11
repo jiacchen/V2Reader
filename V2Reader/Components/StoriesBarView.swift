@@ -53,6 +53,7 @@ struct StoriesBarView: View {
                                     .aspectRatio(contentMode: .fit)
                                     .foregroundColor(Color(UIColor.systemFill))
                             }
+                            Text("").hidden()
                         }
                         .frame(width: 64)
                     }

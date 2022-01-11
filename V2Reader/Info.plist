@@ -8,7 +8,7 @@
 			<key>CFBundleTypeRole</key>
 			<string>Editor</string>
 			<key>CFBundleURLName</key>
-			<string>com.jiacchen.v2ex</string>
+			<string>com.jiacchen.V2Reader</string>
 			<key>CFBundleURLSchemes</key>
 			<array>
 				<string>v2reader</string>
