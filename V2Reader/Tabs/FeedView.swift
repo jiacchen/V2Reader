@@ -14,6 +14,7 @@ struct FeedView: View {
     @State var showNodeManagement = false
     @State var editMode = EditMode.inactive
     @State var edited = false
+    @State var homeChanged = false
     @FocusState private var searchFieldIsFocused: Bool
     @StateObject private var topicCollectionResponseFetcher = TopicCollectionResponseFetcher()
     @StateObject private var nodeCollectionFetcher = NodeCollectionFetcher()
@@ -50,7 +51,7 @@ struct FeedView: View {
                         topicCollectionResponseFetcher.topicCollection = [:]
                         topicCollectionResponseFetcher.currentPage = 1
                         topicCollectionResponseFetcher.fullyFetched = false
-                        try? await topicCollectionResponseFetcher.fetchData(name: data.currentNode)
+                        try? await topicCollectionResponseFetcher.fetchData(name: data.currentNode, home: data.homeNodes)
                     }
                 }
 #else
@@ -107,16 +108,18 @@ struct FeedView: View {
                             showNodeSearch = true
                         }) {
                             HStack(spacing: 4) {
-                                Text(nodeCollectionFetcher.nodeCollectionData[data.currentNode]?.title ?? "")
-                                    .foregroundColor(.primary)
-                                    .fontWeight(.semibold)
-                                    .font(.headline)
-                                Image(systemName: "chevron.down")
-                                    .resizable()
-                                    .frame(width: 11, height: 5)
-                                    .foregroundColor(.primary)
-                                    .font(.headline)
-                                    .padding(.top, 2)
+                                if nodeCollectionFetcher.nodeCollectionData[data.currentNode] != nil {
+                                    Text(nodeCollectionFetcher.nodeCollectionData[data.currentNode]!.title)
+                                        .foregroundColor(.primary)
+                                        .fontWeight(.semibold)
+                                        .font(.headline)
+                                    Image(systemName: "chevron.down")
+                                        .resizable()
+                                        .frame(width: 11, height: 5)
+                                        .foregroundColor(.primary)
+                                        .font(.headline)
+                                        .padding(.top, 2)
+                                }
                             }
                         }
                     }
@@ -161,6 +164,17 @@ struct FeedView: View {
                     }
                 }
             }
+            if homeChanged && data.currentNode == "home" {
+                homeChanged = false
+                topicCollectionResponseFetcher.topicCollection = [:]
+                topicCollectionResponseFetcher.currentPage = 1
+                topicCollectionResponseFetcher.fullyFetched = false
+                Task {
+                    if topicCollectionResponseFetcher.topicCollection.isEmpty && !topicCollectionResponseFetcher.fetching {
+                        try? await topicCollectionResponseFetcher.fetchData(name: data.currentNode, home: data.homeNodes)
+                    }
+                }
+            }
         }, content: {
             NavigationView {
                 List {
@@ -180,14 +194,14 @@ struct FeedView: View {
                                             .foregroundColor(Color.accentColor)
                                             .onTapGesture {
                                                 data.removeFromHome(name: name)
-                                                edited = true
+                                                homeChanged = true
                                             }
                                     } else {
                                         Image(systemName: "star.fill")
                                             .foregroundColor(Color(UIColor.systemFill))
                                             .onTapGesture {
                                                 data.addToHome(name: name)
-                                                edited = true
+                                                homeChanged = true
                                             }
                                     }
                                 }
