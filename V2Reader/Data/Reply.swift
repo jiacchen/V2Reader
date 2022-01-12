@@ -17,7 +17,7 @@ class Reply: ObservableObject {
     var imageURL: [String]
     var num: Int
     
-    init(id: Int, content: String, content_rendered: String, created: TimeInterval, member: Member, num: Int) {
+    init(id: Int, content: String, content_rendered: String, created: TimeInterval, member: Member, num: Int, repliers: [String: [Int]]) {
         self.id = id
         self.content = []
         self.content_rendered = []
@@ -45,8 +45,53 @@ class Reply: ObservableObject {
         if index < content.endIndex {
             self.content.append(String(content[index..<content.endIndex]))
         }
+        
         for text in self.content {
-            self.content_rendered.append(try! AttributedString(markdown: text, options: AttributedString.MarkdownParsingOptions(interpretedSyntax: .inlineOnlyPreservingWhitespace)))
+            let parts = text.split(separator: "@", omittingEmptySubsequences: false)
+            var newContent = ""
+            var maybeMember = false
+            for i in 0..<parts.count {
+                var newPart = ""
+                if maybeMember {
+                    let name = String(parts[i].split(separator: " ", omittingEmptySubsequences: false)[0].split(separator: "\n", omittingEmptySubsequences: false)[0])
+                    if let replyNums = repliers[name] {
+                        var remain = parts[i][parts[i].index(parts[i].startIndex, offsetBy: name.count)..<parts[i].endIndex]
+                        newPart.append("@\(name)")
+                        if remain[remain.startIndex..<remain.index(remain.startIndex, offsetBy: 2)] == " #" {
+                            remain.removeSubrange(remain.range(of: " #")!)
+                            let replyTo = remain.split(separator: " ", omittingEmptySubsequences: false)[0]
+                            let replyNum = Int(replyTo) ?? 0
+                            if replyNums.contains(replyNum) {
+                                remain = remain[remain.index(remain.startIndex, offsetBy: replyTo.count)..<remain.endIndex]
+                                newPart.append(" [#\(replyNum)](v2reader://reply/\(replyNum))")
+                            } else {
+                                remain = " #" + remain
+                                newPart.append(" [#\(replyNums.last!)](v2reader://reply/\(replyNums.last!))")
+                            }
+                        } else {
+                            newPart.append(" [#\(replyNums.last!)](v2reader://reply/\(replyNums.last!))")
+                        }
+                        newPart.append(contentsOf: remain)
+                    } else {
+                        newPart.append("@")
+                        newPart.append(contentsOf: parts[i])
+                    }
+                } else {
+                    newPart.append("@")
+                    newPart.append(contentsOf: parts[i])
+                }
+                if parts[i].isEmpty || parts[i].last == " " || parts[i].last == "\n" {
+                    maybeMember = true
+                } else {
+                    maybeMember = false
+                }
+                if i == 0 {
+                    newPart.removeFirst()
+                }
+                newContent.append(newPart)
+            }
+            
+            self.content_rendered.append(try! AttributedString(markdown: newContent, options: AttributedString.MarkdownParsingOptions(interpretedSyntax: .inlineOnlyPreservingWhitespace)))
         }
     }
     
@@ -96,6 +141,7 @@ class ReplyResponseFetcher: ObservableObject {
     @Published var currentPage = 1
     @Published var fullyFetched = false
     var replyNum = 0
+    var repliers: [String: [Int]] = [:]
     
     enum FetchError: Error {
         case badRequest
@@ -119,7 +165,12 @@ class ReplyResponseFetcher: ObservableObject {
             if replyCollection[replyData.id] == nil {
                 fullyFetched = false
                 replyNum += 1
-                replyCollection[replyData.id] = Reply(id: replyData.id, content: replyData.content, content_rendered: replyData.content_rendered, created: replyData.created, member: Member(id: replyData.member.id, username: replyData.member.username, url: replyData.member.url, website: replyData.member.website ?? "", github: replyData.member.github ?? "", bio: replyData.member.bio ?? "", avatar: replyData.member.avatar, created: replyData.member.created), num: replyNum)
+                if repliers[replyData.member.username] == nil {
+                    repliers[replyData.member.username] = [replyNum]
+                } else {
+                    repliers[replyData.member.username]!.append(replyNum)
+                }
+                replyCollection[replyData.id] = Reply(id: replyData.id, content: replyData.content, content_rendered: replyData.content_rendered, created: replyData.created, member: Member(id: replyData.member.id, username: replyData.member.username, url: replyData.member.url, website: replyData.member.website ?? "", github: replyData.member.github ?? "", bio: replyData.member.bio ?? "", avatar: replyData.member.avatar, created: replyData.member.created), num: replyNum, repliers: repliers)
             }
         }
         fetching = false

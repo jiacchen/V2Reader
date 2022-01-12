@@ -32,8 +32,10 @@ struct SheetView: View {
                                 Image(systemName: "star.fill")
                                     .foregroundColor(Color.accentColor)
                                     .onTapGesture {
-                                        data.removeFromHome(name: name)
-                                        homeChanged = true
+                                        withAnimation {
+                                            data.removeFromHome(name: name)
+                                            homeChanged = true
+                                        }
                                     }
                             }
                         }
@@ -47,26 +49,34 @@ struct SheetView: View {
                                     Image(systemName: "star.fill")
                                         .foregroundColor(Color.accentColor)
                                         .onTapGesture {
-                                            data.removeFromHome(name: name)
-                                            homeChanged = true
+                                            withAnimation {
+                                                data.removeFromHome(name: name)
+                                                homeChanged = true
+                                            }
                                         }
                                 } else {
                                     Image(systemName: "star.fill")
                                         .foregroundColor(Color(UIColor.systemFill))
                                         .onTapGesture {
-                                            data.addToHome(name: name)
-                                            homeChanged = true
+                                            withAnimation {
+                                                data.addToHome(name: name)
+                                                homeChanged = true
+                                            }
                                         }
                                 }
                             }
                         }
                         .onDelete { offsets in
-                            data.removeNode(offsets: offsets)
-                            edited = true
+                            withAnimation {
+                                data.removeNode(offsets: offsets)
+                                edited = true
+                            }
                         }
                         .onMove { offsets, dest in
-                            data.pinnedNodes.move(fromOffsets: offsets, toOffset: dest)
-                            edited = true
+                            withAnimation {
+                                data.pinnedNodes.move(fromOffsets: offsets, toOffset: dest)
+                                edited = true
+                            }
                         }
                     }
                     Section("All") {
@@ -81,8 +91,10 @@ struct SheetView: View {
                                     Image(systemName: "plus")
                                         .foregroundColor(Color.secondary)
                                         .onTapGesture {
-                                            data.addNode(name: name)
-                                            edited = true
+                                            withAnimation {
+                                                data.addNode(name: name)
+                                                edited = true
+                                            }
                                         }
                                 }
                             }

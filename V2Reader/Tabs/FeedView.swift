@@ -23,8 +23,8 @@ struct FeedView: View {
         NavigationView {
             List {
                 Section {
-                StoriesBarView(topicCollectionResponseFetcher: topicCollectionResponseFetcher, nodeCollectionFetcher: nodeCollectionFetcher)
-                    .listRowInsets(EdgeInsets())
+                    StoriesBarView(topicCollectionResponseFetcher: topicCollectionResponseFetcher, nodeCollectionFetcher: nodeCollectionFetcher)
+                        .listRowInsets(EdgeInsets())
                 }
                 ForEach(topicCollectionResponseFetcher.topicCollection.elements, id: \.0) { (id, topic) in
                     PostCardView(topicDetailFetcher: TopicResponseFetcher(), topicCollectionResponseFetcher: topicCollectionResponseFetcher, toProfile: .constant(false), member: .constant(nil))

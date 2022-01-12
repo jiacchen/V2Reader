@@ -17,6 +17,7 @@ struct PostDetailView: View {
     @State var member: Member?
     
     var body: some View {
+        ScrollViewReader { proxy in
         List {
             Section {
                 PostCardView(topicDetailFetcher: topicDetailFetcher, topicCollectionResponseFetcher: topicCollectionResponseFetcher, toProfile: $toProfile, member: $member, fullWidth: true)
@@ -32,6 +33,7 @@ struct PostDetailView: View {
                         .task {
                             await replyResponseFetcher.fetchMoreIfNeeded(id: id, topicId: topic.id)
                         }
+                        .id(reply.num)
                 }
                 if !replyResponseFetcher.fullyFetched {
                     HStack {
@@ -42,6 +44,17 @@ struct PostDetailView: View {
                 }
             }
         }
+        .onOpenURL(perform: { url in
+            print(url)
+            let host = url.host
+            var path = url.path
+            if host == "reply" {
+                path.removeFirst()
+                withAnimation {
+                    proxy.scrollTo(Int(path))
+                }
+            }
+        })
         .listStyle(.insetGrouped)
         .background {
             NavigationLink(destination: ProfileView().environmentObject(member ?? Member(id: 0, username: "", url: "", website: nil, github: nil, bio: nil, avatar: "", created: 0)), isActive: $toProfile) {
@@ -69,6 +82,7 @@ struct PostDetailView: View {
         }
 #endif
         .navigationBarTitle(topic.replies == 1 ? "1 Reply" : "\(topic.replies) Replies")
+        }
     }
 }
 

@@ -13,58 +13,64 @@ struct StoriesBarView: View {
     @ObservedObject var nodeCollectionFetcher: NodeCollectionFetcher
     
     var body: some View {
-        ScrollView(.horizontal, showsIndicators: false) {
-            HStack(spacing: 24) {
-                ForEach(nodeCollectionFetcher.nodeCollectionData.elements, id: \.0) { name, node in
-                    Button(action: {
-                        data.switchNode(newNode: name)
-                        topicCollectionResponseFetcher.topicCollection = [:]
-                        topicCollectionResponseFetcher.currentPage = 1
-                        topicCollectionResponseFetcher.fullyFetched = false
-                        Task {
-                            if topicCollectionResponseFetcher.topicCollection.isEmpty && !topicCollectionResponseFetcher.fetching {
-                                try? await topicCollectionResponseFetcher.fetchData(name: data.currentNode, home: data.homeNodes)
-                            }
-                        }
-                    }) {
-                        VStack(spacing: 8) {
-                            ZStack {
-                                AvatarView(url: node.avatar)
-                                    .padding(4)
-                                if name == data.currentNode {
-                                    Circle()
-                                        .strokeBorder(Color.accentColor, lineWidth: 2)
+        ScrollViewReader { proxy in
+            ScrollView(.horizontal, showsIndicators: false) {
+                HStack(spacing: 24) {
+                    ForEach(nodeCollectionFetcher.nodeCollectionData.elements, id: \.0) { name, node in
+                        Button(action: {
+                            data.switchNode(newNode: name)
+                            topicCollectionResponseFetcher.topicCollection = [:]
+                            topicCollectionResponseFetcher.currentPage = 1
+                            topicCollectionResponseFetcher.fullyFetched = false
+                            Task {
+                                if topicCollectionResponseFetcher.topicCollection.isEmpty && !topicCollectionResponseFetcher.fetching {
+                                    try? await topicCollectionResponseFetcher.fetchData(name: data.currentNode, home: data.homeNodes)
                                 }
                             }
-                            Text(node.title)
-                                .font(.caption)
-                                .lineLimit(1)
-                        }
-                        .frame(width: 64)
-                    }
-                    .buttonStyle(.plain)
-                }
-                if nodeCollectionFetcher.fetching {
-                    ForEach(0..<10) {_ in
-                        VStack(spacing: 8) {
-                            ZStack {
-                                Image(systemName: "circle")
-                                    .resizable()
-                                    .aspectRatio(contentMode: .fit)
-                                    .foregroundColor(Color(UIColor.systemFill))
+                        }) {
+                            VStack(spacing: 8) {
+                                ZStack {
+                                    AvatarView(url: node.avatar)
+                                        .padding(4)
+                                    if name == data.currentNode {
+                                        Circle()
+                                            .strokeBorder(Color.accentColor, lineWidth: 2)
+                                    }
+                                }
+                                Text(node.title)
+                                    .font(.caption)
+                                    .lineLimit(1)
                             }
-                            Text("").hidden()
+                            .frame(width: 64)
                         }
-                        .frame(width: 64)
+                        .buttonStyle(.plain)
+                        .id(name)
+                    }
+                    if nodeCollectionFetcher.fetching {
+                        ForEach(0..<10) {_ in
+                            VStack(spacing: 8) {
+                                ZStack {
+                                    Image(systemName: "circle")
+                                        .resizable()
+                                        .aspectRatio(contentMode: .fit)
+                                        .foregroundColor(Color(UIColor.systemFill))
+                                }
+                                Text("").hidden()
+                            }
+                            .frame(width: 64)
+                        }
                     }
                 }
-            }
-            .task {
-                if !nodeCollectionFetcher.completed && !nodeCollectionFetcher.fetching {
-                    try? await nodeCollectionFetcher.fetchData(names: data.pinnedNodes)
+                .task {
+                    if !nodeCollectionFetcher.completed && !nodeCollectionFetcher.fetching {
+                        try? await nodeCollectionFetcher.fetchData(names: data.pinnedNodes)
+                    }
                 }
+                .padding()
             }
-            .padding()
+            .onChange(of: data.currentNode) { newNode in
+                proxy.scrollTo(newNode)
+            }
         }
     }
 }
