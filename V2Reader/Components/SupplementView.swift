@@ -1,6 +1,6 @@
 //
 //  SupplementView.swift
-//  V2Reader
+//  V2Reeder
 //
 //  Created by Jiachen Chen on 1/10/22.
 //

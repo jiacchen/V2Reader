@@ -1,8 +1,8 @@
 //
 //  ReplyCardView.swift
-//  V2EX
+//  V2Reeder
 //
-//  Created by Jiachen Chen on 1/4/22.
+//  Created by Jiachen Chen on 1/10/22.
 //
 
 import SwiftUI

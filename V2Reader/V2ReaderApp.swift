@@ -1,8 +1,8 @@
 //
-//  SocialApp.swift
-//  Social
+//  V2ReaderApp.swift
+//  V2Reeder
 //
-//  Created by Jordan Singer on 12/25/21.
+//  Created by Jiachen Chen on 1/10/22.
 //
 
 import SwiftUI

@@ -1,8 +1,8 @@
 //
 //  ActivityCellView.swift
-//  Social
+//  V2Reeder
 //
-//  Created by Jordan Singer on 12/26/21.
+//  Created by Jiachen Chen on 1/10/22.
 //
 
 import SwiftUI
