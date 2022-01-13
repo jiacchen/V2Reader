@@ -38,7 +38,7 @@ struct PostCardView: View {
                     if fullWidth {
                         ForEach(0..<topic.content_rendered.count) { index in
                             Text(topic.content_rendered[index])
-                            if index < topic.imageURL.count {
+                            if index < topic.imageURL.count && !topic.imageURL[index].isEmpty {
                                 AsyncImage(url: URL(string: topic.imageURL[index]), scale: 2) { phase in
                                     switch phase {
                                     case .empty:
@@ -68,7 +68,7 @@ struct PostCardView: View {
                         Text(topic.content_rendered[0])
                             .font(.callout)
                             .lineLimit(2)
-                        if !topic.imageURL.isEmpty {
+                        if !topic.imageURL.isEmpty && !topic.imageURL[0].isEmpty {
                             AsyncImage(url: URL(string: topic.imageURL[0]), scale: 2) { phase in
                                 switch phase {
                                 case .empty:

@@ -16,7 +16,7 @@ struct SupplementView: View {
             VStack(alignment: .leading, spacing: 12) {
                 ForEach(0..<supplement.content_rendered.count) { index in
                     Text(supplement.content_rendered[index])
-                    if index < supplement.imageURL.count {
+                    if index < supplement.imageURL.count && !supplement.imageURL[index].isEmpty {
                         AsyncImage(url: URL(string: supplement.imageURL[index]), scale: 2) { phase in
                             switch phase {
                             case .empty:

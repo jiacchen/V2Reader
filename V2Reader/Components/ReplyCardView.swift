@@ -59,7 +59,7 @@ struct ReplyCardView: View {
                 }
                 ForEach(0..<reply.content_rendered.count) { index in
                     Text(reply.content_rendered[index])
-                    if index < reply.imageURL.count {
+                    if index < reply.imageURL.count && !reply.imageURL[index].isEmpty {
                         AsyncImage(url: URL(string: reply.imageURL[index]), scale: 2) { phase in
                             switch phase {
                             case .empty:
