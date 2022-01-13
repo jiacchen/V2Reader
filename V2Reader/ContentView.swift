@@ -38,6 +38,7 @@ struct ContentView: View {
                                 }
                                 .onChange(of: tokenFetcher.completed, perform: { completed in
                                     if completed && !tokenFetcher.tokenInvalid {
+                                        tokenFetcher.completed = false
                                         try? data.updateToken(token: tokenEntered)
                                     }
                                 })
@@ -61,9 +62,15 @@ struct ContentView: View {
                 .task {
                     try? await tokenFetcher.fetchData(token: data.token!)
                 }
-                .tabItem {
-                    Label("Feed", systemImage: "newspaper")
-                }
+                .onChange(of: tokenFetcher.completed, perform: { completed in
+                    if completed && tokenFetcher.tokenInvalid {
+                        tokenFetcher.completed = false
+                        try? data.deleteToken()
+                    }
+                })
+//                .tabItem {
+//                    Label("Feed", systemImage: "newspaper")
+//                }
 #if targetEnvironment(macCatalyst)
                 .withHostingWindow { window in
                     if let titlebar = window?.windowScene?.titlebar {
