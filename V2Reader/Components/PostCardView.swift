@@ -67,7 +67,7 @@ struct PostCardView: View {
                     } else {
                         Text(topic.content_rendered[0])
                             .font(.callout)
-                            .lineLimit(3)
+                            .lineLimit(2)
                         if !topic.imageURL.isEmpty {
                             AsyncImage(url: URL(string: topic.imageURL[0]), scale: 2) { phase in
                                 switch phase {
@@ -140,7 +140,7 @@ struct PostCardView: View {
                                         topicCollectionResponseFetcher.fullyFetched = false
                                         Task {
                                             if topicCollectionResponseFetcher.topicCollection.isEmpty && !topicCollectionResponseFetcher.fetching {
-                                                try? await topicCollectionResponseFetcher.fetchData(name: data.currentNode, home: data.homeNodes)
+                                                try? await topicCollectionResponseFetcher.fetchData(token: data.token!, name: data.currentNode, home: data.homeNodes)
                                             }
                                         }
                                     }
@@ -156,18 +156,7 @@ struct PostCardView: View {
                                 .hidden()
                         }
                     }
-                    .task {
-                        if !topic.detailsAdded && !topicDetailFetcher.fetching {
-                            try? await topicDetailFetcher.fetchData(id: topic.id)
-                            var supplements: [Supplement] = []
-                            for supplement in topicDetailFetcher.topicData.result.supplements {
-                                supplements.append(Supplement(id: supplement.id, content: supplement.content, content_rendered: supplement.content_rendered, syntax: supplement.syntax, created: supplement.created))
-                            }
-                            topic.addDetails(member: Member(id: topicDetailFetcher.topicData.result.member.id, username: topicDetailFetcher.topicData.result.member.username, url: topicDetailFetcher.topicData.result.member.url, website: topicDetailFetcher.topicData.result.member.website, github: topicDetailFetcher.topicData.result.member.github, bio: topicDetailFetcher.topicData.result.member.bio, avatar: topicDetailFetcher.topicData.result.member.avatar, created: topicDetailFetcher.topicData.result.member.created), node: Node(id: topicDetailFetcher.topicData.result.node.id, url: topicDetailFetcher.topicData.result.node.url, name: topicDetailFetcher.topicData.result.node.name, title: topicDetailFetcher.topicData.result.node.title, header: topicDetailFetcher.topicData.result.node.header, footer: topicDetailFetcher.topicData.result.node.footer, avatar: topicDetailFetcher.topicData.result.node.avatar, topics: topicDetailFetcher.topicData.result.node.topics, created: topicDetailFetcher.topicData.result.node.created, last_modified: topicDetailFetcher.topicData.result.node.last_modified), supplements: supplements)
-                        }
-                    }
                 }
-                    
                 PostReactionsBarView(fullWidth: fullWidth)
             }
             .padding(.vertical)

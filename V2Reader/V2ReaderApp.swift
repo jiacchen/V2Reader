@@ -16,6 +16,9 @@ struct V2ReaderApp: App {
         WindowGroup {
             ContentView(refresh: $refresh)
                 .environmentObject(data)
+                .onAppear {
+                    try? data.loadToken()
+                }
         }
         .commands {
             CommandGroup(after: .sidebar) {

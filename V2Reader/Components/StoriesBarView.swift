@@ -24,7 +24,7 @@ struct StoriesBarView: View {
                             topicCollectionResponseFetcher.fullyFetched = false
                             Task {
                                 if topicCollectionResponseFetcher.topicCollection.isEmpty && !topicCollectionResponseFetcher.fetching {
-                                    try? await topicCollectionResponseFetcher.fetchData(name: data.currentNode, home: data.homeNodes)
+                                    try? await topicCollectionResponseFetcher.fetchData(token: data.token!, name: data.currentNode, home: data.homeNodes)
                                 }
                             }
                         }) {
@@ -63,7 +63,7 @@ struct StoriesBarView: View {
                 }
                 .task {
                     if !nodeCollectionFetcher.completed && !nodeCollectionFetcher.fetching {
-                        try? await nodeCollectionFetcher.fetchData(names: data.pinnedNodes)
+                        try? await nodeCollectionFetcher.fetchData(token: data.token!, names: data.pinnedNodes)
                     }
                 }
                 .padding()

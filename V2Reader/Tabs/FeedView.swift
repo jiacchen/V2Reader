@@ -31,7 +31,7 @@ struct FeedView: View {
                         .environmentObject(nodeCollectionFetcher.nodeCollectionData[data.currentNode]!)
                         .environmentObject(topic)
                         .task {
-                            await topicCollectionResponseFetcher.fetchMoreIfNeeded(id: id, nodeName: data.currentNode, homeNodes: data.homeNodes)
+                            await topicCollectionResponseFetcher.fetchMoreIfNeeded(token: data.token!, id: id, nodeName: data.currentNode, homeNodes: data.homeNodes)
                         }
                 }
                 if !topicCollectionResponseFetcher.fullyFetched {
@@ -49,7 +49,7 @@ struct FeedView: View {
                     topicCollectionResponseFetcher.topicCollection = [:]
                     topicCollectionResponseFetcher.currentPage = 1
                     topicCollectionResponseFetcher.fullyFetched = false
-                    try? await topicCollectionResponseFetcher.fetchData(name: data.currentNode, home: data.homeNodes)
+                    try? await topicCollectionResponseFetcher.fetchData(token: data.token!, name: data.currentNode, home: data.homeNodes)
                 }
             }
 #else
@@ -57,7 +57,7 @@ struct FeedView: View {
                 topicCollectionResponseFetcher.topicCollection = [:]
                 topicCollectionResponseFetcher.currentPage = 1
                 topicCollectionResponseFetcher.fullyFetched = false
-                try? await topicCollectionResponseFetcher.fetchData(name: data.currentNode, home: data.homeNodes)
+                try? await topicCollectionResponseFetcher.fetchData(token: data.token!, name: data.currentNode, home: data.homeNodes)
             }
 #endif
             .navigationBarTitleDisplayMode(.inline)
@@ -98,13 +98,13 @@ struct FeedView: View {
                     topicCollectionResponseFetcher.fullyFetched = false
                     Task {
                         if topicCollectionResponseFetcher.topicCollection.isEmpty && !topicCollectionResponseFetcher.fetching {
-                            try? await topicCollectionResponseFetcher.fetchData(name: data.currentNode, home: data.homeNodes)
+                            try? await topicCollectionResponseFetcher.fetchData(token: data.token!, name: data.currentNode, home: data.homeNodes)
                         }
                     }
                 }
                 Task {
                     if !nodeCollectionFetcher.completed && !nodeCollectionFetcher.fetching {
-                        try? await nodeCollectionFetcher.fetchData(names: data.pinnedNodes)
+                        try? await nodeCollectionFetcher.fetchData(token: data.token!, names: data.pinnedNodes)
                     }
                 }
             }
@@ -115,7 +115,7 @@ struct FeedView: View {
                 topicCollectionResponseFetcher.fullyFetched = false
                 Task {
                     if topicCollectionResponseFetcher.topicCollection.isEmpty && !topicCollectionResponseFetcher.fetching {
-                        try? await topicCollectionResponseFetcher.fetchData(name: data.currentNode, home: data.homeNodes)
+                        try? await topicCollectionResponseFetcher.fetchData(token: data.token!, name: data.currentNode, home: data.homeNodes)
                     }
                 }
             }
@@ -124,10 +124,10 @@ struct FeedView: View {
         })
         .task {
             if !nodeCollectionFetcher.completed && !nodeCollectionFetcher.fetching {
-                try? await nodeCollectionFetcher.fetchData(names: data.pinnedNodes)
+                try? await nodeCollectionFetcher.fetchData(token: data.token!, names: data.pinnedNodes)
             }
             if topicCollectionResponseFetcher.topicCollection.isEmpty && !topicCollectionResponseFetcher.fetching {
-                try? await topicCollectionResponseFetcher.fetchData(name: data.currentNode, home: data.homeNodes)
+                try? await topicCollectionResponseFetcher.fetchData(token: data.token!, name: data.currentNode, home: data.homeNodes)
             }
         }
     }

@@ -224,13 +224,12 @@ class TopicCollectionResponseFetcher: ObservableObject {
         case badJSON
     }
     
-    func fetchData(name: String, home: [String]) async throws {
+    func fetchData(token: String, name: String, home: [String]) async throws {
         fetching = true
         if name == "home" {
             for homeNode in home {
                 print("nodetopic")
                 let url = URL(string:"https://www.v2ex.com/api/v2/nodes/\(homeNode)/topics?p=\(currentPage)")!
-                let token = "ec8a1394-93a0-4a7e-b513-f5c129226796"
                 var request = URLRequest(url: url)
                 request.addValue("Bearer \(token)", forHTTPHeaderField: "Authorization")
                 request.httpMethod = "GET"
@@ -252,7 +251,6 @@ class TopicCollectionResponseFetcher: ObservableObject {
         } else {
             print("nodetopic")
             let url = URL(string:"https://www.v2ex.com/api/v2/nodes/\(name)/topics?p=\(currentPage)")!
-            let token = "ec8a1394-93a0-4a7e-b513-f5c129226796"
             var request = URLRequest(url: url)
             request.addValue("Bearer \(token)", forHTTPHeaderField: "Authorization")
             request.httpMethod = "GET"
@@ -270,11 +268,11 @@ class TopicCollectionResponseFetcher: ObservableObject {
         fetching = false
     }
     
-    func fetchMoreIfNeeded(id: Int, nodeName: String, homeNodes: [String]) async {
+    func fetchMoreIfNeeded(token: String, id: Int, nodeName: String, homeNodes: [String]) async {
         if !fullyFetched {
             if id == topicCollection.keys.last && !fetching {
                 currentPage += 1
-                try? await fetchData(name: nodeName, home: homeNodes)
+                try? await fetchData(token: token, name: nodeName, home: homeNodes)
             }
         }
     }
@@ -335,7 +333,7 @@ struct TopicResponse: Codable {
         var node: Node
         var supplements: [Supplement]
         
-        static let defaultResult = Result(id: 0, title: "", content: "", content_rendered: "", syntax: 0, url: "", replies: 0, last_reply_by: "", created: 0, last_modified: 0, last_touched: 0, member: Member.defaultMember, node: Node.defaultNode, supplements: [Supplement.defaultSupplement])
+        static let defaultResult = Result(id: 0, title: "", content: "", content_rendered: "", syntax: 0, url: "", replies: 0, last_reply_by: "", created: 0, last_modified: 0, last_touched: 0, member: Member.defaultMember, node: Node.defaultNode, supplements: [])
     }
     
     var success: Bool
@@ -355,16 +353,15 @@ class TopicResponseFetcher: ObservableObject {
         case badJSON
     }
     
-    func fetchData(id: Int) async throws {
+    func fetchData(token: String, id: Int) async throws {
         print("topicdetail")
         fetching = true
         let url = URL(string:"https://www.v2ex.com/api/v2/topics/\(id)")!
-        let token = "ec8a1394-93a0-4a7e-b513-f5c129226796"
         var request = URLRequest(url: url)
         request.addValue("Bearer \(token)", forHTTPHeaderField: "Authorization")
         request.httpMethod = "GET"
         let (data, response) = try await URLSession.shared.data(for: request)
-        //        print(String(data: data, encoding: .utf8) ?? "Invalid JSON")
+//        print(String(data: data, encoding: .utf8) ?? "Invalid JSON")
         guard (response as? HTTPURLResponse)?.statusCode == 200 else { throw FetchError.badRequest }
         topicData = try JSONDecoder().decode(TopicResponse.self, from: data)
         fetching = false

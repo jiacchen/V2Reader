@@ -8,12 +8,85 @@
 import Foundation
 import OrderedCollections
 
+enum KeychainError: Error {
+    case noPassword
+    case unexpectedPasswordData
+    case unhandledError(status: OSStatus)
+}
+
 class AppData: ObservableObject {
     @Published var currentNode: String = UserDefaults.standard.string(forKey: "currentNode") ?? "home"
     @Published var pinnedNodes: [String] = UserDefaults.standard.stringArray(forKey: "pinnedNodes") ?? []
     @Published var homeNodes: [String] = UserDefaults.standard.stringArray(forKey: "homeNodes") ?? []
     @Published var allNodes: [String: String] = UserDefaults.standard.object(forKey: "allNodes") as? [String: String] ?? [:]
     @Published var fetching = false
+    @Published var token: String?
+    @Published var hasToken: Bool = UserDefaults.standard.bool(forKey: "hasToken")
+    
+    func loadToken() throws {
+        let query: [String: Any] = [kSecClass as String: kSecClassInternetPassword,
+                                    kSecAttrServer as String: "v2reader",
+                                    kSecMatchLimit as String: kSecMatchLimitOne,
+                                    kSecReturnAttributes as String: true,
+                                    kSecReturnData as String: true]
+        var item: CFTypeRef?
+        let status = SecItemCopyMatching(query as CFDictionary, &item)
+        guard status != errSecItemNotFound else {
+            hasToken = false
+            UserDefaults.standard.set(hasToken, forKey: "hasToken")
+            return
+        }
+        guard status == errSecSuccess else { throw KeychainError.unhandledError(status: status) }
+        guard let existingItem = item as? [String : Any],
+              let tokenData = existingItem[kSecValueData as String] as? Data
+        else {
+            throw KeychainError.unexpectedPasswordData
+        }
+        token = String(data: tokenData, encoding: String.Encoding.utf8)
+        hasToken = true
+        UserDefaults.standard.set(hasToken, forKey: "hasToken")
+    }
+    
+    func saveToken(token: String) throws {
+        let tokenData = token.data(using: String.Encoding.utf8)!
+        let query: [String: Any] = [kSecClass as String: kSecClassInternetPassword,
+                                    kSecAttrAccount as String: "default",
+                                    kSecAttrServer as String: "v2reader",
+                                    kSecValueData as String: tokenData]
+        let status = SecItemAdd(query as CFDictionary, nil)
+        guard status == errSecSuccess else { print("fail to save")
+            throw KeychainError.unhandledError(status: status) }
+        self.token = token
+        hasToken = true
+        UserDefaults.standard.set(hasToken, forKey: "hasToken")
+    }
+    
+    func updateToken(token: String) throws {
+        let query: [String: Any] = [kSecClass as String: kSecClassInternetPassword,
+                                    kSecAttrServer as String: "v2reader"]
+        let tokenData = token.data(using: String.Encoding.utf8)!
+        let attributes: [String: Any] = [kSecAttrAccount as String: "default",
+                                         kSecValueData as String: tokenData]
+        let status = SecItemUpdate(query as CFDictionary, attributes as CFDictionary)
+        guard status != errSecItemNotFound else {
+            try? saveToken(token: token)
+            return
+        }
+        guard status == errSecSuccess else { throw KeychainError.unhandledError(status: status) }
+        self.token = token
+        hasToken = true
+        UserDefaults.standard.set(hasToken, forKey: "hasToken")
+    }
+    
+    func deleteToken() throws {
+        let query: [String: Any] = [kSecClass as String: kSecClassInternetPassword,
+                                    kSecAttrServer as String: "v2reader"]
+        let status = SecItemDelete(query as CFDictionary)
+        guard status == errSecSuccess || status == errSecItemNotFound else { throw KeychainError.unhandledError(status: status) }
+        self.token = nil
+        hasToken = false
+        UserDefaults.standard.set(hasToken, forKey: "hasToken")
+    }
     
     func switchNode(newNode: String) {
         currentNode = newNode

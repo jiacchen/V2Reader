@@ -69,7 +69,7 @@ class NodeCollectionFetcher: ObservableObject {
         case badJSON
     }
     
-    func fetchData(names: [String]) async throws {
+    func fetchData(token: String, names: [String]) async throws {
         fetching = true
         nodeCollectionData = ["home": Node(id: 0, url: "", name: "home", title: "Home", header: "", footer: "", avatar: "", topics: 0, created: 0, last_modified: 0)]
         for name in names {
@@ -77,7 +77,6 @@ class NodeCollectionFetcher: ObservableObject {
                 if storedNodes[name] == nil {
                     print("nodecollection")
                     let url = URL(string:"https://www.v2ex.com/api/v2/nodes/\(name)")!
-                    let token = "ec8a1394-93a0-4a7e-b513-f5c129226796"
                     var request = URLRequest(url: url)
                     request.addValue("Bearer \(token)", forHTTPHeaderField: "Authorization")
                     request.httpMethod = "GET"

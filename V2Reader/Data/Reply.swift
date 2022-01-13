@@ -47,50 +47,41 @@ class Reply: ObservableObject {
         }
         
         for text in self.content {
-            let parts = text.split(separator: "@", omittingEmptySubsequences: false)
+            let regex = try! NSRegularExpression(pattern: #"(?![a-zA-Z0-9])@[a-zA-Z0-9]+ (#[1-9]+[0-9]* )?"#)
+            let matches = regex.matches(in: text, options: [], range: NSRange(location: 0, length: text.utf16.count))
             var newContent = ""
-            var maybeMember = false
-            for i in 0..<parts.count {
-                var newPart = ""
-                if maybeMember {
-                    let name = String(parts[i].split(separator: " ", omittingEmptySubsequences: false)[0].split(separator: "\n", omittingEmptySubsequences: false)[0])
-                    if let replyNums = repliers[name] {
-                        var remain = parts[i][parts[i].index(parts[i].startIndex, offsetBy: name.count)..<parts[i].endIndex]
-                        newPart.append("@\(name)")
-                        if remain[remain.startIndex..<remain.index(remain.startIndex, offsetBy: 2)] == " #" {
-                            remain.removeSubrange(remain.range(of: " #")!)
-                            let replyTo = remain.split(separator: " ", omittingEmptySubsequences: false)[0]
-                            let replyNum = Int(replyTo) ?? 0
-                            if replyNums.contains(replyNum) {
-                                remain = remain[remain.index(remain.startIndex, offsetBy: replyTo.count)..<remain.endIndex]
-                                newPart.append(" [#\(replyNum)](v2reader://reply/\(replyNum))")
-                            } else {
-                                remain = " #" + remain
-                                newPart.append(" [#\(replyNums.last!)](v2reader://reply/\(replyNums.last!))")
-                            }
+            var index = text.startIndex
+            
+            for match in matches {
+                guard let range = Range(match.range, in: text) else { continue }
+                newContent.append(String(text[index..<range.lowerBound]))
+                index = range.upperBound
+                let part = text[range]
+                var name = String(part.split(separator: "#")[0])
+                name.removeFirst()
+                name.removeLast()
+                if repliers.keys.contains(name) {
+                    let replyNums = repliers[name]!
+                    if part.contains("#") {
+                        var replyTo = part.split(separator: "#")[1]
+                        replyTo.removeLast()
+                        let replyNum = Int(replyTo) ?? 0
+                        if replyNums.contains(replyNum) {
+                            newContent.append("@**\(name)** [#\(replyNum)](v2reader://reply/\(replyNum)/from/\(num)) ")
                         } else {
-                            newPart.append(" [#\(replyNums.last!)](v2reader://reply/\(replyNums.last!))")
+                            newContent.append("@**\(name)** [#\(replyNums.last!)](v2reader://reply/\(replyNums.last!)/from/\(num)) #\(part.split(separator: "#")[1])")
                         }
-                        newPart.append(contentsOf: remain)
                     } else {
-                        newPart.append("@")
-                        newPart.append(contentsOf: parts[i])
+                        let replyNum = replyNums.last!
+                        newContent.append("@**\(name)** [#\(replyNum)](v2reader://reply/\(replyNum)/from/\(num)) ")
                     }
                 } else {
-                    newPart.append("@")
-                    newPart.append(contentsOf: parts[i])
+                    newContent.append(String(part))
                 }
-                if parts[i].isEmpty || parts[i].last == " " || parts[i].last == "\n" {
-                    maybeMember = true
-                } else {
-                    maybeMember = false
-                }
-                if i == 0 {
-                    newPart.removeFirst()
-                }
-                newContent.append(newPart)
             }
-            
+            if index < text.endIndex {
+                newContent.append(String(text[index..<text.endIndex]))
+            }
             self.content_rendered.append(try! AttributedString(markdown: newContent, options: AttributedString.MarkdownParsingOptions(interpretedSyntax: .inlineOnlyPreservingWhitespace)))
         }
     }
@@ -148,11 +139,10 @@ class ReplyResponseFetcher: ObservableObject {
         case badJSON
     }
     
-    func fetchData(id: Int) async throws {
+    func fetchData(token: String, id: Int) async throws {
         print("topicreplies")
         fetching = true
         let url = URL(string:"https://www.v2ex.com/api/v2/topics/\(id)/replies?p=\(currentPage)")!
-        let token = "ec8a1394-93a0-4a7e-b513-f5c129226796"
         var request = URLRequest(url: url)
         request.addValue("Bearer \(token)", forHTTPHeaderField: "Authorization")
         request.httpMethod = "GET"
@@ -176,11 +166,11 @@ class ReplyResponseFetcher: ObservableObject {
         fetching = false
     }
     
-    func fetchMoreIfNeeded(id: Int, topicId: Int) async {
+    func fetchMoreIfNeeded(token: String, id: Int, topicId: Int) async {
         if !fullyFetched {
             if id == replyCollection.keys.last && !fetching {
                 currentPage += 1
-                try? await fetchData(id: topicId)
+                try? await fetchData(token: token, id: topicId)
             }
         }
     }
