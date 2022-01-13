@@ -155,12 +155,12 @@ class ReplyResponseFetcher: ObservableObject {
             if replyCollection[replyData.id] == nil {
                 fullyFetched = false
                 replyNum += 1
+                replyCollection[replyData.id] = Reply(id: replyData.id, content: replyData.content, content_rendered: replyData.content_rendered, created: replyData.created, member: Member(id: replyData.member.id, username: replyData.member.username, url: replyData.member.url, website: replyData.member.website ?? "", github: replyData.member.github ?? "", bio: replyData.member.bio ?? "", avatar: replyData.member.avatar, created: replyData.member.created), num: replyNum, repliers: repliers)
                 if repliers[replyData.member.username] == nil {
                     repliers[replyData.member.username] = [replyNum]
                 } else {
                     repliers[replyData.member.username]!.append(replyNum)
                 }
-                replyCollection[replyData.id] = Reply(id: replyData.id, content: replyData.content, content_rendered: replyData.content_rendered, created: replyData.created, member: Member(id: replyData.member.id, username: replyData.member.username, url: replyData.member.url, website: replyData.member.website ?? "", github: replyData.member.github ?? "", bio: replyData.member.bio ?? "", avatar: replyData.member.avatar, created: replyData.member.created), num: replyNum, repliers: repliers)
             }
         }
         fetching = false

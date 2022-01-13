@@ -21,7 +21,7 @@ class AppData: ObservableObject {
     @Published var allNodes: [String: String] = UserDefaults.standard.object(forKey: "allNodes") as? [String: String] ?? [:]
     @Published var fetching = false
     @Published var token: String?
-    @Published var hasToken: Bool = UserDefaults.standard.bool(forKey: "hasToken")
+    @Published var completedLoading = false
     
     func loadToken() throws {
         let query: [String: Any] = [kSecClass as String: kSecClassInternetPassword,
@@ -32,19 +32,21 @@ class AppData: ObservableObject {
         var item: CFTypeRef?
         let status = SecItemCopyMatching(query as CFDictionary, &item)
         guard status != errSecItemNotFound else {
-            hasToken = false
-            UserDefaults.standard.set(hasToken, forKey: "hasToken")
+            completedLoading = true
             return
         }
-        guard status == errSecSuccess else { throw KeychainError.unhandledError(status: status) }
+        guard status == errSecSuccess else {
+            completedLoading = true
+            throw KeychainError.unhandledError(status: status)
+        }
         guard let existingItem = item as? [String : Any],
               let tokenData = existingItem[kSecValueData as String] as? Data
         else {
+            completedLoading = true
             throw KeychainError.unexpectedPasswordData
         }
         token = String(data: tokenData, encoding: String.Encoding.utf8)
-        hasToken = true
-        UserDefaults.standard.set(hasToken, forKey: "hasToken")
+        completedLoading = true
     }
     
     func saveToken(token: String) throws {
@@ -54,11 +56,8 @@ class AppData: ObservableObject {
                                     kSecAttrServer as String: "v2reader",
                                     kSecValueData as String: tokenData]
         let status = SecItemAdd(query as CFDictionary, nil)
-        guard status == errSecSuccess else { print("fail to save")
-            throw KeychainError.unhandledError(status: status) }
+        guard status == errSecSuccess else { throw KeychainError.unhandledError(status: status) }
         self.token = token
-        hasToken = true
-        UserDefaults.standard.set(hasToken, forKey: "hasToken")
     }
     
     func updateToken(token: String) throws {
@@ -74,8 +73,6 @@ class AppData: ObservableObject {
         }
         guard status == errSecSuccess else { throw KeychainError.unhandledError(status: status) }
         self.token = token
-        hasToken = true
-        UserDefaults.standard.set(hasToken, forKey: "hasToken")
     }
     
     func deleteToken() throws {
@@ -84,8 +81,6 @@ class AppData: ObservableObject {
         let status = SecItemDelete(query as CFDictionary)
         guard status == errSecSuccess || status == errSecItemNotFound else { throw KeychainError.unhandledError(status: status) }
         self.token = nil
-        hasToken = false
-        UserDefaults.standard.set(hasToken, forKey: "hasToken")
     }
     
     func switchNode(newNode: String) {

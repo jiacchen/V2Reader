@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		4E3E47EC278FB7EA00EFB8C0 /* Token.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4E3E47EB278FB7EA00EFB8C0 /* Token.swift */; };
 		4E413F9B278C2C9D00908C0A /* SupplementView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4E413F9A278C2C9D00908C0A /* SupplementView.swift */; };
 		4E4B92B02786B54A00273317 /* Node.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4E4B92AF2786B54A00273317 /* Node.swift */; };
 		4E4B92B22786B57F00273317 /* Topic.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4E4B92B12786B57F00273317 /* Topic.swift */; };
@@ -35,6 +36,7 @@
 
 /* Begin PBXFileReference section */
 		4E083C55278B974D00F3C8F3 /* V2Reader.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = V2Reader.entitlements; sourceTree = "<group>"; };
+		4E3E47EB278FB7EA00EFB8C0 /* Token.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Token.swift; sourceTree = "<group>"; };
 		4E413F9A278C2C9D00908C0A /* SupplementView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SupplementView.swift; sourceTree = "<group>"; };
 		4E4B92AF2786B54A00273317 /* Node.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Node.swift; sourceTree = "<group>"; };
 		4E4B92B12786B57F00273317 /* Topic.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Topic.swift; sourceTree = "<group>"; };
@@ -89,6 +91,7 @@
 				4E4B92AF2786B54A00273317 /* Node.swift */,
 				4E4B92B12786B57F00273317 /* Topic.swift */,
 				4E4B92B52786B67A00273317 /* Reply.swift */,
+				4E3E47EB278FB7EA00EFB8C0 /* Token.swift */,
 			);
 			path = Data;
 			sourceTree = "<group>";
@@ -251,6 +254,7 @@
 				863CC8D5277A16F70045112E /* ProfileView.swift in Sources */,
 				86BF45AA27792DD10087ABB2 /* FeedView.swift in Sources */,
 				8696D44F277A3BCC00BB45EA /* StoriesBarView.swift in Sources */,
+				4E3E47EC278FB7EA00EFB8C0 /* Token.swift in Sources */,
 				8696D44D277A300800BB45EA /* AvatarView.swift in Sources */,
 				863CC8D1277A13050045112E /* PostDetailView.swift in Sources */,
 				4E8A99F72789665B0092A2BE /* ContentView.swift in Sources */,

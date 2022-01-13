@@ -12,11 +12,12 @@ struct ContentView: View {
     @StateObject private var memberResponseFetcher = MemberResponseFetcher()
     @Binding var refresh: Bool
     @State var tokenEntered = ""
+    @StateObject var tokenFetcher = TokenFetcher()
     
     var body: some View {
-        if !data.hasToken {
+        if data.token == nil {
             ProgressView()
-                .sheet(isPresented: .constant(true)) {
+                .sheet(isPresented: $data.completedLoading) {
                     NavigationView {
                         VStack(alignment: .leading) {
                             Text("A **Personal Access Token** is required to access the V2EX API 2.0 Beta.")
@@ -31,7 +32,20 @@ struct ContentView: View {
                                 }
                                 .submitLabel(.done)
                                 .onSubmit {
-                                    try? data.updateToken(token: tokenEntered)
+                                    Task {
+                                        try? await tokenFetcher.fetchData(token: tokenEntered)
+                                    }
+                                }
+                                .onChange(of: tokenFetcher.completed, perform: { completed in
+                                    if completed && !tokenFetcher.tokenInvalid {
+                                        try? data.updateToken(token: tokenEntered)
+                                    }
+                                })
+                                .alert("Invalid token!\nPlease try again.", isPresented: $tokenFetcher.tokenInvalid) {
+                                    Button("OK") {
+                                        tokenFetcher.completed = false
+                                        tokenFetcher.tokenInvalid = false
+                                    }
                                 }
                             }
                             .padding()
@@ -44,6 +58,9 @@ struct ContentView: View {
                 }
         } else {
             FeedView(refresh: $refresh)
+                .task {
+                    try? await tokenFetcher.fetchData(token: data.token!)
+                }
                 .tabItem {
                     Label("Feed", systemImage: "newspaper")
                 }
