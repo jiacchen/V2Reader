@@ -45,20 +45,35 @@ class Topic: ObservableObject {
         if syntax == 0 {
             let detector = try! NSDataDetector(types: NSTextCheckingResult.CheckingType.link.rawValue)
             let matches = detector.matches(in: content, options: [], range: NSRange(location: 0, length: content.utf16.count))
+            var prevTexts: [String] = []
             
             for match in matches {
                 guard let range = Range(match.range, in: content) else { continue }
                 let url = content[range]
                 
-                if url.contains("imgur.com") || url.contains("i.v2ex.co") || url[url.index(url.startIndex, offsetBy: url.count - 4)..<url.endIndex] == ".jpg" {
+                if url.contains("imgur.com") || url.contains("i.v2ex.co") || url[url.index(url.startIndex, offsetBy: url.count - 4)..<url.endIndex] == ".jpg" || url[url.index(url.startIndex, offsetBy: url.count - 4)..<url.endIndex] == ".png" {
+                    var tempText = ""
+                    for prevText in prevTexts {
+                        tempText.append(prevText)
+                    }
+                    prevTexts.removeAll()
                     self.imageURL.append(String(url).addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed)!)
-                    self.content.append(String(content[index..<range.lowerBound]))
+                    self.content.append(tempText + String(content[index..<range.lowerBound]))
                 } else {
-                    self.imageURL.append("")
-                    self.content.append(String(content[index..<range.lowerBound]) + "[\(url)](\(url))")
+                    prevTexts.append(String(content[index..<range.lowerBound]) + "[\(url)](\(url))")
                 }
                 index = range.upperBound
             }
+            var tempText = ""
+            for prevText in prevTexts {
+                tempText.append(prevText)
+            }
+            prevTexts.removeAll()
+            
+            if index < content.endIndex {
+                self.content.append(tempText + String(content[index..<content.endIndex]))
+            }
+            
         } else {
             let regex = try! NSRegularExpression(pattern: #"!\[(.*)\]\((.+)\)"#)
             let matches = regex.matches(in: content, options: [], range: NSRange(location: 0, length: content.utf16.count))
@@ -80,9 +95,10 @@ class Topic: ObservableObject {
                     self.imageURL.append(String(url).addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed)!)
                 }
             }
-        }
-        if index < content.endIndex {
-            self.content.append(String(content[index..<content.endIndex]))
+            
+            if index < content.endIndex {
+                self.content.append(String(content[index..<content.endIndex]))
+            }
         }
         for text in self.content {
             self.content_rendered.append(try! AttributedString(markdown: text, options: AttributedString.MarkdownParsingOptions(interpretedSyntax: .inlineOnlyPreservingWhitespace)))
@@ -138,20 +154,35 @@ class Supplement: ObservableObject {
         if syntax == 0 {
             let detector = try! NSDataDetector(types: NSTextCheckingResult.CheckingType.link.rawValue)
             let matches = detector.matches(in: content, options: [], range: NSRange(location: 0, length: content.utf16.count))
+            var prevTexts: [String] = []
             
             for match in matches {
                 guard let range = Range(match.range, in: content) else { continue }
                 let url = content[range]
                 
-                if url.contains("imgur.com") || url.contains("i.v2ex.co") || url[url.index(url.startIndex, offsetBy: url.count - 4)..<url.endIndex] == ".jpg" {
+                if url.contains("imgur.com") || url.contains("i.v2ex.co") || url[url.index(url.startIndex, offsetBy: url.count - 4)..<url.endIndex] == ".jpg" || url[url.index(url.startIndex, offsetBy: url.count - 4)..<url.endIndex] == ".png" {
+                    var tempText = ""
+                    for prevText in prevTexts {
+                        tempText.append(prevText)
+                    }
+                    prevTexts.removeAll()
                     self.imageURL.append(String(url).addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed)!)
-                    self.content.append(String(content[index..<range.lowerBound]))
+                    self.content.append(tempText + String(content[index..<range.lowerBound]))
                 } else {
-                    self.imageURL.append("")
-                    self.content.append(String(content[index..<range.lowerBound]) + "[\(url)](\(url))")
+                    prevTexts.append(String(content[index..<range.lowerBound]) + "[\(url)](\(url))")
                 }
                 index = range.upperBound
             }
+            var tempText = ""
+            for prevText in prevTexts {
+                tempText.append(prevText)
+            }
+            prevTexts.removeAll()
+            
+            if index < content.endIndex {
+                self.content.append(tempText + String(content[index..<content.endIndex]))
+            }
+            
         } else {
             let regex = try! NSRegularExpression(pattern: #"!\[(.*)\]\((.+)\)"#)
             let matches = regex.matches(in: content, options: [], range: NSRange(location: 0, length: content.utf16.count))
@@ -173,9 +204,10 @@ class Supplement: ObservableObject {
                     self.imageURL.append(String(url).addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed)!)
                 }
             }
-        }
-        if index < content.endIndex {
-            self.content.append(String(content[index..<content.endIndex]))
+            
+            if index < content.endIndex {
+                self.content.append(String(content[index..<content.endIndex]))
+            }
         }
         for text in self.content {
             self.content_rendered.append(try! AttributedString(markdown: text, options: AttributedString.MarkdownParsingOptions(interpretedSyntax: .inlineOnlyPreservingWhitespace)))

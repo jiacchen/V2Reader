@@ -93,7 +93,18 @@ struct PostDetailView: View {
                     try? await replyResponseFetcher.fetchData(token: data.token!, id: topic.id)
                 }
 #endif
-                .navigationBarTitle(topic.replies == 1 ? "1 Reply" : "\(topic.replies) Replies")
+                .toolbar {
+                    ToolbarItem(placement: .principal) {
+                        
+                        Text(topic.replies == 1 ? "1 Reply" : "\(topic.replies) Replies")
+                            .fontWeight(.semibold)
+#if targetEnvironment(macCatalyst)
+                            .font(.title3)
+#else
+                            .font(.headline)
+#endif
+                    }
+                }
                 
                 if showReturnButton {
                     VStack {

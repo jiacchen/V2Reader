@@ -38,7 +38,11 @@ struct StoriesBarView: View {
                                     }
                                 }
                                 Text(node.title)
+#if targetEnvironment(macCatalyst)
+                                    .font(.subheadline)
+#else
                                     .font(.caption)
+#endif
                                     .lineLimit(1)
                             }
                             .frame(width: 64)

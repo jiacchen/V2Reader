@@ -24,7 +24,11 @@ struct ProfileView: View {
                         
                         VStack(spacing: 4) {
                             Text(member.username)
+#if targetEnvironment(macCatalyst)
+                                .font(.title)
+#else
                                 .font(.title2)
+#endif
                                 .fontWeight(.semibold)
 //                            Text("@\(user.username)")
 //                                .foregroundColor(.secondary)
@@ -81,7 +85,11 @@ struct ProfileView: View {
                         }
                         Spacer()
                     }
+#if targetEnvironment(macCatalyst)
+                    .font(.body)
+#else
                     .font(.callout)
+#endif
                     .padding(.vertical, 4)
                 }
                 .padding(.horizontal, sizeClass == .compact ? nil : 32)
@@ -101,21 +109,21 @@ struct ProfileView: View {
         }
         .navigationTitle("Profile")
         .navigationBarTitleDisplayMode(.inline)
-        .toolbar {
+//        .toolbar {
 //            ToolbarItem(placement: .navigationBarTrailing) {
 //                Button(action: share) {
 //                    Image(systemName: "square.and.arrow.up")
 //                        .font(.headline)
 //                }
 //            }
-            ToolbarItem(placement: .navigationBarTrailing) {
-                Button {
-                    openSettings = true
-                } label: {
-                    Image(systemName: "gear")
-                }
-            }
-        }
+//            ToolbarItem(placement: .navigationBarTrailing) {
+//                Button {
+//                    openSettings = true
+//                } label: {
+//                    Image(systemName: "gear")
+//                }
+//            }
+//        }
     }
 //
 //    func share() {

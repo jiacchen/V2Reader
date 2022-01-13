@@ -18,7 +18,11 @@ struct PostHeaderView: View {
                 
                 VStack(alignment: .leading, spacing: 2) {
                     Text(topic.title)
+#if targetEnvironment(macCatalyst)
+                        .font(.body)
+#else
                         .font(.subheadline)
+#endif
                         .fontWeight(.semibold)
                         .lineLimit(1)
 //                    Text("@\(topic.member.username) · \(topic.formattedDate())")

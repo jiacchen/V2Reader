@@ -15,8 +15,15 @@ struct SupplementView: View {
         VStack(spacing: 0) {
             VStack(alignment: .leading, spacing: 12) {
                 ForEach(0..<supplement.content_rendered.count) { index in
-                    Text(supplement.content_rendered[index])
-                    if index < supplement.imageURL.count && !supplement.imageURL[index].isEmpty {
+                    if !supplement.content[index].isEmpty {
+                        Text(supplement.content_rendered[index])
+#if targetEnvironment(macCatalyst)
+                            .font(.title3)
+#else
+                            .font(.body)
+#endif
+                    }
+                    if index < supplement.imageURL.count {
                         AsyncImage(url: URL(string: supplement.imageURL[index]), scale: 2) { phase in
                             switch phase {
                             case .empty:
@@ -50,7 +57,11 @@ struct SupplementView: View {
                     }
                     Spacer()
                 }
+#if targetEnvironment(macCatalyst)
+                .font(.body)
+#else
                 .font(.subheadline)
+#endif
                 .foregroundColor(.secondary)
                 .padding(.top, 8)
             }

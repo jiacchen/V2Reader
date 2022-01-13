@@ -71,12 +71,20 @@ struct FeedView: View {
                                 Text(nodeCollectionFetcher.nodeCollectionData[data.currentNode]!.title)
                                     .foregroundColor(.primary)
                                     .fontWeight(.semibold)
+#if targetEnvironment(macCatalyst)
+                                    .font(.title3)
+#else
                                     .font(.headline)
+#endif
                                 Image(systemName: "chevron.down")
                                     .resizable()
                                     .frame(width: 11, height: 5)
                                     .foregroundColor(.primary)
+#if targetEnvironment(macCatalyst)
+                                    .font(.title3)
+#else
                                     .font(.headline)
+#endif
                                     .padding(.top, 2)
                             }
                         }
@@ -84,6 +92,11 @@ struct FeedView: View {
                 }
             }
             Text("Nothing Selected.")
+#if targetEnvironment(macCatalyst)
+                .font(.title3)
+#else
+                .font(.body)
+#endif
                 .foregroundColor(.secondary)
         }
         .sheet(isPresented: $showNodeManagement, onDismiss: {

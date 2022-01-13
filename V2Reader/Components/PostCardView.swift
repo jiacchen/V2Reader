@@ -26,19 +26,34 @@ struct PostCardView: View {
             VStack(alignment: .leading, spacing: 12) {
                 if fullWidth {
                     Text(topic.title)
+#if targetEnvironment(macCatalyst)
+                        .font(.title2)
+#else
                         .font(.title3)
+#endif
                         .fontWeight(.medium)
                 } else {
                     Text(topic.title)
+#if targetEnvironment(macCatalyst)
+                        .font(.title3)
+#else
                         .font(.body)
+#endif
                         .fontWeight(.medium)
                 }
                 
                 if !topic.content.isEmpty {
                     if fullWidth {
                         ForEach(0..<topic.content_rendered.count) { index in
-                            Text(topic.content_rendered[index])
-                            if index < topic.imageURL.count && !topic.imageURL[index].isEmpty {
+                            if !topic.content[index].isEmpty {
+                                Text(topic.content_rendered[index])
+#if targetEnvironment(macCatalyst)
+                                    .font(.title3)
+#else
+                                    .font(.body)
+#endif
+                            }
+                            if index < topic.imageURL.count {
                                 AsyncImage(url: URL(string: topic.imageURL[index]), scale: 2) { phase in
                                     switch phase {
                                     case .empty:
@@ -65,10 +80,16 @@ struct PostCardView: View {
                             }
                         }
                     } else {
-                        Text(topic.content_rendered[0])
-                            .font(.callout)
-                            .lineLimit(2)
-                        if !topic.imageURL.isEmpty && !topic.imageURL[0].isEmpty {
+                        if !topic.content[0].isEmpty {
+                            Text(topic.content_rendered[0])
+#if targetEnvironment(macCatalyst)
+                                .font(.body)
+#else
+                                .font(.callout)
+#endif
+                                .lineLimit(2)
+                        }
+                        if !topic.imageURL.isEmpty {
                             AsyncImage(url: URL(string: topic.imageURL[0]), scale: 2) { phase in
                                 switch phase {
                                 case .empty:
@@ -100,10 +121,18 @@ struct PostCardView: View {
                     HStack(spacing: 0) {
                         if topic.detailsAdded {
                             Text("in ")
+#if targetEnvironment(macCatalyst)
+                                .font(.body)
+#else
                                 .font(.callout)
+#endif
                                 .foregroundColor(.secondary)
                             Text(nodeTitleWithLink)
+#if targetEnvironment(macCatalyst)
+                                .font(.body)
+#else
                                 .font(.callout)
+#endif
                                 .accentColor(.secondary)
                                 .onAppear {
                                     nodeTitleWithLink = AttributedString(topic.node!.title)
@@ -111,10 +140,18 @@ struct PostCardView: View {
                                     nodeTitleWithLink.inlinePresentationIntent = .stronglyEmphasized
                                 }
                             Text(" by ")
+#if targetEnvironment(macCatalyst)
+                                .font(.body)
+#else
                                 .font(.callout)
+#endif
                                 .foregroundColor(.secondary)
                             Text(usernameWithLink)
+#if targetEnvironment(macCatalyst)
+                                .font(.body)
+#else
                                 .font(.callout)
+#endif
                                 .accentColor(.secondary)
                                 .onAppear {
                                     usernameWithLink = AttributedString(topic.member!.username)
@@ -151,7 +188,11 @@ struct PostCardView: View {
                             }
                         } else {
                             Text(" ")
+#if targetEnvironment(macCatalyst)
+                                .font(.body)
+#else
                                 .font(.callout)
+#endif
                                 .foregroundColor(.secondary)
                                 .hidden()
                         }

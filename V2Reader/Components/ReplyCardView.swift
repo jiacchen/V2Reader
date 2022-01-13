@@ -20,7 +20,11 @@ struct ReplyCardView: View {
             VStack(alignment: .leading, spacing: 12) {
                 HStack() {
                     Text(usernameWithLink)
+#if targetEnvironment(macCatalyst)
+                        .font(.body)
+#else
                         .font(.callout)
+#endif
                         .accentColor(.primary)
                         .onAppear {
                             usernameWithLink = AttributedString(reply.member.username)
@@ -44,22 +48,41 @@ struct ReplyCardView: View {
                     if reply.member.username == topic.member?.username {
                         Text("OP")
                             .padding(2)
+#if targetEnvironment(macCatalyst)
+                            .font(.footnote)
+#else
                             .font(.caption2)
+#endif
                             .foregroundColor(.secondary)
                             .background(Color(.systemGray5))
                             .cornerRadius(3)
                     }
                     Text("#\(reply.num)")
+#if targetEnvironment(macCatalyst)
+                        .font(.body)
+#else
                         .font(.subheadline)
+#endif
                         .foregroundColor(.secondary)
                     Spacer()
                     Text(reply.formattedDate())
+#if targetEnvironment(macCatalyst)
+                        .font(.body)
+#else
                         .font(.subheadline)
+#endif
                         .foregroundColor(.secondary)
                 }
                 ForEach(0..<reply.content_rendered.count) { index in
-                    Text(reply.content_rendered[index])
-                    if index < reply.imageURL.count && !reply.imageURL[index].isEmpty {
+                    if !reply.content[index].isEmpty {
+                        Text(reply.content_rendered[index])
+#if targetEnvironment(macCatalyst)
+                            .font(.title3)
+#else
+                            .font(.body)
+#endif
+                    }
+                    if index < reply.imageURL.count {
                         AsyncImage(url: URL(string: reply.imageURL[index]), scale: 2) { phase in
                             switch phase {
                             case .empty:
@@ -91,11 +114,11 @@ struct ReplyCardView: View {
         .contentShape(Rectangle())
     }
     
-    func share() {
-        let activityVC = UIActivityViewController(activityItems: [reply.content, URL(string: "\(topic.url)#reply\(reply.num)")!], applicationActivities: nil)
-        guard let windowScene = UIApplication.shared.connectedScenes.first as? UIWindowScene else { return }
-        windowScene.keyWindow?.rootViewController?.present(activityVC, animated: true, completion: nil)
-    }
+//    func share() {
+//        let activityVC = UIActivityViewController(activityItems: [reply.content, URL(string: "\(topic.url)#reply\(reply.num)")!], applicationActivities: nil)
+//        guard let windowScene = UIApplication.shared.connectedScenes.first as? UIWindowScene else { return }
+//        windowScene.keyWindow?.rootViewController?.present(activityVC, animated: true, completion: nil)
+//    }
 }
 
 struct ReplyCardView_Previews: PreviewProvider {
