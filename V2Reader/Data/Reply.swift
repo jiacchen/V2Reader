@@ -35,7 +35,7 @@ class Reply: ObservableObject {
             guard let range = Range(match.range, in: content) else { continue }
             let url = content[range]
             
-            if url.contains("imgur.com") || url.contains("i.v2ex.co") || url[url.index(url.startIndex, offsetBy: url.count - 4)..<url.endIndex] == ".jpg" || url[url.index(url.startIndex, offsetBy: url.count - 4)..<url.endIndex] == ".png" {
+            if url.contains("imgur.com") || url.contains("i.v2ex.co") || url[url.index(url.startIndex, offsetBy: url.count - 4)..<url.endIndex] == ".jpg" || url[url.index(url.startIndex, offsetBy: url.count - 4)..<url.endIndex] == ".png" || url[url.index(url.startIndex, offsetBy: url.count - 5)..<url.endIndex] == ".jpeg" {
                 var tempText = ""
                 for prevText in prevTexts {
                     tempText.append(prevText)
@@ -53,10 +53,7 @@ class Reply: ObservableObject {
             tempText.append(prevText)
         }
         prevTexts.removeAll()
-        
-        if index < content.endIndex {
-            self.content.append(tempText + String(content[index..<content.endIndex]))
-        }
+        self.content.append(tempText + String(content[index..<content.endIndex]))
         
         for text in self.content {
             let regex = try! NSRegularExpression(pattern: #"(?![a-zA-Z0-9])@[a-zA-Z0-9]+ (#[1-9]+[0-9]* )?"#)
@@ -91,9 +88,7 @@ class Reply: ObservableObject {
                     newContent.append(String(part))
                 }
             }
-            if index < text.endIndex {
-                newContent.append(String(text[index..<text.endIndex]))
-            }
+            newContent.append(String(text[index..<text.endIndex]))
             self.content_rendered.append(try! AttributedString(markdown: newContent, options: AttributedString.MarkdownParsingOptions(interpretedSyntax: .inlineOnlyPreservingWhitespace)))
         }
     }
@@ -175,13 +170,13 @@ class ReplyResponseFetcher: ObservableObject {
                 }
             }
         }
+        currentPage += 1
         fetching = false
     }
     
     func fetchMoreIfNeeded(token: String, id: Int, topicId: Int) async {
         if !fullyFetched {
-            if id == replyCollection.keys.last && !fetching {
-                currentPage += 1
+            if id == replyCollection.keys.last {
                 try? await fetchData(token: token, id: topicId)
             }
         }

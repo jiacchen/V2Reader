@@ -76,7 +76,7 @@ struct PostDetailView: View {
                 }
                 .navigationBarTitleDisplayMode(.inline)
                 .task {
-                    if !topic.detailsAdded && !topicDetailFetcher.fetching {
+                    if !topic.detailsAdded {
                         try? await topicDetailFetcher.fetchData(token: data.token!, id: topic.id)
                         var supplements: [Supplement] = []
                         for supplement in topicDetailFetcher.topicData.result.supplements {
@@ -95,7 +95,6 @@ struct PostDetailView: View {
 #endif
                 .toolbar {
                     ToolbarItem(placement: .principal) {
-                        
                         Text(topic.replies == 1 ? "1 Reply" : "\(topic.replies) Replies")
                             .fontWeight(.semibold)
 #if targetEnvironment(macCatalyst)

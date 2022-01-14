@@ -16,8 +16,8 @@ enum KeychainError: Error {
 
 class AppData: ObservableObject {
     @Published var currentNode: String = UserDefaults.standard.string(forKey: "currentNode") ?? "home"
-    @Published var pinnedNodes: [String] = UserDefaults.standard.stringArray(forKey: "pinnedNodes") ?? []
-    @Published var homeNodes: [String] = UserDefaults.standard.stringArray(forKey: "homeNodes") ?? []
+    @Published var pinnedNodes: [String] = UserDefaults.standard.stringArray(forKey: "pinnedNodes") ?? ["share", "create", "programmer", "apple", "internet", "qna"]
+    @Published var homeNodes: [String] = UserDefaults.standard.stringArray(forKey: "homeNodes") ?? ["share", "create", "programmer"]
     @Published var allNodes: [String: String] = UserDefaults.standard.object(forKey: "allNodes") as? [String: String] ?? [:]
     @Published var fetching = false
     @Published var token: String?

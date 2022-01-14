@@ -16,6 +16,8 @@
 		4E6C2BB62787B4310008AF2B /* OrderedCollections in Frameworks */ = {isa = PBXBuildFile; productRef = 4E6C2BB52787B4310008AF2B /* OrderedCollections */; };
 		4E8A99F72789665B0092A2BE /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4E8A99F62789665B0092A2BE /* ContentView.swift */; };
 		4EAD48462785311A00AA35CC /* ReplyCardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4EAD48452785311A00AA35CC /* ReplyCardView.swift */; };
+		4EC194932790FBBC00F7FD9E /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 4EC194912790FBBC00F7FD9E /* InfoPlist.strings */; };
+		4EC194962790FBBC00F7FD9E /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 4EC194942790FBBC00F7FD9E /* Localizable.strings */; };
 		4ED1BED5278D4AB200C9F333 /* SheetView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4ED1BED4278D4AB200C9F333 /* SheetView.swift */; };
 		863CC8D1277A13050045112E /* PostDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 863CC8D0277A13050045112E /* PostDetailView.swift */; };
 		863CC8D3277A13F00045112E /* PostHeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 863CC8D2277A13F00045112E /* PostHeaderView.swift */; };
@@ -44,6 +46,8 @@
 		4E4B92B72786B76F00273317 /* Member.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Member.swift; sourceTree = "<group>"; };
 		4E8A99F62789665B0092A2BE /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
 		4EAD48452785311A00AA35CC /* ReplyCardView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReplyCardView.swift; sourceTree = "<group>"; };
+		4EC194922790FBBC00F7FD9E /* zh-Hans */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hans"; path = "zh-Hans.lproj/InfoPlist.strings"; sourceTree = "<group>"; };
+		4EC194952790FBBC00F7FD9E /* zh-Hans */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hans"; path = "zh-Hans.lproj/Localizable.strings"; sourceTree = "<group>"; };
 		4ED1BED4278D4AB200C9F333 /* SheetView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SheetView.swift; sourceTree = "<group>"; };
 		863CC8D0277A13050045112E /* PostDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PostDetailView.swift; sourceTree = "<group>"; };
 		863CC8D2277A13F00045112E /* PostHeaderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PostHeaderView.swift; sourceTree = "<group>"; };
@@ -99,6 +103,8 @@
 		86AEF6192777BC500028E4C5 = {
 			isa = PBXGroup;
 			children = (
+				4EC194942790FBBC00F7FD9E /* Localizable.strings */,
+				4EC194912790FBBC00F7FD9E /* InfoPlist.strings */,
 				86AEF6242777BC500028E4C5 /* V2Reader */,
 				86AEF6232777BC500028E4C5 /* Products */,
 			);
@@ -216,6 +222,7 @@
 			knownRegions = (
 				en,
 				Base,
+				"zh-Hans",
 			);
 			mainGroup = 86AEF6192777BC500028E4C5;
 			packageReferences = (
@@ -236,6 +243,8 @@
 			buildActionMask = 2147483647;
 			files = (
 				86AEF62D2777BC500028E4C5 /* Preview Assets.xcassets in Resources */,
+				4EC194962790FBBC00F7FD9E /* Localizable.strings in Resources */,
+				4EC194932790FBBC00F7FD9E /* InfoPlist.strings in Resources */,
 				86AEF62A2777BC500028E4C5 /* Assets.xcassets in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -274,18 +283,40 @@
 		};
 /* End PBXSourcesBuildPhase section */
 
+/* Begin PBXVariantGroup section */
+		4EC194912790FBBC00F7FD9E /* InfoPlist.strings */ = {
+			isa = PBXVariantGroup;
+			children = (
+				4EC194922790FBBC00F7FD9E /* zh-Hans */,
+			);
+			name = InfoPlist.strings;
+			path = V2Reader;
+			sourceTree = "<group>";
+		};
+		4EC194942790FBBC00F7FD9E /* Localizable.strings */ = {
+			isa = PBXVariantGroup;
+			children = (
+				4EC194952790FBBC00F7FD9E /* zh-Hans */,
+			);
+			name = Localizable.strings;
+			path = V2Reader;
+			sourceTree = "<group>";
+		};
+/* End PBXVariantGroup section */
+
 /* Begin XCBuildConfiguration section */
 		86AEF62E2777BC500028E4C5 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED = YES;
 				CLANG_ANALYZER_NONNULL = YES;
 				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++17";
 				CLANG_CXX_LIBRARY = "libc++";
 				CLANG_ENABLE_MODULES = YES;
 				CLANG_ENABLE_OBJC_ARC = YES;
-				CLANG_ENABLE_OBJC_WEAK = NO;
+				CLANG_ENABLE_OBJC_WEAK = YES;
 				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
 				CLANG_WARN_BOOL_CONVERSION = YES;
 				CLANG_WARN_COMMA = YES;
@@ -341,13 +372,14 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED = YES;
 				CLANG_ANALYZER_NONNULL = YES;
 				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++17";
 				CLANG_CXX_LIBRARY = "libc++";
 				CLANG_ENABLE_MODULES = YES;
 				CLANG_ENABLE_OBJC_ARC = YES;
-				CLANG_ENABLE_OBJC_WEAK = NO;
+				CLANG_ENABLE_OBJC_WEAK = YES;
 				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
 				CLANG_WARN_BOOL_CONVERSION = YES;
 				CLANG_WARN_COMMA = YES;
@@ -400,7 +432,7 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_ENTITLEMENTS = V2Reader/V2Reader.entitlements;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 3;
+				CURRENT_PROJECT_VERSION = 4;
 				DEVELOPMENT_ASSET_PATHS = "\"V2Reader/Preview Content\"";
 				DEVELOPMENT_TEAM = FJC939GGVP;
 				ENABLE_PREVIEWS = YES;
@@ -435,7 +467,7 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_ENTITLEMENTS = V2Reader/V2Reader.entitlements;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 3;
+				CURRENT_PROJECT_VERSION = 4;
 				DEVELOPMENT_ASSET_PATHS = "\"V2Reader/Preview Content\"";
 				DEVELOPMENT_TEAM = FJC939GGVP;
 				ENABLE_PREVIEWS = YES;

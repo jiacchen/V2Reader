@@ -1,0 +1,90 @@
+/* No comment provided by engineer. */
+" 号会员" = " 号会员";
+
+/* No comment provided by engineer. */
+" by " = " by ";
+
+/* No comment provided by engineer. */
+"#%lld" = "#%lld";
+
+/* No comment provided by engineer. */
+"%lld" = "%lld";
+
+/* No comment provided by engineer. */
+"%lld Replies" = "%lld条回复";
+
+/* No comment provided by engineer. */
+"1 Reply" = "1条回复";
+
+/* No comment provided by engineer. */
+"加入于 " = "加入于";
+
+/* No comment provided by engineer. */
+"A **Personal Access Token** is required to access the V2EX API 2.0 Beta." = "你需要一个**Personal Access Token**来使用V2EX API 2.0 Beta。";
+
+/* No comment provided by engineer. */
+"Activity" = "通知";
+
+/* No comment provided by engineer. */
+"Cancel" = "取消";
+
+/* No comment provided by engineer. */
+"Done" = "完成";
+
+/* No comment provided by engineer. */
+"Edit" = "编辑";
+
+/* No comment provided by engineer. */
+"in " = "in ";
+
+/* No comment provided by engineer. */
+"Invalid token!\nPlease try again." = "此Token无效，请再试一次。";
+
+/* No comment provided by engineer. */
+"New" = "发布主题";
+
+/* No comment provided by engineer. */
+"Nodes" = "节点";
+
+/* No comment provided by engineer. */
+"Nothing Selected." = "Nothing Selected.";
+
+/* No comment provided by engineer. */
+"OK" = "好的";
+
+/* No comment provided by engineer. */
+"OP" = "OP";
+
+/* No comment provided by engineer. */
+"Please follow the instruction on the [website](https://www.v2ex.com/help/personal-access-token) to create a token and enter it in the field below." = "请按照[此网站](https://www.v2ex.com/help/personal-access-token)的指示创建一个Token，并填写在下方的输入框中。";
+
+/* No comment provided by engineer. */
+"Post" = "主题";
+
+/* No comment provided by engineer. */
+"Profile" = "用户资料";
+
+/* No comment provided by engineer. */
+"Refresh" = "刷新";
+
+/* No comment provided by engineer. */
+"Reply" = "回复";
+
+/* No comment provided by engineer. */
+"Search" = "搜索";
+
+/* No comment provided by engineer. */
+"The token you entered will be stored securely in the keychain." = "输入的Token将会被安全地保存在Keychain里。";
+
+/* No comment provided by engineer. */
+"Token" = "Token";
+
+/* No comment provided by engineer. */
+"Token..." = "Token...";
+
+/* No comment provided by engineer. */
+"V2EX 第 " = "V2EX 第 ";
+
+/* No comment provided by engineer. */
+"What's happening?" = "What's happening?";
+

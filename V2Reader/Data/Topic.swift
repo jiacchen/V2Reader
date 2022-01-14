@@ -51,7 +51,7 @@ class Topic: ObservableObject {
                 guard let range = Range(match.range, in: content) else { continue }
                 let url = content[range]
                 
-                if url.contains("imgur.com") || url.contains("i.v2ex.co") || url[url.index(url.startIndex, offsetBy: url.count - 4)..<url.endIndex] == ".jpg" || url[url.index(url.startIndex, offsetBy: url.count - 4)..<url.endIndex] == ".png" {
+                if url.contains("imgur.com") || url.contains("i.v2ex.co") || url[url.index(url.startIndex, offsetBy: url.count - 4)..<url.endIndex] == ".jpg" || url[url.index(url.startIndex, offsetBy: url.count - 4)..<url.endIndex] == ".png" || url[url.index(url.startIndex, offsetBy: url.count - 5)..<url.endIndex] == ".jpeg" {
                     var tempText = ""
                     for prevText in prevTexts {
                         tempText.append(prevText)
@@ -69,14 +69,12 @@ class Topic: ObservableObject {
                 tempText.append(prevText)
             }
             prevTexts.removeAll()
-            
-            if index < content.endIndex {
-                self.content.append(tempText + String(content[index..<content.endIndex]))
-            }
+            self.content.append(tempText + String(content[index..<content.endIndex]))
             
         } else {
             let regex = try! NSRegularExpression(pattern: #"!\[(.*)\]\((.+)\)"#)
             let matches = regex.matches(in: content, options: [], range: NSRange(location: 0, length: content.utf16.count))
+            var prevTexts: [String] = []
             
             for match in matches {
                 guard let range = Range(match.range, in: content) else { continue }
@@ -85,20 +83,33 @@ class Topic: ObservableObject {
                 if text.last == "[" {
                     text.removeLast()
                 }
-                self.content.append(text)
                 index = range.upperBound
                 let detector = try! NSDataDetector(types: NSTextCheckingResult.CheckingType.link.rawValue)
                 let urlMatches = detector.matches(in: String(markdown), options: [], range: NSRange(location: 0, length: markdown.utf16.count))
                 for urlMatch in urlMatches {
                     guard let urlRange = Range(urlMatch.range, in: markdown) else { continue }
-                    let url = markdown[urlRange]
-                    self.imageURL.append(String(url).addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed)!)
+                    let url = String(markdown[urlRange])
+                    if URL(string: url)!.scheme == "http" {
+                        var httpImage = String(markdown)
+                        httpImage.removeFirst()
+                        prevTexts.append(text + httpImage)
+                    } else {
+                        var tempText = ""
+                        for prevText in prevTexts {
+                            tempText.append(prevText)
+                        }
+                        prevTexts.removeAll()
+                        self.content.append(tempText + text)
+                        self.imageURL.append(url.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed)!)
+                    }
                 }
             }
-            
-            if index < content.endIndex {
-                self.content.append(String(content[index..<content.endIndex]))
+            var tempText = ""
+            for prevText in prevTexts {
+                tempText.append(prevText)
             }
+            prevTexts.removeAll()
+            self.content.append(tempText + String(content[index..<content.endIndex]))
         }
         for text in self.content {
             self.content_rendered.append(try! AttributedString(markdown: text, options: AttributedString.MarkdownParsingOptions(interpretedSyntax: .inlineOnlyPreservingWhitespace)))
@@ -160,7 +171,7 @@ class Supplement: ObservableObject {
                 guard let range = Range(match.range, in: content) else { continue }
                 let url = content[range]
                 
-                if url.contains("imgur.com") || url.contains("i.v2ex.co") || url[url.index(url.startIndex, offsetBy: url.count - 4)..<url.endIndex] == ".jpg" || url[url.index(url.startIndex, offsetBy: url.count - 4)..<url.endIndex] == ".png" {
+                if url.contains("imgur.com") || url.contains("i.v2ex.co") || url[url.index(url.startIndex, offsetBy: url.count - 4)..<url.endIndex] == ".jpg" || url[url.index(url.startIndex, offsetBy: url.count - 4)..<url.endIndex] == ".png" || url[url.index(url.startIndex, offsetBy: url.count - 5)..<url.endIndex] == ".jpeg" {
                     var tempText = ""
                     for prevText in prevTexts {
                         tempText.append(prevText)
@@ -178,14 +189,12 @@ class Supplement: ObservableObject {
                 tempText.append(prevText)
             }
             prevTexts.removeAll()
-            
-            if index < content.endIndex {
-                self.content.append(tempText + String(content[index..<content.endIndex]))
-            }
+            self.content.append(tempText + String(content[index..<content.endIndex]))
             
         } else {
             let regex = try! NSRegularExpression(pattern: #"!\[(.*)\]\((.+)\)"#)
             let matches = regex.matches(in: content, options: [], range: NSRange(location: 0, length: content.utf16.count))
+            var prevTexts: [String] = []
             
             for match in matches {
                 guard let range = Range(match.range, in: content) else { continue }
@@ -194,20 +203,33 @@ class Supplement: ObservableObject {
                 if text.last == "[" {
                     text.removeLast()
                 }
-                self.content.append(text)
                 index = range.upperBound
                 let detector = try! NSDataDetector(types: NSTextCheckingResult.CheckingType.link.rawValue)
                 let urlMatches = detector.matches(in: String(markdown), options: [], range: NSRange(location: 0, length: markdown.utf16.count))
                 for urlMatch in urlMatches {
                     guard let urlRange = Range(urlMatch.range, in: markdown) else { continue }
-                    let url = markdown[urlRange]
-                    self.imageURL.append(String(url).addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed)!)
+                    let url = String(markdown[urlRange])
+                    if URL(string: url)!.scheme == "http" {
+                        var httpImage = String(markdown)
+                        httpImage.removeFirst()
+                        prevTexts.append(text + httpImage)
+                    } else {
+                        var tempText = ""
+                        for prevText in prevTexts {
+                            tempText.append(prevText)
+                        }
+                        prevTexts.removeAll()
+                        self.content.append(tempText + text)
+                        self.imageURL.append(url.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed)!)
+                    }
                 }
             }
-            
-            if index < content.endIndex {
-                self.content.append(String(content[index..<content.endIndex]))
+            var tempText = ""
+            for prevText in prevTexts {
+                tempText.append(prevText)
             }
+            prevTexts.removeAll()
+            self.content.append(tempText + String(content[index..<content.endIndex]))
         }
         for text in self.content {
             self.content_rendered.append(try! AttributedString(markdown: text, options: AttributedString.MarkdownParsingOptions(interpretedSyntax: .inlineOnlyPreservingWhitespace)))
@@ -298,14 +320,14 @@ class TopicCollectionResponseFetcher: ObservableObject {
                     topicCollection[topicData.id] = Topic(id: topicData.id, title: topicData.title, content: topicData.content, content_rendered: topicData.content_rendered, syntax: topicData.syntax, url: topicData.url, replies: topicData.replies, last_reply_by: topicData.last_reply_by, created: topicData.created, last_modified: topicData.last_modified, last_touched: topicData.last_touched)
                 }
             }
+            currentPage += 1
         }
         fetching = false
     }
     
     func fetchMoreIfNeeded(token: String, id: Int, nodeName: String, homeNodes: [String]) async {
         if !fullyFetched {
-            if id == topicCollection.keys.last && !fetching {
-                currentPage += 1
+            if id == topicCollection.keys.last {
                 try? await fetchData(token: token, name: nodeName, home: homeNodes)
             }
         }

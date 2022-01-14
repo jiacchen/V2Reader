@@ -176,7 +176,7 @@ struct PostCardView: View {
                                         topicCollectionResponseFetcher.currentPage = 1
                                         topicCollectionResponseFetcher.fullyFetched = false
                                         Task {
-                                            if topicCollectionResponseFetcher.topicCollection.isEmpty && !topicCollectionResponseFetcher.fetching {
+                                            if topicCollectionResponseFetcher.topicCollection.isEmpty {
                                                 try? await topicCollectionResponseFetcher.fetchData(token: data.token!, name: data.currentNode, home: data.homeNodes)
                                             }
                                         }
