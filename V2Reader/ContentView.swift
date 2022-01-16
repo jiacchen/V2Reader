@@ -76,7 +76,7 @@ struct ContentView: View {
                     .listRowBackground(Color.clear)
                     
                     NavigationLink {
-                        FeedView(nodeName: "home", refresh: $refresh)
+                        FeedView(refresh: $refresh, nodeName: "home")
                             .toolbar {
                                 ToolbarItem(placement: .principal) {
                                     Text("Home")
@@ -120,7 +120,7 @@ struct ContentView: View {
                         ForEach(nodeCollectionFetcher.nodeCollectionData.elements, id: \.0) { name, node in
                             if name != "home" {
                                 NavigationLink {
-                                    FeedView(nodeName: name, refresh: $refresh)
+                                    FeedView(refresh: $refresh, nodeName: name)
                                         .toolbar {
                                             ToolbarItem(placement: .principal) {
                                                 Text(node.title)
@@ -159,7 +159,7 @@ struct ContentView: View {
                                             .padding()
                                     }
 #if targetEnvironment(macCatalyst)
-                                    .padding(.vertical)
+                                    .padding(.vertical, 12)
 #endif
                                 }
                                 .listRowBackground(Color.clear)
@@ -219,7 +219,7 @@ struct ContentView: View {
                     }
                 }
                 .navigationBarTitleDisplayMode(.inline)
-                FeedView(nodeName: "home", refresh: $refresh)
+                FeedView(refresh: $refresh, nodeName: "home")
                     .toolbar {
                         ToolbarItem(placement: .principal) {
                             Text("Home")

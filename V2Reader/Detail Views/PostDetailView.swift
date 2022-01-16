@@ -27,7 +27,6 @@ struct PostDetailView: View {
                     Section {
                         PostCardView(topicDetailFetcher: topicDetailFetcher, topicCollectionResponseFetcher: topicCollectionResponseFetcher, toProfile: $toProfile, member: $member, toNode: $toNode, node: $node, fullWidth: true)
                             .environmentObject(topic)
-                            .listSectionSeparator(.hidden, edges: .top)
                             .listRowInsets(EdgeInsets())
                         ForEach(topic.supplements, id: \.id) { supplement in
                             SupplementView().environmentObject(supplement)
@@ -83,7 +82,7 @@ struct PostDetailView: View {
                 }
                 .background {
                     NavigationLink(isActive: $toNode) {
-                        FeedView(nodeName: node?.name ?? "", refresh: .constant(false))
+                        FeedView(refresh: .constant(false), nodeName: node?.name ?? "")
                             .toolbar {
                                 ToolbarItem(placement: .principal) {
                                     Text(node?.title ?? "")

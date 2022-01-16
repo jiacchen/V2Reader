@@ -15,52 +15,48 @@ struct FeedView: View {
     @Binding var refresh: Bool
     
     var body: some View {
-//        NavigationView {
-            List {
-//                StoriesBarView(topicCollectionResponseFetcher: topicCollectionResponseFetcher, nodeCollectionFetcher: nodeCollectionFetcher)
-//                    .listRowInsets(EdgeInsets())
-//                    .listRowSeparator(.hidden)
-                ForEach(topicCollectionResponseFetcher.topicCollection.elements, id: \.0) { (id, topic) in
-                    PostCardView(topicDetailFetcher: TopicResponseFetcher(), topicCollectionResponseFetcher: topicCollectionResponseFetcher, toProfile: .constant(false), member: .constant(nil), toNode: .constant(false), node: .constant(nil))
-                        .listRowSeparator(.hidden)
-                        .environmentObject(topic)
-                        .task {
-                            await topicCollectionResponseFetcher.fetchMoreIfNeeded(token: data.token!, id: id, nodeName: nodeName, homeNodes: data.homeNodes)
-                        }
-                }
-                if !topicCollectionResponseFetcher.fullyFetched {
-                    HStack {
-                        Spacer()
-                        ProgressView()
-                        Spacer()
-                    }
+        List {
+            ForEach(topicCollectionResponseFetcher.topicCollection.elements, id: \.0) { (id, topic) in
+                PostCardView(topicDetailFetcher: TopicResponseFetcher(), topicCollectionResponseFetcher: topicCollectionResponseFetcher, toProfile: .constant(false), member: .constant(nil), toNode: .constant(false), node: .constant(nil))
                     .listRowSeparator(.hidden)
-                }
+                    .environmentObject(topic)
+                    .task {
+                        await topicCollectionResponseFetcher.fetchMoreIfNeeded(token: data.token!, id: id, nodeName: nodeName, homeNodes: data.homeNodes)
+                    }
             }
-            .task {
-                if topicCollectionResponseFetcher.topicCollection.isEmpty {
-                    try? await topicCollectionResponseFetcher.fetchData(token: data.token!, name: nodeName, home: data.homeNodes)
+            if !topicCollectionResponseFetcher.fullyFetched {
+                HStack {
+                    Spacer()
+                    ProgressView()
+                    Spacer()
                 }
+                .listRowSeparator(.hidden)
             }
-            .listStyle(.plain)
+        }
+        .task {
+            if topicCollectionResponseFetcher.topicCollection.isEmpty {
+                try? await topicCollectionResponseFetcher.fetchData(token: data.token!, name: nodeName, home: data.homeNodes)
+            }
+        }
+        .listStyle(.plain)
 #if targetEnvironment(macCatalyst)
-            .onChange(of: refresh) { newValue in
-                Task {
-                    topicCollectionResponseFetcher.topicCollection = [:]
-                    topicCollectionResponseFetcher.currentPage = 1
-                    topicCollectionResponseFetcher.fullyFetched = false
-                    try? await topicCollectionResponseFetcher.fetchData(token: data.token!, name: nodeName, home: data.homeNodes)
-                }
-            }
-#else
-            .refreshable {
+        .onChange(of: refresh) { newValue in
+            Task {
                 topicCollectionResponseFetcher.topicCollection = [:]
                 topicCollectionResponseFetcher.currentPage = 1
                 topicCollectionResponseFetcher.fullyFetched = false
                 try? await topicCollectionResponseFetcher.fetchData(token: data.token!, name: nodeName, home: data.homeNodes)
             }
+        }
+#else
+        .refreshable {
+            topicCollectionResponseFetcher.topicCollection = [:]
+            topicCollectionResponseFetcher.currentPage = 1
+            topicCollectionResponseFetcher.fullyFetched = false
+            try? await topicCollectionResponseFetcher.fetchData(token: data.token!, name: nodeName, home: data.homeNodes)
+        }
 #endif
-            .navigationBarTitleDisplayMode(.inline)
+        .navigationBarTitleDisplayMode(.inline)
     }
 }
 
