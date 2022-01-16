@@ -276,7 +276,11 @@ extension UISplitViewController {
     open override func viewDidLoad() {
         super.viewDidLoad()
         self.preferredDisplayMode = DisplayMode.twoOverSecondary
+#if targetEnvironment(macCatalyst)
+        self.preferredSplitBehavior = SplitBehavior.displace
+#else
         self.preferredSplitBehavior = SplitBehavior.automatic
+#endif
     }
 }
 

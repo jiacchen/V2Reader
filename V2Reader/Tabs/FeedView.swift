@@ -9,10 +9,10 @@ import SwiftUI
 
 struct FeedView: View {
     @EnvironmentObject var data: AppData
-    var nodeName: String
     @State var showNewPostView = false
     @StateObject var topicCollectionResponseFetcher = TopicCollectionResponseFetcher()
     @Binding var refresh: Bool
+    var nodeName: String
     
     var body: some View {
         List {
@@ -62,6 +62,6 @@ struct FeedView: View {
 
 struct FeedView_Previews: PreviewProvider {
     static var previews: some View {
-        FeedView(nodeName: "home", refresh: .constant(false))
+        FeedView(refresh: .constant(false), nodeName: "home")
     }
 }
