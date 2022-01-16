@@ -11,12 +11,12 @@ struct SheetView: View {
     @Environment(\.dismiss) var dismiss
     @EnvironmentObject var data: AppData
     @State var searchText = ""
+    @State var showingAlert = false
     @Binding var editMode: EditMode
     @Binding var homeChanged: Bool
     @Binding var edited: Bool
     @Binding var showNodeManagement: Bool
     @ObservedObject var nodeCollectionFetcher: NodeCollectionFetcher
-    @ObservedObject var topicCollectionResponseFetcher: TopicCollectionResponseFetcher
     
     var body: some View {
         NavigationView {
@@ -24,7 +24,7 @@ struct SheetView: View {
                 ProgressView()
             } else {
                 List {
-                    Section("Home") {
+                    Section {
                         ForEach(homeResults, id: \.self) { name in
                             HStack {
                                 Text(nodeCollectionFetcher.nodeCollectionData[name]?.title ?? data.allNodes[name]!)
@@ -39,8 +39,10 @@ struct SheetView: View {
                                     }
                             }
                         }
+                    } header: {
+                        Text("Home")
                     }
-                    Section("Pinned") {
+                    Section {
                         ForEach(pinnedResults, id: \.self) { name in
                             HStack {
                                 Text(nodeCollectionFetcher.nodeCollectionData[name]?.title ?? data.allNodes[name]!)
@@ -58,10 +60,17 @@ struct SheetView: View {
                                     Image(systemName: "star.fill")
                                         .foregroundColor(Color(UIColor.systemFill))
                                         .onTapGesture {
-                                            withAnimation {
-                                                data.addToHome(name: name)
-                                                homeChanged = true
+                                            if data.homeNodes.count >= 5 {
+                                                showingAlert = true
+                                            } else {
+                                                withAnimation {
+                                                    data.addToHome(name: name)
+                                                    homeChanged = true
+                                                }
                                             }
+                                        }
+                                        .alert("You can select up to 5 nodes for the home feed.", isPresented: $showingAlert) {
+                                            Button("OK", role: .cancel) {}
                                         }
                                 }
                             }
@@ -78,8 +87,11 @@ struct SheetView: View {
                                 edited = true
                             }
                         }
+                    } header: {
+                        Text("Pinned")
                     }
-                    Section("All") {
+                    
+                    Section {
                         ForEach(allResults.sorted(by: { elem1, elem2 in
                             return elem1.key < elem2.key
                         }), id: \.0) { name, title in
@@ -99,6 +111,8 @@ struct SheetView: View {
                                 }
                             }
                         }
+                    } header: {
+                        Text("All")
                     }
                 }
                 .searchable(text: $searchText, placement: .navigationBarDrawer(displayMode: .always), prompt: "Search")
@@ -164,6 +178,6 @@ struct SheetView: View {
 
 struct SheetView_Previews: PreviewProvider {
     static var previews: some View {
-        SheetView(editMode: .constant(EditMode.inactive), homeChanged: .constant(false), edited: .constant(false), showNodeManagement: .constant(false), nodeCollectionFetcher: NodeCollectionFetcher(), topicCollectionResponseFetcher: TopicCollectionResponseFetcher())
+        SheetView(editMode: .constant(EditMode.inactive), homeChanged: .constant(false), edited: .constant(false), showNodeManagement: .constant(false), nodeCollectionFetcher: NodeCollectionFetcher())
     }
 }

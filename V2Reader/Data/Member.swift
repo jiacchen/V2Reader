@@ -66,6 +66,7 @@ struct MemberResponse: Codable {
 @MainActor
 class MemberResponseFetcher: ObservableObject {
     @Published var memberData = MemberResponse.defaultMember
+    @Published var completed = false
     
     enum FetchError: Error {
         case badRequest
@@ -82,5 +83,6 @@ class MemberResponseFetcher: ObservableObject {
 //        print(String(data: data, encoding: .utf8) ?? "Invalid JSON")
         guard (response as? HTTPURLResponse)?.statusCode == 200 else { throw FetchError.badRequest }
         memberData = try JSONDecoder().decode(MemberResponse.self, from: data)
+        completed = true
     }
 }

@@ -13,26 +13,32 @@ struct PostDetailView: View {
     @StateObject private var topicDetailFetcher = TopicResponseFetcher()
     @StateObject private var replyResponseFetcher = ReplyResponseFetcher()
     @ObservedObject var topicCollectionResponseFetcher: TopicCollectionResponseFetcher
-    @State var toProfile: Bool = false
+    @State var toProfile = false
     @State var member: Member?
     @State var showReturnButton = false
     @State var returnTo = 0
+    @State var node: Node?
+    @State var toNode = false
     
     var body: some View {
         ScrollViewReader { proxy in
             ZStack {
                 List {
                     Section {
-                        PostCardView(topicDetailFetcher: topicDetailFetcher, topicCollectionResponseFetcher: topicCollectionResponseFetcher, toProfile: $toProfile, member: $member, fullWidth: true)
+                        PostCardView(topicDetailFetcher: topicDetailFetcher, topicCollectionResponseFetcher: topicCollectionResponseFetcher, toProfile: $toProfile, member: $member, toNode: $toNode, node: $node, fullWidth: true)
                             .environmentObject(topic)
+                            .listSectionSeparator(.hidden, edges: .top)
+                            .listRowInsets(EdgeInsets())
                         ForEach(topic.supplements, id: \.id) { supplement in
                             SupplementView().environmentObject(supplement)
+                                .listRowInsets(EdgeInsets())
                         }
                     }
                     Section {
                         ForEach(replyResponseFetcher.replyCollection.elements, id: \.0) { id, reply in
                             ReplyCardView(toProfile: $toProfile, member: $member)
                                 .environmentObject(reply)
+                                .listRowInsets(EdgeInsets())
                                 .task {
                                     await replyResponseFetcher.fetchMoreIfNeeded(token: data.token!, id: id, topicId: topic.id)
                                 }
@@ -50,6 +56,7 @@ struct PostDetailView: View {
                                 ProgressView()
                                 Spacer()
                             }
+                            .listRowInsets(EdgeInsets())
                         }
                     }
                 }
@@ -67,9 +74,28 @@ struct PostDetailView: View {
                         returnTo = jumpFrom!
                     }
                 })
-                .listStyle(.insetGrouped)
+                .listStyle(.grouped)
                 .background {
                     NavigationLink(destination: ProfileView().environmentObject(member ?? Member(id: 0, username: "", url: "", website: nil, github: nil, bio: nil, avatar: "", created: 0)), isActive: $toProfile) {
+                        EmptyView()
+                    }
+                    .hidden()
+                }
+                .background {
+                    NavigationLink(isActive: $toNode) {
+                        FeedView(nodeName: node?.name ?? "", refresh: .constant(false))
+                            .toolbar {
+                                ToolbarItem(placement: .principal) {
+                                    Text(node?.title ?? "")
+                                        .fontWeight(.semibold)
+#if targetEnvironment(macCatalyst)
+                                        .font(.title3)
+#else
+                                        .font(.headline)
+#endif
+                                }
+                            }
+                    } label: {
                         EmptyView()
                     }
                     .hidden()
@@ -102,6 +128,11 @@ struct PostDetailView: View {
 #else
                             .font(.headline)
 #endif
+                    }
+                    ToolbarItem(placement: .navigationBarTrailing) {
+                        Link(destination: URL(string: topic.url)!) {
+                            Image(systemName: "arrowshape.turn.up.backward")
+                        }
                     }
                 }
                 

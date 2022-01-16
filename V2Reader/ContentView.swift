@@ -12,7 +12,12 @@ struct ContentView: View {
     @StateObject private var memberResponseFetcher = MemberResponseFetcher()
     @Binding var refresh: Bool
     @State var tokenEntered = ""
+    @State var showNodeManagement = false
+    @State var editMode = EditMode.inactive
+    @State var edited = false
+    @State var homeChanged = false
     @StateObject var tokenFetcher = TokenFetcher()
+    @StateObject var nodeCollectionFetcher = NodeCollectionFetcher()
     
     var body: some View {
         if data.token == nil {
@@ -58,52 +63,220 @@ struct ContentView: View {
                     .interactiveDismissDisabled()
                 }
         } else {
-            FeedView(refresh: $refresh)
-                .task {
-                    try? await tokenFetcher.fetchData(token: data.token!)
-                }
-                .onChange(of: tokenFetcher.completed, perform: { completed in
-                    if completed && tokenFetcher.tokenInvalid {
-                        tokenFetcher.completed = false
-                        try? data.deleteToken()
+            NavigationView {
+                List {
+                    HStack {
+                        Spacer()
+                        Image("Logo")
+                            .resizable()
+                            .aspectRatio(contentMode: .fit)
+                            .frame(width: 128)
+                        Spacer()
                     }
-                })
-//                .tabItem {
-//                    Label("Feed", systemImage: "newspaper")
-//                }
+                    .listRowBackground(Color.clear)
+                    
+                    NavigationLink {
+                        FeedView(nodeName: "home", refresh: $refresh)
+                            .toolbar {
+                                ToolbarItem(placement: .principal) {
+                                    Text("Home")
+                                        .fontWeight(.semibold)
 #if targetEnvironment(macCatalyst)
-                .withHostingWindow { window in
-                    if let titlebar = window?.windowScene?.titlebar {
-                        titlebar.titleVisibility = .hidden
-                        titlebar.toolbar = nil
+                                        .font(.title3)
+#else
+                                        .font(.headline)
+#endif
+                                }
+                            }
+#if targetEnvironment(macCatalyst)
+                            .withHostingWindow { window in
+                                if let titlebar = window?.windowScene?.titlebar {
+                                    titlebar.titleVisibility = .hidden
+                                    titlebar.toolbar = nil
+                                }
+                            }
+#endif
+                    } label: {
+                        HStack {
+                            AvatarView(url: "")
+                                .frame(width: 48)
+                            Text("Home")
+#if targetEnvironment(macCatalyst)
+                                .font(.title3)
+                                .fontWeight(.medium)
+#else
+                                .font(.headline)
+#endif
+                                .padding()
+                        }
+#if targetEnvironment(macCatalyst)
+                        .padding(.vertical)
+#endif
+                    }
+                    .listRowBackground(Color.clear)
+                    .listRowSeparator(.hidden)
+                    
+                    Section {
+                        ForEach(nodeCollectionFetcher.nodeCollectionData.elements, id: \.0) { name, node in
+                            if name != "home" {
+                                NavigationLink {
+                                    FeedView(nodeName: name, refresh: $refresh)
+                                        .toolbar {
+                                            ToolbarItem(placement: .principal) {
+                                                Text(node.title)
+                                                    .fontWeight(.semibold)
+#if targetEnvironment(macCatalyst)
+                                                    .font(.title3)
+#else
+                                                    .font(.headline)
+#endif
+                                            }
+                                            ToolbarItem(placement: .navigationBarTrailing) {
+                                                Link(destination: URL(string: "https://www.v2ex.com/write")!) {
+                                                    Image(systemName: "plus")
+                                                }
+                                            }
+                                        }
+#if targetEnvironment(macCatalyst)
+                                        .withHostingWindow { window in
+                                            if let titlebar = window?.windowScene?.titlebar {
+                                                titlebar.titleVisibility = .hidden
+                                                titlebar.toolbar = nil
+                                            }
+                                        }
+#endif
+                                } label: {
+                                    HStack {
+                                        AvatarView(url: node.avatar)
+                                            .frame(width: 48)
+                                        Text(node.title)
+#if targetEnvironment(macCatalyst)
+                                            .font(.title3)
+                                            .fontWeight(.medium)
+#else
+                                            .font(.headline)
+#endif
+                                            .padding()
+                                    }
+#if targetEnvironment(macCatalyst)
+                                    .padding(.vertical)
+#endif
+                                }
+                                .listRowBackground(Color.clear)
+                                .listRowSeparator(.hidden)
+                            }
+                        }
+                    } header: {
+                        Text("Pinned")
+                    }
+                    
+                    NavigationLink {
+                        ProfileView()
+                            .environmentObject(Member(id: memberResponseFetcher.memberData.result.id, username: memberResponseFetcher.memberData.result.username, url: memberResponseFetcher.memberData.result.url, website: memberResponseFetcher.memberData.result.website, github: memberResponseFetcher.memberData.result.github, bio: memberResponseFetcher.memberData.result.bio, avatar: memberResponseFetcher.memberData.result.avatar_xxxlarge ?? memberResponseFetcher.memberData.result.avatar_large, created: memberResponseFetcher.memberData.result.created))
+                    } label: {
+                        HStack {
+                            AvatarView(url: memberResponseFetcher.memberData.result.avatar_xxxlarge ?? memberResponseFetcher.memberData.result.avatar_large)
+                                .frame(width: 48)
+                            Text(memberResponseFetcher.memberData.result.username)
+#if targetEnvironment(macCatalyst)
+                                .font(.title3)
+                                .fontWeight(.medium)
+#else
+                                .font(.headline)
+#endif
+                                .padding()
+                        }
+#if targetEnvironment(macCatalyst)
+                        .padding(.vertical)
+#endif
+                    }
+                    .listRowBackground(Color.clear)
+                    .listRowSeparator(.hidden)
+                }
+                .task {
+                    if !nodeCollectionFetcher.completed {
+                        try? await nodeCollectionFetcher.fetchData(token: data.token!, names: data.pinnedNodes)
+                    }
+                    if !memberResponseFetcher.completed {
+                        try? await memberResponseFetcher.fetchData(token: data.token!)
                     }
                 }
-//#else
-//        TabView() {
-//            FeedView(refresh: $refresh)
-//                .tabItem {
-//                    Label("Feed", systemImage: "newspaper")
-//                }
-            
-//            ActivityView()
-//                .tabItem {
-//                    Label("Activity", systemImage: "bell")
-//                }
-//
-//            NavigationView {
-//                ProfileView()
-//                    .environmentObject(Member(id: memberResponseFetcher.memberData.result.id, username: memberResponseFetcher.memberData.result.username, url: memberResponseFetcher.memberData.result.url, website: memberResponseFetcher.memberData.result.website, github: memberResponseFetcher.memberData.result.github, bio: memberResponseFetcher.memberData.result.bio, avatar: memberResponseFetcher.memberData.result.avatar_xxxlarge ?? memberResponseFetcher.memberData.result.avatar_large, created: memberResponseFetcher.memberData.result.created))
-//            }
-//            .navigationViewStyle(.stack)
-//            .tabItem {
-//                Label("Profile", systemImage: "person")
-//            }
-//        }
-//        .task {
-//            try? await memberResponseFetcher.fetchData(token: data.token!)
-//        }
+                .toolbar {
+                    ToolbarItem(placement: .navigationBarLeading) {
+                        Button {
+                            showNodeManagement = true
+                        } label: {
+                            Image(systemName: "switch.2")
+                        }
+
+                    }
+                    ToolbarItem(placement: .navigationBarTrailing) {
+                        NavigationLink {
+                            ActivityView()
+                        } label: {
+                            Image(systemName: "bell")
+                        }
+                    }
+                }
+                .navigationBarTitleDisplayMode(.inline)
+                FeedView(nodeName: "home", refresh: $refresh)
+                    .toolbar {
+                        ToolbarItem(placement: .principal) {
+                            Text("Home")
+                                .fontWeight(.semibold)
+#if targetEnvironment(macCatalyst)
+                                .font(.title3)
+#else
+                                .font(.headline)
 #endif
+                        }
+                    }
+                Text("Nothing Selected")
+#if targetEnvironment(macCatalyst)
+                    .font(.title3)
+                    .withHostingWindow { window in
+                        if let titlebar = window?.windowScene?.titlebar {
+                            titlebar.titleVisibility = .hidden
+                            titlebar.toolbar = nil
+                        }
+                    }
+#else
+                    .font(.body)
+#endif
+                    .foregroundColor(.secondary)
+            }
+            .task {
+                try? await tokenFetcher.fetchData(token: data.token!)
+            }
+            .onChange(of: tokenFetcher.completed, perform: { completed in
+                if completed && tokenFetcher.tokenInvalid {
+                    tokenFetcher.completed = false
+                    try? data.deleteToken()
+                }
+            })
+            .sheet(isPresented: $showNodeManagement, onDismiss: {
+                editMode = EditMode.inactive
+                if edited {
+                    edited = false
+                    nodeCollectionFetcher.completed = false
+                    Task {
+                        if !nodeCollectionFetcher.completed {
+                            try? await nodeCollectionFetcher.fetchData(token: data.token!, names: data.pinnedNodes)
+                        }
+                    }
+                }
+            }, content: {
+                SheetView(editMode: $editMode, homeChanged: $homeChanged, edited: $edited, showNodeManagement: $showNodeManagement, nodeCollectionFetcher: nodeCollectionFetcher).environmentObject(data)
+            })
         }
+    }
+}
+
+extension UISplitViewController {
+    open override func viewDidLoad() {
+        super.viewDidLoad()
+        self.preferredDisplayMode = DisplayMode.twoOverSecondary
+        self.preferredSplitBehavior = SplitBehavior.automatic
     }
 }
 

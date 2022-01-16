@@ -22,6 +22,7 @@ struct SupplementView: View {
 #else
                             .font(.body)
 #endif
+                            .padding(.horizontal)
                     }
                     if index < supplement.imageURL.count {
                         AsyncImage(url: URL(string: supplement.imageURL[index]), scale: 2) { phase in
@@ -36,9 +37,13 @@ struct SupplementView: View {
                                 image
                                     .resizable()
                                     .aspectRatio(contentMode: .fit)
-                                    .cornerRadius(12)
+//                                    .cornerRadius(12)
                             case .failure:
-                                Image(systemName: "photo")
+                                HStack {
+                                    Spacer()
+                                    Image(systemName: "photo")
+                                    Spacer()
+                                }
                             @unknown default:
                                 // Since the AsyncImagePhase enum isn't frozen,
                                 // we need to add this currently unused fallback
@@ -64,6 +69,7 @@ struct SupplementView: View {
 #endif
                 .foregroundColor(.secondary)
                 .padding(.top, 8)
+                .padding(.horizontal)
             }
         }
         .padding(.vertical)

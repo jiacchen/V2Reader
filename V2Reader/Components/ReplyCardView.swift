@@ -73,6 +73,7 @@ struct ReplyCardView: View {
 #endif
                         .foregroundColor(.secondary)
                 }
+                .padding(.horizontal)
                 ForEach(0..<reply.content_rendered.count) { index in
                     if !reply.content[index].isEmpty {
                         Text(reply.content_rendered[index])
@@ -81,6 +82,7 @@ struct ReplyCardView: View {
 #else
                             .font(.body)
 #endif
+                            .padding(.horizontal)
                     }
                     if index < reply.imageURL.count {
                         AsyncImage(url: URL(string: reply.imageURL[index]), scale: 2) { phase in
@@ -95,9 +97,13 @@ struct ReplyCardView: View {
                                 image
                                     .resizable()
                                     .aspectRatio(contentMode: .fit)
-                                    .cornerRadius(12)
+//                                    .cornerRadius(12)
                             case .failure:
-                                Image(systemName: "photo")
+                                HStack {
+                                    Spacer()
+                                    Image(systemName: "photo")
+                                    Spacer()
+                                }
                             @unknown default:
                                 // Since the AsyncImagePhase enum isn't frozen,
                                 // we need to add this currently unused fallback

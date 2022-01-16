@@ -13,7 +13,7 @@ struct AvatarView: View {
     var body: some View {
         if let avatarURL = url {
             if avatarURL == "" {
-                Image(systemName: "house.circle.fill")
+                Image(systemName: "star.square.fill")
                     .resizable()
                     .aspectRatio(contentMode: .fit)
                     .foregroundColor(.accentColor)
@@ -22,7 +22,7 @@ struct AvatarView: View {
                     image
                         .resizable()
                         .aspectRatio(contentMode: .fill)
-                        .mask(Circle())
+                        .cornerRadius(10)
                 } placeholder: {
                     Image(systemName: "circle")
                         .resizable()

@@ -43,11 +43,11 @@ struct PostReactionsBarView: View {
         .padding(.top, 8)
     }
     
-    func share() {
-        let activityVC = UIActivityViewController(activityItems: [topic.title, URL(string: topic.url)!], applicationActivities: nil)
-        guard let windowScene = UIApplication.shared.connectedScenes.first as? UIWindowScene else { return }
-        windowScene.keyWindow?.rootViewController?.present(activityVC, animated: true, completion: nil)
-   }
+//    func share() {
+//        let activityVC = UIActivityViewController(activityItems: [topic.title, URL(string: topic.url)!], applicationActivities: nil)
+//        guard let windowScene = UIApplication.shared.connectedScenes.first as? UIWindowScene else { return }
+//        windowScene.keyWindow?.rootViewController?.present(activityVC, animated: true, completion: nil)
+//   }
 }
 
 struct PostReactionsBarView_Previews: PreviewProvider {

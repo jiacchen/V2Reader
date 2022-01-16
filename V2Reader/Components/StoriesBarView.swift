@@ -71,7 +71,7 @@ struct StoriesBarView: View {
                 proxy.scrollTo(data.currentNode)
             }
             .onChange(of: data.currentNode) { newNode in
-                print(newNode)
+//                print(newNode)
                 proxy.scrollTo(newNode)
             }
         }

@@ -35,7 +35,7 @@ class Reply: ObservableObject {
             guard let range = Range(match.range, in: content) else { continue }
             let url = content[range]
             
-            if url.contains("imgur.com") || url.contains("i.v2ex.co") || url[url.index(url.startIndex, offsetBy: url.count - 4)..<url.endIndex] == ".jpg" || url[url.index(url.startIndex, offsetBy: url.count - 4)..<url.endIndex] == ".png" || url[url.index(url.startIndex, offsetBy: url.count - 5)..<url.endIndex] == ".jpeg" {
+            if url.contains("i.v2ex.co") || url[url.index(url.startIndex, offsetBy: url.count - 4)..<url.endIndex] == ".jpg" || url[url.index(url.startIndex, offsetBy: url.count - 4)..<url.endIndex] == ".png" || url[url.index(url.startIndex, offsetBy: url.count - 5)..<url.endIndex] == ".jpeg" {
                 var tempText = ""
                 for prevText in prevTexts {
                     tempText.append(prevText)

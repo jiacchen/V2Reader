@@ -11,14 +11,11 @@ struct ActivityView: View {
     @EnvironmentObject var data: AppData
     
     var body: some View {
-        NavigationView {
-            ScrollView {
-                EmptyView()
-            }
-            .navigationTitle("Activity")
-            .navigationBarTitleDisplayMode(.inline)
+        ScrollView {
+            EmptyView()
         }
-        .navigationViewStyle(.stack)
+        .navigationTitle("Notifications")
+        .navigationBarTitleDisplayMode(.inline)
     }
 }
 

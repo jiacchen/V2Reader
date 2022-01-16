@@ -20,10 +20,10 @@
 "加入于 " = "加入于";
 
 /* No comment provided by engineer. */
-"A **Personal Access Token** is required to access the V2EX API 2.0 Beta." = "你需要一个**Personal Access Token**来使用V2EX API 2.0 Beta。";
+"A **Personal Access Token** is required to access the V2EX API 2.0 Beta." = "你需要提供一个 **Personal Access Token** 来访问 V2EX API 2.0 Beta。";
 
 /* No comment provided by engineer. */
-"Activity" = "通知";
+"Notifications" = "通知";
 
 /* No comment provided by engineer. */
 "Cancel" = "取消";
@@ -38,7 +38,7 @@
 "in " = "in ";
 
 /* No comment provided by engineer. */
-"Invalid token!\nPlease try again." = "此Token无效，请再试一次。";
+"Invalid token!\nPlease try again." = "此 Token 无效，请再试一次。";
 
 /* No comment provided by engineer. */
 "New" = "发布主题";
@@ -47,7 +47,7 @@
 "Nodes" = "节点";
 
 /* No comment provided by engineer. */
-"Nothing Selected." = "Nothing Selected.";
+"Nothing Selected" = "未选择主题";
 
 /* No comment provided by engineer. */
 "OK" = "好的";
@@ -56,7 +56,7 @@
 "OP" = "OP";
 
 /* No comment provided by engineer. */
-"Please follow the instruction on the [website](https://www.v2ex.com/help/personal-access-token) to create a token and enter it in the field below." = "请按照[此网站](https://www.v2ex.com/help/personal-access-token)的指示创建一个Token，并填写在下方的输入框中。";
+"Please follow the instruction on the [website](https://www.v2ex.com/help/personal-access-token) to create a token and enter it in the field below." = "请按照[此网页](https://www.v2ex.com/help/personal-access-token)的指示创建一个 Token，并填写在下方的输入框中。";
 
 /* No comment provided by engineer. */
 "Post" = "主题";
@@ -74,7 +74,7 @@
 "Search" = "搜索";
 
 /* No comment provided by engineer. */
-"The token you entered will be stored securely in the keychain." = "输入的Token将会被安全地保存在Keychain里。";
+"The token you entered will be stored securely in the keychain." = "输入的 Token 将会被安全地存储在 Keychain 里。";
 
 /* No comment provided by engineer. */
 "Token" = "Token";
@@ -88,3 +88,14 @@
 /* No comment provided by engineer. */
 "What's happening?" = "What's happening?";
 
+/* No comment provided by engineer. */
+"You can select up to 5 nodes for the home feed." = "主页中最多可以包含5个节点。";
+
+/* No comment provided by engineer. */
+"Home" = "主页";
+
+/* No comment provided by engineer. */
+"Pinned" = "关注";
+
+/* No comment provided by engineer. */
+"All" = "所有";

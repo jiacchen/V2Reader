@@ -107,7 +107,6 @@ struct ProfileView: View {
 //                }
             }
         }
-        .navigationTitle("Profile")
         .navigationBarTitleDisplayMode(.inline)
 //        .toolbar {
 //            ToolbarItem(placement: .navigationBarTrailing) {

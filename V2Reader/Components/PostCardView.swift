@@ -15,6 +15,8 @@ struct PostCardView: View {
     @ObservedObject var topicCollectionResponseFetcher: TopicCollectionResponseFetcher
     @Binding var toProfile: Bool
     @Binding var member: Member?
+    @Binding var toNode: Bool
+    @Binding var node: Node?
     @State var usernameWithLink = AttributedString()
     @State var nodeTitleWithLink = AttributedString()
     var fullWidth = false
@@ -32,6 +34,7 @@ struct PostCardView: View {
                         .font(.title3)
 #endif
                         .fontWeight(.medium)
+                        .padding(.horizontal)
                 } else {
                     Text(topic.title)
 #if targetEnvironment(macCatalyst)
@@ -52,6 +55,7 @@ struct PostCardView: View {
 #else
                                     .font(.body)
 #endif
+                                    .padding(.horizontal)
                             }
                             if index < topic.imageURL.count {
                                 AsyncImage(url: URL(string: topic.imageURL[index]), scale: 2) { phase in
@@ -66,9 +70,13 @@ struct PostCardView: View {
                                         image
                                             .resizable()
                                             .aspectRatio(contentMode: .fit)
-                                            .cornerRadius(12)
+//                                            .cornerRadius(12)
                                     case .failure:
-                                        Image(systemName: "photo")
+                                        HStack {
+                                            Spacer()
+                                            Image(systemName: "photo")
+                                            Spacer()
+                                        }
                                     @unknown default:
                                         // Since the AsyncImagePhase enum isn't frozen,
                                         // we need to add this currently unused fallback
@@ -102,9 +110,13 @@ struct PostCardView: View {
                                     image
                                         .resizable()
                                         .aspectRatio(contentMode: .fit)
-                                        .cornerRadius(12)
+                                        .cornerRadius(10)
                                 case .failure:
-                                    Image(systemName: "photo")
+                                    HStack {
+                                        Spacer()
+                                        Image(systemName: "photo")
+                                        Spacer()
+                                    }
                                 @unknown default:
                                     // Since the AsyncImagePhase enum isn't frozen,
                                     // we need to add this currently unused fallback
@@ -170,18 +182,10 @@ struct PostCardView: View {
                                     }
                                 case "go":
                                     path.removeFirst()
-                                    if data.currentNode != path {
-                                        data.switchNode(newNode: path)
-                                        topicCollectionResponseFetcher.topicCollection = [:]
-                                        topicCollectionResponseFetcher.currentPage = 1
-                                        topicCollectionResponseFetcher.fullyFetched = false
-                                        Task {
-                                            if topicCollectionResponseFetcher.topicCollection.isEmpty {
-                                                try? await topicCollectionResponseFetcher.fetchData(token: data.token!, name: data.currentNode, home: data.homeNodes)
-                                            }
-                                        }
+                                    if path == topic.node!.name {
+                                        toNode = true
+                                        node = topic.node!
                                     }
-                                    dismiss()
                                 default:
                                     break
                                 }
@@ -197,8 +201,14 @@ struct PostCardView: View {
                                 .hidden()
                         }
                     }
+                    .padding(.horizontal)
                 }
-                PostReactionsBarView(fullWidth: fullWidth)
+                if fullWidth {
+                    PostReactionsBarView(fullWidth: true)
+                        .padding(.horizontal)
+                } else {
+                    PostReactionsBarView(fullWidth: false)
+                }
             }
             .padding(.vertical)
         }
@@ -223,6 +233,6 @@ struct CustomButtonStyle: ButtonStyle {
 
 struct PostCardView_Previews: PreviewProvider {
     static var previews: some View {
-        PostCardView(topicDetailFetcher: TopicResponseFetcher(), topicCollectionResponseFetcher: TopicCollectionResponseFetcher(), toProfile: .constant(false), member: .constant(nil))
+        PostCardView(topicDetailFetcher: TopicResponseFetcher(), topicCollectionResponseFetcher: TopicCollectionResponseFetcher(), toProfile: .constant(false), member: .constant(nil), toNode: .constant(false), node: .constant(nil))
     }
 }
