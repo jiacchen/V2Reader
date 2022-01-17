@@ -39,7 +39,7 @@ iOS/iPadOS 15 以上，或者 macOS 12 Monterey 以上（使用了 Catalyst，�
 
 ### 为什么 API 2.0 Beta 已经有了获取提醒的 API，但软件内还没有实现？
 
-主要有两个原因。一、这个 API 获取的内容都是 HTML 格式的，我还没有考虑用什么方式去解析，而帖子中的内容是 Markdown 格式的，可以用 iOS 15 新引入的 AttributedString。二、这个提醒 API 还获取不到帖子的 id，暂时也没办法实现点击跳转帖子的功能。
+有两个原因：一、这个 API 获取的内容都是 HTML 格式的，我还没有考虑用什么方式去解析，而帖子中的内容是 Markdown 格式的，可以用 iOS 15 新引入的 AttributedString。二、这个提醒 API 还获取不到帖子的 id，暂时也没办法实现点击跳转帖子的功能。
 
 ### 为什么有些 Markdown 格式的内容没有正常显示？
 
