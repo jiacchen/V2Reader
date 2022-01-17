@@ -6,7 +6,7 @@ V2Reader 是一个用 SwiftUI 开发的，在 iOS、iPadOS 和 macOS 上的 V2EX
 
 ## 简介
 
-我前段时间刚好看到 V2EX API 2.0 的页面，就试了一下，当时还发了一个小 [issue](https://www.v2ex.com/t/825436)，不过站长很快就解决了。那个时候正好还在放假，就想着学一下 iOS 开发，然后用这些 API 写一个客户端练手。目前只用了 SwiftUI 原生的组件，没有使用第三方库。因为才刚接触 Swift，基本是一边学一边写，所以很多地方的代码有点乱，等以后整理好了应该会开源。页面布局参考了两款我很喜欢的 App：[Apollo for Reddit](https://apps.apple.com/us/app/apollo-for-reddit/id979274575) 和 [Reeder 5](https://apps.apple.com/us/app/reeder-5/id1529445840)。
+我前段时间看到 V2EX API 2.0 的页面，就试了一下，当时还发了一个小 [issue](https://www.v2ex.com/t/825436)，站长很快就解决了。那个时候刚好还在放假，就想着学一下 iOS 开发，然后用这些 API 写一个客户端练手。目前只用了 SwiftUI 原生的组件，没有使用第三方库。因为才刚接触 Swift，基本是一边学一边写，所以很多地方的代码有点乱，等以后整理好了应该会开源。页面布局参考了两款我很喜欢的 App：[Apollo for Reddit](https://apps.apple.com/us/app/apollo-for-reddit/id979274575) 和 [Reeder 5](https://apps.apple.com/us/app/reeder-5/id1529445840)。
 
 ## 安装
 
@@ -40,7 +40,7 @@ iOS/iPadOS 15 以上，或者 macOS 12 Monterey 以上（使用了 Catalyst，�
 
 ### 为什么 API 2.0 Beta 已经有了获取提醒的 API，但软件内还没有实现？
 
-有两个原因：一、这个 API 获取的内容都是 HTML 格式的，我还没有考虑用什么方式去解析，而帖子中的内容是 Markdown 格式的，可以用 iOS 15 新引入的 AttributedString。二、这个提醒 API 还获取不到帖子的 id，暂时也没办法实现点击跳转帖子的功能。
+有两个原因：一、这个 API 获取的内容都是 HTML 格式的，我还没有考虑用什么方式去解析，不像帖子中的内容是 Markdown 格式的，可以用 iOS 15 新引入的 AttributedString。二、这个提醒 API 还获取不到帖子的 id，暂时也没办法实现点击跳转帖子的功能。
 
 ### 为什么有些 Markdown 格式的内容没有正常显示？
 
