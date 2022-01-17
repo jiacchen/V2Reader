@@ -52,7 +52,7 @@ iOS/iPadOS 15 以上，或者 macOS 12 Monterey 以上（使用了 Catalyst，�
 
 ### 为什么需要用 Token 来登录？可不可以使用账号密码或者免登录？
 
-因为 V2EX API 2.0 Beta 的登录验证是通过 Token 的，所以需要用户自己创建 Token，然后复制粘贴到 App 中，App 会将 Token 放入系统的 Keychain 保存。用 Token 是否安全，可以参考站长在[这个帖子](https://www.v2ex.com/t/812163#reply13)中的回复。
+因为 V2EX API 2.0 Beta 的登录验证是通过 Token 的，所以需要用户自己创建 Token，然后复制粘贴到 App 中，App 会将 Token 放入系统的 Keychain 保存。用 Token 是否安全，可以参考站长 @Livid 在[这个帖子](https://www.v2ex.com/t/812163#reply13)中的回复。
 
 ### 为什么使用一段时间之后加载不出内容了，重新启动之后显示 Token 无效？
 
@@ -64,4 +64,4 @@ iOS/iPadOS 15 以上，或者 macOS 12 Monterey 以上（使用了 Catalyst，�
 
 ## 最后
 
-我写这个 App 只是作为学习 Swift 的练手，目前支持的功能还很少，可能也还有比较多的问题，并不是为了代替网页版或者别的优秀 App，大家有兴趣的话欢迎加入 TestFlight 测试，反馈使用中的问题和需要改进的地方。
+我写这个 App 只是作为学习 Swift 的练手，目前支持的功能还很少，可能也还有比较多的问题，并不能代替网页版或者别的优秀 App，大家有兴趣的话欢迎加入 TestFlight 测试体验，反馈使用中的问题和需要改进的地方。
