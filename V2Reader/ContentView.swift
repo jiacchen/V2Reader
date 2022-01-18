@@ -70,7 +70,7 @@ struct ContentView: View {
                         Image("Logo")
                             .resizable()
                             .aspectRatio(contentMode: .fit)
-                            .frame(width: 128)
+                            .frame(width: 96)
                         Spacer()
                     }
                     .listRowBackground(Color.clear)
