@@ -24,8 +24,8 @@ iOS/iPadOS 15 以上，或者 macOS 12 Monterey 以上（使用了 Catalyst，�
 - 搜索节点并关注或者将节点添加到主页
   ![iOS 截屏](https://i.v2ex.co/ob17825n.jpeg)
 
-- 点击发布主题或发布回复的用户查看用户信息
-  ![iOS 截屏](https://i.v2ex.co/sxY2hPx9.jpeg)
+- 点击发布者或回复者的 id 查看用户信息
+  ![iOS 截屏](https://i.v2ex.co/5X2B8Pbb.png)
 
 - 自动在 @用户 后添加楼层号，可以点击跳转到对应的楼层，然后点击蓝色箭头跳回原楼层
   ![iOS 截屏](https://i.v2ex.co/S67f1H6g.jpeg)
