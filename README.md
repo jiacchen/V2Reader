@@ -2,7 +2,7 @@
 
 ## TLDR
 
-V2Reader 是一个用 SwiftUI 开发的，在 iOS、iPadOS 和 macOS 上的 V2EX 客户端。因为所有的数据都是通过访问 [V2EX API 2.0 Beta](https://www.v2ex.com/help/api) 来获取的，而这份文档还在更新，有很多数据没有提供，所以 V2Reader 的功能还比较有限。之后随着 API 的更新，会有更多功能加入。
+V2Reader 是一个用 SwiftUI 开发的，在 iOS、iPadOS 和 macOS 上的 V2EX 第三方客户端。因为所有的数据都是通过访问 [V2EX API 2.0 Beta](https://www.v2ex.com/help/api) 来获取的，而这份文档还在更新，有很多数据没有提供，所以 V2Reader 的功能还比较有限。之后随着 API 的更新，会有更多功能加入。
 
 ## 简介
 
