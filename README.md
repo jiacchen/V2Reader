@@ -19,18 +19,22 @@ iOS/iPadOS 15 以上，或者 macOS 12 Monterey 以上（使用了 Catalyst，�
 ## 功能
 
 - 通过不同节点访问主题以及回复
+  ![iOS 截屏](https://i.v2ex.co/T4dk2b9E.jpeg)
+
 - 搜索节点并关注或者将节点添加到主页
+  ![iOS 截屏](https://i.v2ex.co/ob17825n.jpeg)
+
 - 点击发布主题或发布回复的用户查看用户信息
-  ![iOS 截屏](https://i.v2ex.co/zfte03dU.jpeg)
+  ![iOS 截屏](https://i.v2ex.co/sxY2hPx9.jpeg)
 
 - 在回复中 @ 其他用户会自动添加楼层号，可以点击跳转到对应的楼层，然后点击蓝色箭头跳回原楼层
-  ![iOS 截屏](https://i.v2ex.co/7azTmc1G.jpeg)
+  ![iOS 截屏](https://i.v2ex.co/S67f1H6g.jpeg)
 
 - iPad 版本以三列视图显示，支持分屏或小窗模式
-  ![iPadOS 截屏](https://i.v2ex.co/bFT2rOSL.png)
+  ![iPadOS 截屏](https://i.v2ex.co/CH83yN0C.png)
 
 - Mac Catalyst 版本
-  ![macOS 截屏](https://i.v2ex.co/a3rt7ir0.png)
+  ![macOS 截屏](https://i.v2ex.co/OcWD1T9g.png)
 
 ## FAQ
 
@@ -58,7 +62,7 @@ iOS/iPadOS 15 以上，或者 macOS 12 Monterey 以上（使用了 Catalyst，�
 
 站长设置了每小时最多请求 API 600 次，这种情况可能是达到了限制，可以等整点后再尝试。
 
-### 为什么主页中最多只能添加5个节点？
+### 为什么主页中最多只能添加 5 个节点？
 
 主页每次刷新时，每个节点都需要单独访问一次 API，所以主页中包含的节点过多会导致很快达到 API 请求次数的上限。
 
