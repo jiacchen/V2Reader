@@ -14,10 +14,10 @@
 		4E4B92B62786B67A00273317 /* Reply.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4E4B92B52786B67A00273317 /* Reply.swift */; };
 		4E4B92B82786B76F00273317 /* Member.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4E4B92B72786B76F00273317 /* Member.swift */; };
 		4E6C2BB62787B4310008AF2B /* OrderedCollections in Frameworks */ = {isa = PBXBuildFile; productRef = 4E6C2BB52787B4310008AF2B /* OrderedCollections */; };
+		4E7262672798C93A002A3845 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 4E7262652798C93A002A3845 /* InfoPlist.strings */; };
+		4E72626A2798C93A002A3845 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 4E7262682798C93A002A3845 /* Localizable.strings */; };
 		4E8A99F72789665B0092A2BE /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4E8A99F62789665B0092A2BE /* ContentView.swift */; };
 		4EAD48462785311A00AA35CC /* ReplyCardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4EAD48452785311A00AA35CC /* ReplyCardView.swift */; };
-		4EC194932790FBBC00F7FD9E /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 4EC194912790FBBC00F7FD9E /* InfoPlist.strings */; };
-		4EC194962790FBBC00F7FD9E /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 4EC194942790FBBC00F7FD9E /* Localizable.strings */; };
 		4ED1BED5278D4AB200C9F333 /* SheetView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4ED1BED4278D4AB200C9F333 /* SheetView.swift */; };
 		863CC8D1277A13050045112E /* PostDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 863CC8D0277A13050045112E /* PostDetailView.swift */; };
 		863CC8D3277A13F00045112E /* PostHeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 863CC8D2277A13F00045112E /* PostHeaderView.swift */; };
@@ -44,10 +44,11 @@
 		4E4B92B12786B57F00273317 /* Topic.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Topic.swift; sourceTree = "<group>"; };
 		4E4B92B52786B67A00273317 /* Reply.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Reply.swift; sourceTree = "<group>"; };
 		4E4B92B72786B76F00273317 /* Member.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Member.swift; sourceTree = "<group>"; };
+		4E7262662798C93A002A3845 /* zh-Hans */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hans"; path = "zh-Hans.lproj/InfoPlist.strings"; sourceTree = "<group>"; };
+		4E7262692798C93A002A3845 /* zh-Hans */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hans"; path = "zh-Hans.lproj/Localizable.strings"; sourceTree = "<group>"; };
+		4E72626D2798CCD2002A3845 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		4E8A99F62789665B0092A2BE /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
 		4EAD48452785311A00AA35CC /* ReplyCardView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReplyCardView.swift; sourceTree = "<group>"; };
-		4EC194922790FBBC00F7FD9E /* zh-Hans */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hans"; path = "zh-Hans.lproj/InfoPlist.strings"; sourceTree = "<group>"; };
-		4EC194952790FBBC00F7FD9E /* zh-Hans */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hans"; path = "zh-Hans.lproj/Localizable.strings"; sourceTree = "<group>"; };
 		4ED1BED4278D4AB200C9F333 /* SheetView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SheetView.swift; sourceTree = "<group>"; };
 		863CC8D0277A13050045112E /* PostDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PostDetailView.swift; sourceTree = "<group>"; };
 		863CC8D2277A13F00045112E /* PostHeaderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PostHeaderView.swift; sourceTree = "<group>"; };
@@ -103,8 +104,8 @@
 		86AEF6192777BC500028E4C5 = {
 			isa = PBXGroup;
 			children = (
-				4EC194942790FBBC00F7FD9E /* Localizable.strings */,
-				4EC194912790FBBC00F7FD9E /* InfoPlist.strings */,
+				4E7262682798C93A002A3845 /* Localizable.strings */,
+				4E7262652798C93A002A3845 /* InfoPlist.strings */,
 				86AEF6242777BC500028E4C5 /* V2Reader */,
 				86AEF6232777BC500028E4C5 /* Products */,
 			);
@@ -221,8 +222,8 @@
 			hasScannedForEncodings = 0;
 			knownRegions = (
 				en,
-				Base,
 				"zh-Hans",
+				Base,
 			);
 			mainGroup = 86AEF6192777BC500028E4C5;
 			packageReferences = (
@@ -243,8 +244,8 @@
 			buildActionMask = 2147483647;
 			files = (
 				86AEF62D2777BC500028E4C5 /* Preview Assets.xcassets in Resources */,
-				4EC194962790FBBC00F7FD9E /* Localizable.strings in Resources */,
-				4EC194932790FBBC00F7FD9E /* InfoPlist.strings in Resources */,
+				4E72626A2798C93A002A3845 /* Localizable.strings in Resources */,
+				4E7262672798C93A002A3845 /* InfoPlist.strings in Resources */,
 				86AEF62A2777BC500028E4C5 /* Assets.xcassets in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -284,19 +285,20 @@
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXVariantGroup section */
-		4EC194912790FBBC00F7FD9E /* InfoPlist.strings */ = {
+		4E7262652798C93A002A3845 /* InfoPlist.strings */ = {
 			isa = PBXVariantGroup;
 			children = (
-				4EC194922790FBBC00F7FD9E /* zh-Hans */,
+				4E7262662798C93A002A3845 /* zh-Hans */,
+				4E72626D2798CCD2002A3845 /* en */,
 			);
 			name = InfoPlist.strings;
 			path = V2Reader;
 			sourceTree = "<group>";
 		};
-		4EC194942790FBBC00F7FD9E /* Localizable.strings */ = {
+		4E7262682798C93A002A3845 /* Localizable.strings */ = {
 			isa = PBXVariantGroup;
 			children = (
-				4EC194952790FBBC00F7FD9E /* zh-Hans */,
+				4E7262692798C93A002A3845 /* zh-Hans */,
 			);
 			name = Localizable.strings;
 			path = V2Reader;
@@ -432,7 +434,7 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_ENTITLEMENTS = V2Reader/V2Reader.entitlements;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 9;
+				CURRENT_PROJECT_VERSION = 10;
 				DEVELOPMENT_ASSET_PATHS = "\"V2Reader/Preview Content\"";
 				DEVELOPMENT_TEAM = FJC939GGVP;
 				ENABLE_PREVIEWS = YES;
@@ -468,7 +470,7 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_ENTITLEMENTS = V2Reader/V2Reader.entitlements;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 9;
+				CURRENT_PROJECT_VERSION = 10;
 				DEVELOPMENT_ASSET_PATHS = "\"V2Reader/Preview Content\"";
 				DEVELOPMENT_TEAM = FJC939GGVP;
 				ENABLE_PREVIEWS = YES;
