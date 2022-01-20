@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-struct PostDetailView: View {
+struct TopicView: View {
     @EnvironmentObject var data: AppData
     @EnvironmentObject var topic: Topic
     @StateObject private var topicDetailFetcher = TopicResponseFetcher()
@@ -25,7 +25,7 @@ struct PostDetailView: View {
             ZStack {
                 List {
                     Section {
-                        PostCardView(topicDetailFetcher: topicDetailFetcher, topicCollectionResponseFetcher: topicCollectionResponseFetcher, toProfile: $toProfile, member: $member, toNode: $toNode, node: $node, fullWidth: true)
+                        PostView(topicDetailFetcher: topicDetailFetcher, topicCollectionResponseFetcher: topicCollectionResponseFetcher, toProfile: $toProfile, member: $member, toNode: $toNode, node: $node, fullWidth: true)
                             .environmentObject(topic)
                             .listRowInsets(EdgeInsets())
                         ForEach(topic.supplements, id: \.id) { supplement in
@@ -35,7 +35,7 @@ struct PostDetailView: View {
                     }
                     Section {
                         ForEach(replyResponseFetcher.replyCollection.elements, id: \.0) { id, reply in
-                            ReplyCardView(toProfile: $toProfile, member: $member)
+                            ReplyView(toProfile: $toProfile, member: $member)
                                 .environmentObject(reply)
                                 .listRowInsets(EdgeInsets())
                                 .task {
@@ -82,7 +82,7 @@ struct PostDetailView: View {
                 }
                 .background {
                     NavigationLink(isActive: $toNode) {
-                        FeedView(refresh: .constant(false), nodeName: node?.name ?? "")
+                        TopicCollectionView(refresh: .constant(false), nodeName: node?.name ?? "")
                             .toolbar {
                                 ToolbarItem(placement: .principal) {
                                     Text(node?.title ?? "")
@@ -161,6 +161,6 @@ struct PostDetailView: View {
 
 struct PostDetailView_Previews: PreviewProvider {
     static var previews: some View {
-        PostDetailView(topicCollectionResponseFetcher: TopicCollectionResponseFetcher())
+        TopicView(topicCollectionResponseFetcher: TopicCollectionResponseFetcher())
     }
 }

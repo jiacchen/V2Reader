@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-struct ReplyCardView: View {
+struct ReplyView: View {
     @EnvironmentObject var data: AppData
     @EnvironmentObject var reply: Reply
     @EnvironmentObject var topic: Topic
@@ -97,7 +97,6 @@ struct ReplyCardView: View {
                                 image
                                     .resizable()
                                     .aspectRatio(contentMode: .fit)
-//                                    .cornerRadius(12)
                             case .failure:
                                 HStack {
                                     Spacer()
@@ -119,16 +118,10 @@ struct ReplyCardView: View {
         .padding(.vertical)
         .contentShape(Rectangle())
     }
-    
-//    func share() {
-//        let activityVC = UIActivityViewController(activityItems: [reply.content, URL(string: "\(topic.url)#reply\(reply.num)")!], applicationActivities: nil)
-//        guard let windowScene = UIApplication.shared.connectedScenes.first as? UIWindowScene else { return }
-//        windowScene.keyWindow?.rootViewController?.present(activityVC, animated: true, completion: nil)
-//    }
 }
 
 struct ReplyCardView_Previews: PreviewProvider {
     static var previews: some View {
-        ReplyCardView(toProfile: .constant(false), member: .constant(nil))
+        ReplyView(toProfile: .constant(false), member: .constant(nil))
     }
 }

@@ -7,9 +7,8 @@
 
 import SwiftUI
 
-struct FeedView: View {
+struct TopicCollectionView: View {
     @EnvironmentObject var data: AppData
-    @State var showNewPostView = false
     @StateObject var topicCollectionResponseFetcher = TopicCollectionResponseFetcher()
     @Binding var refresh: Bool
     var nodeName: String
@@ -17,7 +16,7 @@ struct FeedView: View {
     var body: some View {
         List {
             ForEach(topicCollectionResponseFetcher.topicCollection.elements, id: \.0) { (id, topic) in
-                PostCardView(topicDetailFetcher: TopicResponseFetcher(), topicCollectionResponseFetcher: topicCollectionResponseFetcher, toProfile: .constant(false), member: .constant(nil), toNode: .constant(false), node: .constant(nil))
+                PostView(topicDetailFetcher: TopicResponseFetcher(), topicCollectionResponseFetcher: topicCollectionResponseFetcher, toProfile: .constant(false), member: .constant(nil), toNode: .constant(false), node: .constant(nil))
                     .listRowSeparator(.hidden)
                     .environmentObject(topic)
                     .task {
@@ -62,6 +61,6 @@ struct FeedView: View {
 
 struct FeedView_Previews: PreviewProvider {
     static var previews: some View {
-        FeedView(refresh: .constant(false), nodeName: "home")
+        TopicCollectionView(refresh: .constant(false), nodeName: "home")
     }
 }

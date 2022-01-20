@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-struct ActivityView: View {
+struct NotificationView: View {
     @EnvironmentObject var data: AppData
     
     var body: some View {
@@ -21,6 +21,6 @@ struct ActivityView: View {
 
 struct ActivityView_Previews: PreviewProvider {
     static var previews: some View {
-        ActivityView()
+        NotificationView()
     }
 }

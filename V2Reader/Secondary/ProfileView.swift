@@ -30,22 +30,8 @@ struct ProfileView: View {
                                 .font(.title2)
 #endif
                                 .fontWeight(.semibold)
-//                            Text("@\(user.username)")
-//                                .foregroundColor(.secondary)
                         }
                     }
-                    
-//                    Button(action: { following = true }) {
-//                        HStack {
-//                            Spacer()
-//                            Text("Follow")
-//                                .font(.headline)
-//                            Spacer()
-//                        }
-//                    }
-//                    .buttonStyle(.borderedProminent)
-//                    .disabled(following)
-                    
                     HStack {
                         Spacer()
                         VStack(alignment: .leading, spacing: 16) {
@@ -95,41 +81,10 @@ struct ProfileView: View {
                 .padding(.horizontal, sizeClass == .compact ? nil : 32)
                 .padding(.top, 32)
                 .padding(.bottom, 20)
-            
-                
-//                Divider()
-//
-//                VStack(spacing: 0) {
-//                    ForEach(data.getPostsByUserID(user.id), id: \.id) { post in
-//                        PostCardView()
-//                            .environmentObject(post)
-//                    }
-//                }
             }
         }
         .navigationBarTitleDisplayMode(.inline)
-//        .toolbar {
-//            ToolbarItem(placement: .navigationBarTrailing) {
-//                Button(action: share) {
-//                    Image(systemName: "square.and.arrow.up")
-//                        .font(.headline)
-//                }
-//            }
-//            ToolbarItem(placement: .navigationBarTrailing) {
-//                Button {
-//                    openSettings = true
-//                } label: {
-//                    Image(systemName: "gear")
-//                }
-//            }
-//        }
     }
-//
-//    func share() {
-//        let activityVC = UIActivityViewController(activityItems: [member.username], applicationActivities: nil)
-//        guard let windowScene = UIApplication.shared.connectedScenes.first as? UIWindowScene else { return }
-//        windowScene.keyWindow?.rootViewController?.present(activityVC, animated: true, completion: nil)
-//   }
 }
 
 struct ProfileView_Previews: PreviewProvider {

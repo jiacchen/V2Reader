@@ -37,7 +37,6 @@ struct SupplementView: View {
                                 image
                                     .resizable()
                                     .aspectRatio(contentMode: .fit)
-//                                    .cornerRadius(12)
                             case .failure:
                                 HStack {
                                     Spacer()

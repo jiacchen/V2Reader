@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-struct PostCardView: View {
+struct PostView: View {
     @Environment(\.dismiss) var dismiss
     @EnvironmentObject var data: AppData
     @EnvironmentObject var topic: Topic
@@ -23,8 +23,6 @@ struct PostCardView: View {
     
     var card: some View {
         VStack(spacing: 0) {
-//            PostHeaderView()
-//                .environmentObject(topic)
             VStack(alignment: .leading, spacing: 12) {
                 if fullWidth {
                     Text(topic.title)
@@ -70,7 +68,6 @@ struct PostCardView: View {
                                         image
                                             .resizable()
                                             .aspectRatio(contentMode: .fit)
-//                                            .cornerRadius(12)
                                     case .failure:
                                         HStack {
                                             Spacer()
@@ -204,10 +201,10 @@ struct PostCardView: View {
                     .padding(.horizontal)
                 }
                 if fullWidth {
-                    PostReactionsBarView(fullWidth: true)
+                    FooterView(fullWidth: true)
                         .padding(.horizontal)
                 } else {
-                    PostReactionsBarView(fullWidth: false)
+                    FooterView(fullWidth: false)
                 }
             }
             .padding(.vertical)
@@ -218,7 +215,7 @@ struct PostCardView: View {
         if fullWidth {
             card
         } else {
-            NavigationLink(destination: PostDetailView(topicCollectionResponseFetcher: topicCollectionResponseFetcher, toProfile: toProfile).environmentObject(topic)) {
+            NavigationLink(destination: TopicView(topicCollectionResponseFetcher: topicCollectionResponseFetcher, toProfile: toProfile).environmentObject(topic)) {
                 card
             }
         }
@@ -233,6 +230,6 @@ struct CustomButtonStyle: ButtonStyle {
 
 struct PostCardView_Previews: PreviewProvider {
     static var previews: some View {
-        PostCardView(topicDetailFetcher: TopicResponseFetcher(), topicCollectionResponseFetcher: TopicCollectionResponseFetcher(), toProfile: .constant(false), member: .constant(nil), toNode: .constant(false), node: .constant(nil))
+        PostView(topicDetailFetcher: TopicResponseFetcher(), topicCollectionResponseFetcher: TopicCollectionResponseFetcher(), toProfile: .constant(false), member: .constant(nil), toNode: .constant(false), node: .constant(nil))
     }
 }
