@@ -58,9 +58,3 @@ struct TopicCollectionView: View {
         .navigationBarTitleDisplayMode(.inline)
     }
 }
-
-struct FeedView_Previews: PreviewProvider {
-    static var previews: some View {
-        TopicCollectionView(refresh: .constant(false), nodeName: "home")
-    }
-}

@@ -263,9 +263,3 @@ fileprivate struct HostingWindowFinder: UIViewRepresentable {
     func updateUIView(_ uiView: UIView, context: Context) {
     }
 }
-
-struct ContentView_Previews: PreviewProvider {
-    static var previews: some View {
-        ContentView(refresh: .constant(false))
-    }
-}

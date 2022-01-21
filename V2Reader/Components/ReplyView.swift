@@ -119,9 +119,3 @@ struct ReplyView: View {
         .contentShape(Rectangle())
     }
 }
-
-struct ReplyCardView_Previews: PreviewProvider {
-    static var previews: some View {
-        ReplyView(toProfile: .constant(false), member: .constant(nil))
-    }
-}

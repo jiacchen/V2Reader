@@ -33,9 +33,3 @@ struct FooterView: View {
         .padding(.top, 8)
     }
 }
-
-struct PostReactionsBarView_Previews: PreviewProvider {
-    static var previews: some View {
-        FooterView()
-    }
-}

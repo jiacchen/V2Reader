@@ -18,9 +18,3 @@ struct NotificationView: View {
         .navigationBarTitleDisplayMode(.inline)
     }
 }
-
-struct ActivityView_Previews: PreviewProvider {
-    static var previews: some View {
-        NotificationView()
-    }
-}

@@ -75,9 +75,3 @@ struct SupplementView: View {
         .contentShape(Rectangle())
     }
 }
-
-struct SupplementView_Previews: PreviewProvider {
-    static var previews: some View {
-        SupplementView()
-    }
-}

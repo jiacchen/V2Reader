@@ -75,7 +75,6 @@ class Topic: ObservableObject {
             let regex = try! NSRegularExpression(pattern: #"!\[(.*)\]\((.+)\)"#)
             let matches = regex.matches(in: content, options: [], range: NSRange(location: 0, length: content.utf16.count))
             var prevTexts: [String] = []
-            
             for match in matches {
                 guard let range = Range(match.range, in: content) else { continue }
                 let markdown = content[range]
@@ -89,7 +88,6 @@ class Topic: ObservableObject {
                 for urlMatch in urlMatches {
                     guard let urlRange = Range(urlMatch.range, in: markdown) else { continue }
                     let url = String(markdown[urlRange])
-//                    print(url)
                     if url[url.startIndex..<url.index(url.startIndex, offsetBy: 5)] == "http:" {
                         var httpImage = String(markdown)
                         httpImage.removeFirst()
@@ -111,6 +109,7 @@ class Topic: ObservableObject {
             }
             prevTexts.removeAll()
             self.content.append(tempText + String(content[index..<content.endIndex]))
+            self.content.append(content)
         }
         for text in self.content {
             self.content_rendered.append(try! AttributedString(markdown: text, options: AttributedString.MarkdownParsingOptions(interpretedSyntax: .inlineOnlyPreservingWhitespace)))
@@ -121,15 +120,6 @@ class Topic: ObservableObject {
         self.member = member
         self.node = node
         self.supplements = supplements
-//        for imageUrl in imageURL {
-//            let data = try? Data(contentsOf: URL(string: imageUrl)!)
-//            if data != nil {
-//                let image = UIImage(data: data!)
-//                if image != nil {
-//                    self.image.append(image!)
-//                }
-//            }
-//        }
         detailsAdded = true
     }
     

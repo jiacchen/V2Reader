@@ -158,9 +158,3 @@ struct TopicView: View {
         }
     }
 }
-
-struct PostDetailView_Previews: PreviewProvider {
-    static var previews: some View {
-        TopicView(topicCollectionResponseFetcher: TopicCollectionResponseFetcher())
-    }
-}

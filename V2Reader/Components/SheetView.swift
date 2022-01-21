@@ -175,9 +175,3 @@ struct SheetView: View {
         }
     }
 }
-
-struct SheetView_Previews: PreviewProvider {
-    static var previews: some View {
-        SheetView(editMode: .constant(EditMode.inactive), homeChanged: .constant(false), edited: .constant(false), showNodeManagement: .constant(false), nodeCollectionFetcher: NodeCollectionFetcher())
-    }
-}

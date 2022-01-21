@@ -227,9 +227,3 @@ struct CustomButtonStyle: ButtonStyle {
         configuration.label
     }
 }
-
-struct PostCardView_Previews: PreviewProvider {
-    static var previews: some View {
-        PostView(topicDetailFetcher: TopicResponseFetcher(), topicCollectionResponseFetcher: TopicCollectionResponseFetcher(), toProfile: .constant(false), member: .constant(nil), toNode: .constant(false), node: .constant(nil))
-    }
-}
