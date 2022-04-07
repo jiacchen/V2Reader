@@ -74,7 +74,7 @@ struct ReplyView: View {
                         .foregroundColor(.secondary)
                 }
                 .padding(.horizontal)
-                ForEach(0..<reply.content_rendered.count) { index in
+                ForEach(0..<reply.content_rendered.count, id: \.self) { index in
                     if !reply.content[index].isEmpty {
                         Text(reply.content_rendered[index])
 #if targetEnvironment(macCatalyst)

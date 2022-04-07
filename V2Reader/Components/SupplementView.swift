@@ -14,7 +14,7 @@ struct SupplementView: View {
     var body: some View {
         VStack(spacing: 0) {
             VStack(alignment: .leading, spacing: 12) {
-                ForEach(0..<supplement.content_rendered.count) { index in
+                ForEach(0..<supplement.content_rendered.count, id: \.self) { index in
                     if !supplement.content[index].isEmpty {
                         Text(supplement.content_rendered[index])
 #if targetEnvironment(macCatalyst)

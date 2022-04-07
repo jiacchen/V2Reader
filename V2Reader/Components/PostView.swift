@@ -45,13 +45,13 @@ struct PostView: View {
                 
                 if !topic.content.isEmpty {
                     if fullWidth {
-                        ForEach(0..<topic.content_rendered.count) { index in
+                        ForEach(0..<topic.content_rendered.count, id: \.self) { index in
                             if !topic.content[index].isEmpty {
                                 Text(topic.content_rendered[index])
 #if targetEnvironment(macCatalyst)
-                                    .font(.title3)
+                                .font(.title3)
 #else
-                                    .font(.body)
+                                .font(.body)
 #endif
                                     .padding(.horizontal)
                             }
@@ -85,15 +85,13 @@ struct PostView: View {
                             }
                         }
                     } else {
-                        if !topic.content[0].isEmpty {
-                            Text(topic.content_rendered[0])
+                        Text(topic.content_rendered[0])
 #if targetEnvironment(macCatalyst)
-                                .font(.body)
+                            .font(.body)
 #else
-                                .font(.callout)
+                            .font(.callout)
 #endif
-                                .lineLimit(2)
-                        }
+                            .lineLimit(2)
                         if !topic.imageURL.isEmpty {
                             AsyncImage(url: URL(string: topic.imageURL[0]), scale: 2) { phase in
                                 switch phase {

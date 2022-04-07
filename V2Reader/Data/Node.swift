@@ -57,9 +57,8 @@ struct NodeResponse: Codable {
     static let defaultNodeResponse = NodeResponse(success: false, message: "", result: Result.defaultResult)
 }
 
-@MainActor
 class NodeCollectionFetcher: ObservableObject {
-    @Published var nodeCollectionData: OrderedDictionary<String, Node> = ["home": Node(id: 0, url: "", name: "home", title: "Home", header: "", footer: "", avatar: "", topics: 0, created: 0, last_modified: 0)]
+    @MainActor var nodeCollectionData: OrderedDictionary<String, Node> = ["home": Node(id: 0, url: "", name: "home", title: "Home", header: "", footer: "", avatar: "", topics: 0, created: 0, last_modified: 0)]
     @Published var completed = false
     @Published var fetching = false
     var storedNodes: [String: Data] = UserDefaults.standard.object(forKey: "storedNodes") as? [String: Data] ?? [:]
@@ -69,7 +68,7 @@ class NodeCollectionFetcher: ObservableObject {
         case badJSON
     }
     
-    func fetchData(token: String, names: [String]) async throws {
+    @MainActor func fetchData(token: String, names: [String]) async throws {
         fetching = true
         nodeCollectionData = ["home": Node(id: 0, url: "", name: "home", title: "Home", header: "", footer: "", avatar: "", topics: 0, created: 0, last_modified: 0)]
         for name in names {

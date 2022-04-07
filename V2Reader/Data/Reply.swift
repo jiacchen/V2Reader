@@ -131,9 +131,8 @@ struct ReplyResponse: Codable {
     static let defaultTopicReplies = ReplyResponse(success: false, message: "", result: [])
 }
 
-@MainActor
 class ReplyResponseFetcher: ObservableObject {
-    var replyCollectionData = ReplyResponse.defaultTopicReplies
+    @MainActor var replyCollectionData = ReplyResponse.defaultTopicReplies
     @Published var replyCollection: OrderedDictionary<Int, Reply> = [:]
     @Published var fetching = false
     @Published var currentPage = 1
@@ -146,7 +145,7 @@ class ReplyResponseFetcher: ObservableObject {
         case badJSON
     }
     
-    func fetchData(token: String, id: Int) async throws {
+    @MainActor func fetchData(token: String, id: Int) async throws {
         print("topicreplies")
         fetching = true
         let url = URL(string:"https://www.v2ex.com/api/v2/topics/\(id)/replies?p=\(currentPage)")!

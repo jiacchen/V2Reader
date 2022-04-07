@@ -258,9 +258,8 @@ struct TopicCollectionResponse: Codable {
     static let defaultTopicResponse = TopicCollectionResponse(success: false, message: "", result: [])
 }
 
-@MainActor
 class TopicCollectionResponseFetcher: ObservableObject {
-    var topicCollectionData = TopicCollectionResponse.defaultTopicResponse
+    @MainActor var topicCollectionData = TopicCollectionResponse.defaultTopicResponse
     @Published var topicCollection: OrderedDictionary<Int, Topic> = [:]
     @Published var fetching = false
     @Published var currentPage = 1
@@ -271,7 +270,7 @@ class TopicCollectionResponseFetcher: ObservableObject {
         case badJSON
     }
     
-    func fetchData(token: String, name: String, home: [String]) async throws {
+    @MainActor func fetchData(token: String, name: String, home: [String]) async throws {
         fetching = true
         if name == "home" {
             var tempTopicCollection: OrderedDictionary<Int, Topic> = [:]
@@ -388,9 +387,8 @@ struct TopicResponse: Codable {
     static let defaultTopicDetail = TopicResponse(success: false, message: "", result: Result.defaultResult)
 }
 
-@MainActor
 class TopicResponseFetcher: ObservableObject {
-    @Published var topicData = TopicResponse.defaultTopicDetail
+    @MainActor var topicData = TopicResponse.defaultTopicDetail
     @Published var fetching = false
     
     enum FetchError: Error {
@@ -398,7 +396,7 @@ class TopicResponseFetcher: ObservableObject {
         case badJSON
     }
     
-    func fetchData(token: String, id: Int) async throws {
+    @MainActor func fetchData(token: String, id: Int) async throws {
         print("topicdetail")
         fetching = true
         let url = URL(string:"https://www.v2ex.com/api/v2/topics/\(id)")!

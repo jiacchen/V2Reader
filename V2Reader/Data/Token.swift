@@ -27,7 +27,6 @@ struct TokenResponse: Codable {
     static let defaultTokenResponse = TokenResponse(success: false, message: "", result: Result.defaultResult)
 }
 
-@MainActor
 class TokenFetcher: ObservableObject {
     @Published var tokenInvalid = false
     @Published var completed = false
@@ -37,7 +36,7 @@ class TokenFetcher: ObservableObject {
         case badJSON
     }
     
-    func fetchData(token: String) async throws {
+    @MainActor func fetchData(token: String) async throws {
         let url = URL(string:"https://www.v2ex.com/api/v2/token")!
         var request = URLRequest(url: url)
         request.addValue("Bearer \(token)", forHTTPHeaderField: "Authorization")

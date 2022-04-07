@@ -243,6 +243,7 @@ extension UISplitViewController {
     }
 }
 
+#if targetEnvironment(macCatalyst)
 extension View {
     fileprivate func withHostingWindow(_ callback: @escaping (UIWindow?) -> Void) -> some View {
         self.background(HostingWindowFinder(callback: callback))
@@ -263,3 +264,4 @@ fileprivate struct HostingWindowFinder: UIViewRepresentable {
     func updateUIView(_ uiView: UIView, context: Context) {
     }
 }
+#endif

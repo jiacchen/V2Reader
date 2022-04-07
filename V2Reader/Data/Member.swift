@@ -63,9 +63,8 @@ struct MemberResponse: Codable {
     static let defaultMember = MemberResponse(success: false, result: Result.defaultResult)
 }
 
-@MainActor
 class MemberResponseFetcher: ObservableObject {
-    @Published var memberData = MemberResponse.defaultMember
+    @MainActor var memberData = MemberResponse.defaultMember
     @Published var completed = false
     
     enum FetchError: Error {
@@ -73,7 +72,7 @@ class MemberResponseFetcher: ObservableObject {
         case badJSON
     }
     
-    func fetchData(token: String) async throws {
+    @MainActor func fetchData(token: String) async throws {
         print("myself")
         let url = URL(string:"https://www.v2ex.com/api/v2/member")!
         var request = URLRequest(url: url)

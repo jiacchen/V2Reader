@@ -7,7 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		4E37512E279A039400999850 /* HTMLParser.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4E37512D279A039400999850 /* HTMLParser.swift */; };
+		4E37512E279A039400999850 /* Util.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4E37512D279A039400999850 /* Util.swift */; };
 		4E3E47EC278FB7EA00EFB8C0 /* Token.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4E3E47EB278FB7EA00EFB8C0 /* Token.swift */; };
 		4E413F9B278C2C9D00908C0A /* SupplementView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4E413F9A278C2C9D00908C0A /* SupplementView.swift */; };
 		4E4B92B02786B54A00273317 /* Node.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4E4B92AF2786B54A00273317 /* Node.swift */; };
@@ -21,6 +21,8 @@
 		4E8A99F72789665B0092A2BE /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4E8A99F62789665B0092A2BE /* ContentView.swift */; };
 		4EAD48462785311A00AA35CC /* ReplyView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4EAD48452785311A00AA35CC /* ReplyView.swift */; };
 		4ED1BED5278D4AB200C9F333 /* SheetView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4ED1BED4278D4AB200C9F333 /* SheetView.swift */; };
+		4EDD8CC327ACA675000FEE42 /* Markdownosaur.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4EDD8CC227ACA675000FEE42 /* Markdownosaur.swift */; };
+		4EDD8CC627ACA762000FEE42 /* Markdown in Frameworks */ = {isa = PBXBuildFile; productRef = 4EDD8CC527ACA762000FEE42 /* Markdown */; };
 		863CC8D1277A13050045112E /* TopicView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 863CC8D0277A13050045112E /* TopicView.swift */; };
 		863CC8D5277A16F70045112E /* ProfileView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 863CC8D4277A16F70045112E /* ProfileView.swift */; };
 		863CC8DB277A1FBE0045112E /* AppData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 863CC8DA277A1FBE0045112E /* AppData.swift */; };
@@ -35,7 +37,7 @@
 
 /* Begin PBXFileReference section */
 		4E083C55278B974D00F3C8F3 /* V2Reader.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = V2Reader.entitlements; sourceTree = "<group>"; };
-		4E37512D279A039400999850 /* HTMLParser.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HTMLParser.swift; sourceTree = "<group>"; };
+		4E37512D279A039400999850 /* Util.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Util.swift; sourceTree = "<group>"; };
 		4E3E47EB278FB7EA00EFB8C0 /* Token.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Token.swift; sourceTree = "<group>"; };
 		4E413F9A278C2C9D00908C0A /* SupplementView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SupplementView.swift; sourceTree = "<group>"; };
 		4E4B92AF2786B54A00273317 /* Node.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Node.swift; sourceTree = "<group>"; };
@@ -49,6 +51,7 @@
 		4E8A99F62789665B0092A2BE /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
 		4EAD48452785311A00AA35CC /* ReplyView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReplyView.swift; sourceTree = "<group>"; };
 		4ED1BED4278D4AB200C9F333 /* SheetView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SheetView.swift; sourceTree = "<group>"; };
+		4EDD8CC227ACA675000FEE42 /* Markdownosaur.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Markdownosaur.swift; sourceTree = "<group>"; };
 		863CC8D0277A13050045112E /* TopicView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TopicView.swift; sourceTree = "<group>"; };
 		863CC8D4277A16F70045112E /* ProfileView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileView.swift; sourceTree = "<group>"; };
 		863CC8DA277A1FBE0045112E /* AppData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppData.swift; sourceTree = "<group>"; };
@@ -68,6 +71,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				4E6C2BB62787B4310008AF2B /* OrderedCollections in Frameworks */,
+				4EDD8CC627ACA762000FEE42 /* Markdown in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -117,6 +121,7 @@
 			isa = PBXGroup;
 			children = (
 				4E083C55278B974D00F3C8F3 /* V2Reader.entitlements */,
+				4EDD8CC227ACA675000FEE42 /* Markdownosaur.swift */,
 				863CC8D9277A1FB80045112E /* Data */,
 				86AEF6252777BC500028E4C5 /* V2ReaderApp.swift */,
 				4E55EDF2279963FE00326388 /* Primary */,
@@ -124,7 +129,7 @@
 				86BF45C0277A12CB0087ABB2 /* Detail Views */,
 				86F5D2DB27792DA400B3467E /* Components */,
 				86AEF6292777BC500028E4C5 /* Assets.xcassets */,
-				4E37512D279A039400999850 /* HTMLParser.swift */,
+				4E37512D279A039400999850 /* Util.swift */,
 			);
 			path = V2Reader;
 			sourceTree = "<group>";
@@ -179,6 +184,7 @@
 			name = V2Reader;
 			packageProductDependencies = (
 				4E6C2BB52787B4310008AF2B /* OrderedCollections */,
+				4EDD8CC527ACA762000FEE42 /* Markdown */,
 			);
 			productName = Social;
 			productReference = 86AEF6222777BC500028E4C5 /* V2Reader.app */;
@@ -211,6 +217,7 @@
 			mainGroup = 86AEF6192777BC500028E4C5;
 			packageReferences = (
 				4E6C2BB42787B4310008AF2B /* XCRemoteSwiftPackageReference "swift-collections" */,
+				4EDD8CC427ACA762000FEE42 /* XCRemoteSwiftPackageReference "swift-markdown" */,
 			);
 			productRefGroup = 86AEF6232777BC500028E4C5 /* Products */;
 			projectDirPath = "";
@@ -248,7 +255,8 @@
 				86BF45AA27792DD10087ABB2 /* TopicCollectionView.swift in Sources */,
 				4E3E47EC278FB7EA00EFB8C0 /* Token.swift in Sources */,
 				8696D44D277A300800BB45EA /* AvatarView.swift in Sources */,
-				4E37512E279A039400999850 /* HTMLParser.swift in Sources */,
+				4EDD8CC327ACA675000FEE42 /* Markdownosaur.swift in Sources */,
+				4E37512E279A039400999850 /* Util.swift in Sources */,
 				863CC8D1277A13050045112E /* TopicView.swift in Sources */,
 				4E8A99F72789665B0092A2BE /* ContentView.swift in Sources */,
 				863CC8DB277A1FBE0045112E /* AppData.swift in Sources */,
@@ -511,6 +519,14 @@
 				minimumVersion = 1.0.0;
 			};
 		};
+		4EDD8CC427ACA762000FEE42 /* XCRemoteSwiftPackageReference "swift-markdown" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/apple/swift-markdown";
+			requirement = {
+				branch = main;
+				kind = branch;
+			};
+		};
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
@@ -518,6 +534,11 @@
 			isa = XCSwiftPackageProductDependency;
 			package = 4E6C2BB42787B4310008AF2B /* XCRemoteSwiftPackageReference "swift-collections" */;
 			productName = OrderedCollections;
+		};
+		4EDD8CC527ACA762000FEE42 /* Markdown */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 4EDD8CC427ACA762000FEE42 /* XCRemoteSwiftPackageReference "swift-markdown" */;
+			productName = Markdown;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};
