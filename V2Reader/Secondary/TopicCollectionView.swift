@@ -38,23 +38,12 @@ struct TopicCollectionView: View {
             }
         }
         .listStyle(.plain)
-#if targetEnvironment(macCatalyst)
-        .onChange(of: refresh) { newValue in
-            Task {
-                topicCollectionResponseFetcher.topicCollection = [:]
-                topicCollectionResponseFetcher.currentPage = 1
-                topicCollectionResponseFetcher.fullyFetched = false
-                try? await topicCollectionResponseFetcher.fetchData(token: data.token!, name: nodeName, home: data.homeNodes)
-            }
-        }
-#else
         .refreshable {
             topicCollectionResponseFetcher.topicCollection = [:]
             topicCollectionResponseFetcher.currentPage = 1
             topicCollectionResponseFetcher.fullyFetched = false
             try? await topicCollectionResponseFetcher.fetchData(token: data.token!, name: nodeName, home: data.homeNodes)
         }
-#endif
         .navigationBarTitleDisplayMode(.inline)
     }
 }

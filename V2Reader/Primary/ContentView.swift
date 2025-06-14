@@ -40,37 +40,17 @@ struct ContentView: View {
                                 ToolbarItem(placement: .principal) {
                                     Text("Home")
                                         .fontWeight(.semibold)
-#if targetEnvironment(macCatalyst)
-                                        .font(.title3)
-#else
                                         .font(.headline)
-#endif
                                 }
                             }
-#if targetEnvironment(macCatalyst)
-                            .withHostingWindow { window in
-                                if let titlebar = window?.windowScene?.titlebar {
-                                    titlebar.titleVisibility = .hidden
-                                    titlebar.toolbar = nil
-                                }
-                            }
-#endif
                     } label: {
                         HStack {
                             AvatarView(url: "")
                                 .frame(width: 48)
                             Text("Home")
-#if targetEnvironment(macCatalyst)
-                                .font(.title3)
-                                .fontWeight(.medium)
-#else
                                 .font(.headline)
-#endif
                                 .padding()
                         }
-#if targetEnvironment(macCatalyst)
-                        .padding(.vertical)
-#endif
                     }
                     .listRowBackground(Color.clear)
                     .listRowSeparator(.hidden)
@@ -84,11 +64,7 @@ struct ContentView: View {
                                             ToolbarItem(placement: .principal) {
                                                 Text(node.title)
                                                     .fontWeight(.semibold)
-#if targetEnvironment(macCatalyst)
-                                                    .font(.title3)
-#else
                                                     .font(.headline)
-#endif
                                             }
                                             ToolbarItem(placement: .navigationBarTrailing) {
                                                 Link(destination: URL(string: "https://www.v2ex.com/write")!) {
@@ -96,30 +72,14 @@ struct ContentView: View {
                                                 }
                                             }
                                         }
-#if targetEnvironment(macCatalyst)
-                                        .withHostingWindow { window in
-                                            if let titlebar = window?.windowScene?.titlebar {
-                                                titlebar.titleVisibility = .hidden
-                                                titlebar.toolbar = nil
-                                            }
-                                        }
-#endif
                                 } label: {
                                     HStack {
                                         AvatarView(url: node.avatar)
                                             .frame(width: 48)
                                         Text(node.title)
-#if targetEnvironment(macCatalyst)
-                                            .font(.title3)
-                                            .fontWeight(.medium)
-#else
                                             .font(.headline)
-#endif
                                             .padding()
                                     }
-#if targetEnvironment(macCatalyst)
-                                    .padding(.vertical, 12)
-#endif
                                 }
                                 .listRowBackground(Color.clear)
                                 .listRowSeparator(.hidden)
@@ -137,17 +97,9 @@ struct ContentView: View {
                             AvatarView(url: memberResponseFetcher.memberData.result.avatar_xxxlarge ?? memberResponseFetcher.memberData.result.avatar_large)
                                 .frame(width: 48)
                             Text(memberResponseFetcher.memberData.result.username)
-#if targetEnvironment(macCatalyst)
-                                .font(.title3)
-                                .fontWeight(.medium)
-#else
                                 .font(.headline)
-#endif
                                 .padding()
                         }
-#if targetEnvironment(macCatalyst)
-                        .padding(.vertical)
-#endif
                     }
                     .listRowBackground(Color.clear)
                     .listRowSeparator(.hidden)
@@ -183,36 +135,22 @@ struct ContentView: View {
                         ToolbarItem(placement: .principal) {
                             Text("Home")
                                 .fontWeight(.semibold)
-#if targetEnvironment(macCatalyst)
-                                .font(.title3)
-#else
                                 .font(.headline)
-#endif
                         }
                     }
                 Text("Nothing Selected")
-#if targetEnvironment(macCatalyst)
-                    .font(.title3)
-                    .withHostingWindow { window in
-                        if let titlebar = window?.windowScene?.titlebar {
-                            titlebar.titleVisibility = .hidden
-                            titlebar.toolbar = nil
-                        }
-                    }
-#else
                     .font(.body)
-#endif
                     .foregroundColor(.secondary)
             }
             .task {
                 try? await tokenFetcher.fetchData(token: data.token!)
             }
-            .onChange(of: tokenFetcher.completed, perform: { completed in
-                if completed && tokenFetcher.tokenInvalid {
+            .onChange(of: tokenFetcher.completed) { newValue, _ in
+                if newValue && tokenFetcher.tokenInvalid {
                     tokenFetcher.completed = false
                     try? data.deleteToken()
                 }
-            })
+            }
             .sheet(isPresented: $showNodeManagement, onDismiss: {
                 editMode = EditMode.inactive
                 if edited {
@@ -235,33 +173,6 @@ extension UISplitViewController {
     open override func viewDidLoad() {
         super.viewDidLoad()
         self.preferredDisplayMode = DisplayMode.twoOverSecondary
-#if targetEnvironment(macCatalyst)
-        self.preferredSplitBehavior = SplitBehavior.displace
-#else
         self.preferredSplitBehavior = SplitBehavior.automatic
-#endif
     }
 }
-
-#if targetEnvironment(macCatalyst)
-extension View {
-    fileprivate func withHostingWindow(_ callback: @escaping (UIWindow?) -> Void) -> some View {
-        self.background(HostingWindowFinder(callback: callback))
-    }
-}
-
-fileprivate struct HostingWindowFinder: UIViewRepresentable {
-    var callback: (UIWindow?) -> ()
-    
-    func makeUIView(context: Context) -> UIView {
-        let view = UIView()
-        DispatchQueue.main.async { [weak view] in
-            self.callback(view?.window)
-        }
-        return view
-    }
-    
-    func updateUIView(_ uiView: UIView, context: Context) {
-    }
-}
-#endif

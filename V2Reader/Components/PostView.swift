@@ -26,20 +26,12 @@ struct PostView: View {
             VStack(alignment: .leading, spacing: 12) {
                 if fullWidth {
                     Text(topic.title)
-#if targetEnvironment(macCatalyst)
-                        .font(.title2)
-#else
                         .font(.title3)
-#endif
                         .fontWeight(.medium)
                         .padding(.horizontal)
                 } else {
                     Text(topic.title)
-#if targetEnvironment(macCatalyst)
-                        .font(.title3)
-#else
                         .font(.body)
-#endif
                         .fontWeight(.medium)
                 }
                 
@@ -48,12 +40,8 @@ struct PostView: View {
                         ForEach(0..<topic.content_rendered.count, id: \.self) { index in
                             if !topic.content[index].isEmpty {
                                 Text(topic.content_rendered[index])
-#if targetEnvironment(macCatalyst)
-                                .font(.title3)
-#else
                                 .font(.body)
-#endif
-                                    .padding(.horizontal)
+                                .padding(.horizontal)
                             }
                             if index < topic.imageURL.count {
                                 AsyncImage(url: URL(string: topic.imageURL[index]), scale: 2) { phase in
@@ -86,11 +74,7 @@ struct PostView: View {
                         }
                     } else {
                         Text(topic.content_rendered[0])
-#if targetEnvironment(macCatalyst)
-                            .font(.body)
-#else
                             .font(.callout)
-#endif
                             .lineLimit(2)
                         if !topic.imageURL.isEmpty {
                             AsyncImage(url: URL(string: topic.imageURL[0]), scale: 2) { phase in
@@ -128,18 +112,10 @@ struct PostView: View {
                     HStack(spacing: 0) {
                         if topic.detailsAdded {
                             Text("in ")
-#if targetEnvironment(macCatalyst)
-                                .font(.body)
-#else
                                 .font(.callout)
-#endif
                                 .foregroundColor(.secondary)
                             Text(nodeTitleWithLink)
-#if targetEnvironment(macCatalyst)
-                                .font(.body)
-#else
                                 .font(.callout)
-#endif
                                 .accentColor(.secondary)
                                 .onAppear {
                                     nodeTitleWithLink = AttributedString(topic.node!.title)
@@ -147,18 +123,10 @@ struct PostView: View {
                                     nodeTitleWithLink.inlinePresentationIntent = .stronglyEmphasized
                                 }
                             Text(" by ")
-#if targetEnvironment(macCatalyst)
-                                .font(.body)
-#else
                                 .font(.callout)
-#endif
                                 .foregroundColor(.secondary)
                             Text(usernameWithLink)
-#if targetEnvironment(macCatalyst)
-                                .font(.body)
-#else
                                 .font(.callout)
-#endif
                                 .accentColor(.secondary)
                                 .onAppear {
                                     usernameWithLink = AttributedString(topic.member!.username)
@@ -187,11 +155,7 @@ struct PostView: View {
                             }
                         } else {
                             Text(" ")
-#if targetEnvironment(macCatalyst)
-                                .font(.body)
-#else
                                 .font(.callout)
-#endif
                                 .foregroundColor(.secondary)
                                 .hidden()
                         }

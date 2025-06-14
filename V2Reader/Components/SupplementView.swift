@@ -17,11 +17,7 @@ struct SupplementView: View {
                 ForEach(0..<supplement.content_rendered.count, id: \.self) { index in
                     if !supplement.content[index].isEmpty {
                         Text(supplement.content_rendered[index])
-#if targetEnvironment(macCatalyst)
-                            .font(.title3)
-#else
                             .font(.body)
-#endif
                             .padding(.horizontal)
                     }
                     if index < supplement.imageURL.count {
@@ -61,11 +57,7 @@ struct SupplementView: View {
                     }
                     Spacer()
                 }
-#if targetEnvironment(macCatalyst)
-                .font(.body)
-#else
                 .font(.subheadline)
-#endif
                 .foregroundColor(.secondary)
                 .padding(.top, 8)
                 .padding(.horizontal)

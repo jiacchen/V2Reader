@@ -20,11 +20,7 @@ struct ReplyView: View {
             VStack(alignment: .leading, spacing: 12) {
                 HStack() {
                     Text(usernameWithLink)
-#if targetEnvironment(macCatalyst)
-                        .font(.body)
-#else
                         .font(.callout)
-#endif
                         .accentColor(.primary)
                         .onAppear {
                             usernameWithLink = AttributedString(reply.member.username)
@@ -48,40 +44,24 @@ struct ReplyView: View {
                     if reply.member.username == topic.member?.username {
                         Text("OP")
                             .padding(2)
-#if targetEnvironment(macCatalyst)
-                            .font(.footnote)
-#else
                             .font(.caption2)
-#endif
                             .foregroundColor(.secondary)
                             .background(Color(.systemGray5))
                             .cornerRadius(3)
                     }
                     Text("#\(reply.num)")
-#if targetEnvironment(macCatalyst)
-                        .font(.body)
-#else
                         .font(.subheadline)
-#endif
                         .foregroundColor(.secondary)
                     Spacer()
                     Text(reply.formattedDate())
-#if targetEnvironment(macCatalyst)
-                        .font(.body)
-#else
                         .font(.subheadline)
-#endif
                         .foregroundColor(.secondary)
                 }
                 .padding(.horizontal)
                 ForEach(0..<reply.content_rendered.count, id: \.self) { index in
                     if !reply.content[index].isEmpty {
                         Text(reply.content_rendered[index])
-#if targetEnvironment(macCatalyst)
-                            .font(.title3)
-#else
                             .font(.body)
-#endif
                             .padding(.horizontal)
                     }
                     if index < reply.imageURL.count {

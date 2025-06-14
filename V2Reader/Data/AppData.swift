@@ -122,7 +122,7 @@ class AppData: ObservableObject {
         fetching = true
         if let url = URL(string:"https://www.v2ex.com/planes") {
             do {
-                let content = try String(contentsOf: url)
+                let content = try String(contentsOf: url, encoding: .utf8)
                 let regex = try! NSRegularExpression(pattern: #"<a href="/go/[a-z0-9]+" class="item_node">.+</a>"#)
                 let matches = regex.matches(in: content, options: [], range: NSRange(location: 0, length: content.utf16.count))
                 for match in matches {

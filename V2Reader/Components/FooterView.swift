@@ -24,11 +24,7 @@ struct FooterView: View {
             }
             Spacer()
         }
-#if targetEnvironment(macCatalyst)
-        .font(.body)
-#else
         .font(.subheadline)
-#endif
         .foregroundColor(.secondary)
         .padding(.top, 8)
     }

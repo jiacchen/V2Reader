@@ -33,12 +33,12 @@ struct TokenView: View {
                                     try? await tokenFetcher.fetchData(token: tokenEntered)
                                 }
                             }
-                            .onChange(of: tokenFetcher.completed, perform: { completed in
-                                if completed && !tokenFetcher.tokenInvalid {
+                            .onChange(of: tokenFetcher.completed) { newValue, _ in
+                                if newValue && !tokenFetcher.tokenInvalid {
                                     tokenFetcher.completed = false
                                     try? data.updateToken(token: tokenEntered)
                                 }
-                            })
+                            }
                             .alert("Invalid token!\nPlease try again.", isPresented: $tokenFetcher.tokenInvalid) {
                                 Button("OK") {
                                     tokenFetcher.completed = false

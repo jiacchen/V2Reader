@@ -74,31 +74,6 @@ struct TopicView: View {
                     }
                 })
                 .listStyle(.grouped)
-                .background {
-                    NavigationLink(destination: ProfileView().environmentObject(member ?? Member(id: 0, username: "", url: "", website: nil, github: nil, bio: nil, avatar: "", created: 0)), isActive: $toProfile) {
-                        EmptyView()
-                    }
-                    .hidden()
-                }
-                .background {
-                    NavigationLink(isActive: $toNode) {
-                        TopicCollectionView(refresh: .constant(false), nodeName: node?.name ?? "")
-                            .toolbar {
-                                ToolbarItem(placement: .principal) {
-                                    Text(node?.title ?? "")
-                                        .fontWeight(.semibold)
-#if targetEnvironment(macCatalyst)
-                                        .font(.title3)
-#else
-                                        .font(.headline)
-#endif
-                                }
-                            }
-                    } label: {
-                        EmptyView()
-                    }
-                    .hidden()
-                }
                 .navigationBarTitleDisplayMode(.inline)
                 .task {
                     if !topic.detailsAdded {
@@ -113,26 +88,30 @@ struct TopicView: View {
                         try? await replyResponseFetcher.fetchData(token: data.token!, id: topic.id)
                     }
                 }
-#if !targetEnvironment(macCatalyst)
-                .refreshable {
-                    try? await replyResponseFetcher.fetchData(token: data.token!, id: topic.id)
-                }
-#endif
                 .toolbar {
                     ToolbarItem(placement: .principal) {
                         Text(topic.replies == 1 ? "1 Reply" : "\(topic.replies) Replies")
                             .fontWeight(.semibold)
-#if targetEnvironment(macCatalyst)
-                            .font(.title3)
-#else
                             .font(.headline)
-#endif
                     }
                     ToolbarItem(placement: .navigationBarTrailing) {
                         Link(destination: URL(string: topic.url)!) {
                             Image(systemName: "arrowshape.turn.up.backward")
                         }
                     }
+                }
+                .navigationDestination(isPresented: $toNode) {
+                    TopicCollectionView(refresh: .constant(false), nodeName: node?.name ?? "")
+                        .toolbar {
+                            ToolbarItem(placement: .principal) {
+                                Text(node?.title ?? "")
+                                    .fontWeight(.semibold)
+                                    .font(.headline)
+                            }
+                        }
+                }
+                .navigationDestination(isPresented: $toProfile) {
+                    ProfileView().environmentObject(member ?? Member(id: 0, username: "", url: "", website: nil, github: nil, bio: nil, avatar: "", created: 0))
                 }
                 
                 if showReturnButton {
@@ -158,3 +137,4 @@ struct TopicView: View {
         }
     }
 }
+

@@ -24,11 +24,7 @@ struct ProfileView: View {
                         
                         VStack(spacing: 4) {
                             Text(member.username)
-#if targetEnvironment(macCatalyst)
-                                .font(.title)
-#else
                                 .font(.title2)
-#endif
                                 .fontWeight(.semibold)
                         }
                     }
@@ -36,16 +32,12 @@ struct ProfileView: View {
                         Spacer()
                         VStack(alignment: .leading, spacing: 16) {
                             VStack(alignment: .leading, spacing: 16) {
-                                Text("V2EX 第 ")
+                                Text("V2EX 第 \(member.id) 号会员")
                                     .foregroundColor(.secondary)
-                                + Text(String(member.id))
                                     .fontWeight(.semibold)
-                                + Text(" 号会员")
-                                    .foregroundColor(.secondary)
                                 
-                                Text("加入于 ")
+                                Text("加入于 \(member.created)")
                                     .foregroundColor(.secondary)
-                                + Text(member.created)
                                     .fontWeight(.semibold)
                             }
                             
@@ -71,11 +63,7 @@ struct ProfileView: View {
                         }
                         Spacer()
                     }
-#if targetEnvironment(macCatalyst)
-                    .font(.body)
-#else
                     .font(.callout)
-#endif
                     .padding(.vertical, 4)
                 }
                 .padding(.horizontal, sizeClass == .compact ? nil : 32)
@@ -86,3 +74,4 @@ struct ProfileView: View {
         .navigationBarTitleDisplayMode(.inline)
     }
 }
+

@@ -74,7 +74,7 @@
 "Search" = "搜索";
 
 /* No comment provided by engineer. */
-"The token you entered will be stored securely in the keychain." = "输入的 Token 将会被安全地存储在 Keychain 里。";
+"The token you entered will be stored securely in the keychain." = "输入的 Token 将会被安全地存储在钥匙串中。";
 
 /* No comment provided by engineer. */
 "Token" = "Token";
